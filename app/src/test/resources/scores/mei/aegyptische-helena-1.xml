@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mei
+    xmlns="http://www.music-encoding.org/ns/mei">
+    <meiHead>
+        <fileDesc>
+            <titleStmt>
+                <title/>
+            </titleStmt>
+            <pubStmt/>
+        </fileDesc>
+        <encodingDesc>
+            <appInfo>
+                <application isodate="2021-11-26T22:36:37.955Z" version="1.0.3">
+                    <name>Deep Optical Measure Detector</name>
+                    <p>Measures detected with Deep Optical Measure Detector</p>
+                </application>
+            </appInfo>
+        </encodingDesc>
+    </meiHead>
+    <music>
+        <facsimile>
+            <surface xml:id="surface_01FNF69D68VPA98NDZWWRPRFQX" n="1" ulx="0" uly="0" lrx="515" lry="782">
+                <graphic xml:id="graphic_01FNF69D69TWTQT2VXPW02K4D6" target="aegyptische-helena_0.png" width="516" height="783"/>
+                <zone xml:id="zone_01FNF69D69N5R878TFAY9Y4JC2" type="measure" ulx="43" uly="60" lrx="244" lry="713"/>
+                <zone xml:id="zone_01FNF69D699KX93YCFPW3Q9SK2" type="measure" ulx="226" uly="66" lrx="375" lry="733"/>
+                <zone xml:id="zone_01FNF69D6A9ENTDNAMKPAQR2AX" type="measure" ulx="359" uly="74" lrx="432" lry="722"/>
+                <zone xml:id="zone_01FNF69D6AXBAXSPPFEGYBRZAF" type="measure" ulx="418" uly="77" lrx="488" lry="713"/>
+            </surface>
+        </facsimile>
+        <body>
+            <mdiv xml:id="mdiv_01FNF69D637R93WVK15CDJJ92K" n="1" label="">
+                <score>
+                    <scoreDef/>
+                    <section>
+                        <pb n="1"/>
+                        <measure xml:id="measure_01FNF69D69Q16WR5CXV4FRRQT6" n="1" label="1" facs="#zone_01FNF69D69N5R878TFAY9Y4JC2"/>
+                        <measure xml:id="measure_01FNF69D69G052KXFT8ZX6QYEZ" n="2" label="2" facs="#zone_01FNF69D699KX93YCFPW3Q9SK2"/>
+                        <measure xml:id="measure_01FNF69D6AC1MAAKWA16X9YPGA" n="3" label="3" facs="#zone_01FNF69D6A9ENTDNAMKPAQR2AX"/>
+                        <measure xml:id="measure_01FNF69D6ANJM47XY3J72ZG12S" n="4" label="4" facs="#zone_01FNF69D6AXBAXSPPFEGYBRZAF"/>
+                        <pb n="2"/>
+                    </section>
+                </score>
+            </mdiv>
+        </body>
+    </music>
+</mei>
