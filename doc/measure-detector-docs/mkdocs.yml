@@ -1,1 +1,12 @@
 site_name: Measure Detector Documentation 
+plugins:
+        - search
+        - build_plantuml:
+                render: "local" # or "local" for local rendering
+                bin_path: "/usr/bin/plantuml" # ignored when render: server
+                server: "http://www.plantuml.com/plantuml" # offical plantuml server
+                output_format: "svg" # or "png"
+                diagram_root: "docs/diagrams" # should reside under docs_dir
+                output_folder: "out"
+                input_folder: "src"
+                input_extensions: "" # comma separated list of extensions to parse, by default every file is parsed

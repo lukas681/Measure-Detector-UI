@@ -20,3 +20,5 @@ For full documentation visit [mkdocs.org](https://www.mkdocs.org).
 
 * Most of the architectural pictures are rendered using plantuml
 * Therefore, you an install the corresponding plugin for mdocs: [https://github.com/christo-ph/mkdocs_build_plantuml](docs)
+
+![file](diagrams/out/test.svg)
