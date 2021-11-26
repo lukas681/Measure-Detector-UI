@@ -46,6 +46,17 @@ if (project.hasProperty("war")) {
     apply from: "gradle/war.gradle"
 }
 
+sourceSets {
+    test {
+        java {
+            srcDirs = ['src/test/java']
+        }
+        resources {
+            srcDirs = ['src/test/resources']
+        }
+    }
+}
+
 if (project.hasProperty("gae")) {
     apply plugin: 'maven'
     apply plugin: 'org.springframework.boot.experimental.thin-launcher'
@@ -179,6 +190,9 @@ repositories {
 }
 
 dependencies {
+    implementation group: 'org.apache.pdfbox', name: 'pdfbox', version: '2.0.24'
+    implementation group: 'org.apache.pdfbox', name: 'jbig2-imageio', version: '3.0.3'
+
     // import JHipster dependencies BOM
     if (!project.hasProperty("gae")) {
         implementation platform("tech.jhipster:jhipster-dependencies:${jhipsterDependenciesVersion}")
