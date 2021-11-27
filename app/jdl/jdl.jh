@@ -1,0 +1,69 @@
+enum EditionType {
+   SCORE,
+   SINGLEVOICE
+}
+enum EditionState {
+    FINISHED,
+    INPROGRESS,
+    TODO
+}
+
+entity Project  {
+  name String required,
+  composer String,
+  createdDate Instant
+}
+
+entity Edition {
+  title String required,
+  createdDate Instant,
+  type EditionType,
+  description String
+}
+
+entity Page {
+  pageNr Long required,
+  imgFileReference String,
+  nextPage Long
+}
+
+entity MeasureBox {
+  ulx Long,
+  uly Long,
+  lrx Long,
+  lry Long,
+  measureCount Long,
+  comment String
+}
+
+entity Tag {
+  name String required minlength(2)
+}
+
+relationship OneToMany {
+	Project{editions} to Edition{project}
+}
+
+relationship OneToMany {
+	Edition{pages} to Page{edition}
+}
+
+relationship OneToMany {
+	Page{measureBoxes} to MeasureBox{page}
+}
+
+paginate Page with infinite-scroll
+paginate Edition with infinite-scroll
+paginate Project with infinite-scroll
+paginate MeasureBox with infinite-scroll
+
+
+// Set service options to all except few
+service all with serviceClass
+
+filter Project
+filter Edition
+filter Page
+filter MeasureBox
+
+

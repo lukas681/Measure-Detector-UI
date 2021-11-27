@@ -42,6 +42,8 @@
     "devServerPort": 4200,
     "clientPackageManager": "npm",
     "languages": ["de", "en"],
-    "enableGradleEnterprise": false
+    "enableGradleEnterprise": false,
+    "entities": ["Project", "Edition", "Page", "MeasureBox", "Tag"],
+    "lastLiquibaseTimestamp": 1638011428000
   }
 }
