@@ -1,0 +1,108 @@
+<div>
+  <h2 id="page-heading" data-cy="MeasureBoxHeading">
+    <span jhiTranslate="measureDetectorApp.measureBox.home.title">Measure Boxes</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="reset()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span jhiTranslate="measureDetectorApp.measureBox.home.refreshListLabel">Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-measure-box"
+        [routerLink]="['/measure-box/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span jhiTranslate="measureDetectorApp.measureBox.home.createLabel"> Create a new Measure Box </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="measureBoxes?.length === 0">
+    <span jhiTranslate="measureDetectorApp.measureBox.home.notFound">No measureBoxes found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="measureBoxes && measureBoxes.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="reset()">
+          <th scope="col" jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="ulx">
+            <span jhiTranslate="measureDetectorApp.measureBox.ulx">Ulx</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="uly">
+            <span jhiTranslate="measureDetectorApp.measureBox.uly">Uly</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="lrx">
+            <span jhiTranslate="measureDetectorApp.measureBox.lrx">Lrx</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="lry">
+            <span jhiTranslate="measureDetectorApp.measureBox.lry">Lry</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="measureCount">
+            <span jhiTranslate="measureDetectorApp.measureBox.measureCount">Measure Count</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="comment">
+            <span jhiTranslate="measureDetectorApp.measureBox.comment">Comment</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="page.id">
+            <span jhiTranslate="measureDetectorApp.measureBox.page">Page</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
+        <tr *ngFor="let measureBox of measureBoxes; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/measure-box', measureBox.id, 'view']">{{ measureBox.id }}</a>
+          </td>
+          <td>{{ measureBox.ulx }}</td>
+          <td>{{ measureBox.uly }}</td>
+          <td>{{ measureBox.lrx }}</td>
+          <td>{{ measureBox.lry }}</td>
+          <td>{{ measureBox.measureCount }}</td>
+          <td>{{ measureBox.comment }}</td>
+          <td>
+            <div *ngIf="measureBox.page">
+              <a [routerLink]="['/page', measureBox.page?.id, 'view']">{{ measureBox.page?.id }}</a>
+            </div>
+          </td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/measure-box', measureBox.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/measure-box', measureBox.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(measureBox)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

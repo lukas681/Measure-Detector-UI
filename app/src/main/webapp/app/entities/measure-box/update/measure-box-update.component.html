@@ -1,0 +1,90 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2
+        id="jhi-measure-box-heading"
+        data-cy="MeasureBoxCreateUpdateHeading"
+        jhiTranslate="measureDetectorApp.measureBox.home.createOrEditLabel"
+      >
+        Create or edit a Measure Box
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-control-label" jhiTranslate="global.field.id" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="measureDetectorApp.measureBox.ulx" for="field_ulx">Ulx</label>
+          <input type="number" class="form-control" name="ulx" id="field_ulx" data-cy="ulx" formControlName="ulx" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="measureDetectorApp.measureBox.uly" for="field_uly">Uly</label>
+          <input type="number" class="form-control" name="uly" id="field_uly" data-cy="uly" formControlName="uly" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="measureDetectorApp.measureBox.lrx" for="field_lrx">Lrx</label>
+          <input type="number" class="form-control" name="lrx" id="field_lrx" data-cy="lrx" formControlName="lrx" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="measureDetectorApp.measureBox.lry" for="field_lry">Lry</label>
+          <input type="number" class="form-control" name="lry" id="field_lry" data-cy="lry" formControlName="lry" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="measureDetectorApp.measureBox.measureCount" for="field_measureCount"
+            >Measure Count</label
+          >
+          <input
+            type="number"
+            class="form-control"
+            name="measureCount"
+            id="field_measureCount"
+            data-cy="measureCount"
+            formControlName="measureCount"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="measureDetectorApp.measureBox.comment" for="field_comment">Comment</label>
+          <input type="text" class="form-control" name="comment" id="field_comment" data-cy="comment" formControlName="comment" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="measureDetectorApp.measureBox.page" for="field_page">Page</label>
+          <select class="form-control" id="field_page" data-cy="page" name="page" formControlName="page">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="pageOption.id === editForm.get('page')!.value?.id ? editForm.get('page')!.value : pageOption"
+              *ngFor="let pageOption of pagesSharedCollection; trackBy: trackPageById"
+            >
+              {{ pageOption.id }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

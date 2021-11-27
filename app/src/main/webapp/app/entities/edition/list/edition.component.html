@@ -1,0 +1,100 @@
+<div>
+  <h2 id="page-heading" data-cy="EditionHeading">
+    <span jhiTranslate="measureDetectorApp.edition.home.title">Editions</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="reset()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span jhiTranslate="measureDetectorApp.edition.home.refreshListLabel">Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-edition"
+        [routerLink]="['/edition/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span jhiTranslate="measureDetectorApp.edition.home.createLabel"> Create a new Edition </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="editions?.length === 0">
+    <span jhiTranslate="measureDetectorApp.edition.home.notFound">No editions found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="editions && editions.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="reset()">
+          <th scope="col" jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="title">
+            <span jhiTranslate="measureDetectorApp.edition.title">Title</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="createdDate">
+            <span jhiTranslate="measureDetectorApp.edition.createdDate">Created Date</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="type">
+            <span jhiTranslate="measureDetectorApp.edition.type">Type</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="description">
+            <span jhiTranslate="measureDetectorApp.edition.description">Description</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="project.id">
+            <span jhiTranslate="measureDetectorApp.edition.project">Project</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
+        <tr *ngFor="let edition of editions; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/edition', edition.id, 'view']">{{ edition.id }}</a>
+          </td>
+          <td>{{ edition.title }}</td>
+          <td>{{ edition.createdDate | formatMediumDatetime }}</td>
+          <td jhiTranslate="{{ 'measureDetectorApp.EditionType.' + edition.type }}">{{ edition.type }}</td>
+          <td>{{ edition.description }}</td>
+          <td>
+            <div *ngIf="edition.project">
+              <a [routerLink]="['/project', edition.project?.id, 'view']">{{ edition.project?.id }}</a>
+            </div>
+          </td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/edition', edition.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/edition', edition.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(edition)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

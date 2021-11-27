@@ -1,0 +1,47 @@
+{
+  "name": "MeasureBox",
+  "fields": [
+    {
+      "fieldName": "ulx",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "uly",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "lrx",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "lry",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "measureCount",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "comment",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "page",
+      "otherEntityRelationshipName": "measureBoxes",
+      "relationshipName": "page"
+    }
+  ],
+  "entityTableName": "measure_box",
+  "dto": "no",
+  "pagination": "infinite-scroll",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20211127111027"
+}

@@ -1,0 +1,30 @@
+{
+  "measureDetectorApp": {
+    "measureBox": {
+      "home": {
+        "title": "Measure Boxes",
+        "refreshListLabel": "Liste aktualisieren",
+        "createLabel": "Measure Box erstellen",
+        "createOrEditLabel": "Measure Box erstellen oder bearbeiten",
+        "notFound": "Keine Measure Boxes gefunden"
+      },
+      "created": "Measure Box erstellt mit ID {{ param }}",
+      "updated": "Measure Box aktualisiert mit ID {{ param }}",
+      "deleted": "Measure Box gelöscht mit ID {{ param }}",
+      "delete": {
+        "question": "Soll Measure Box {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Measure Box"
+      },
+      "id": "ID",
+      "ulx": "Ulx",
+      "uly": "Uly",
+      "lrx": "Lrx",
+      "lry": "Lry",
+      "measureCount": "Measure Count",
+      "comment": "Comment",
+      "page": "Page"
+    }
+  }
+}

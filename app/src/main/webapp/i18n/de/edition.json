@@ -1,0 +1,29 @@
+{
+  "measureDetectorApp": {
+    "edition": {
+      "home": {
+        "title": "Editions",
+        "refreshListLabel": "Liste aktualisieren",
+        "createLabel": "Edition erstellen",
+        "createOrEditLabel": "Edition erstellen oder bearbeiten",
+        "notFound": "Keine Editions gefunden"
+      },
+      "created": "Edition erstellt mit ID {{ param }}",
+      "updated": "Edition aktualisiert mit ID {{ param }}",
+      "deleted": "Edition gelöscht mit ID {{ param }}",
+      "delete": {
+        "question": "Soll Edition {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Edition"
+      },
+      "id": "ID",
+      "title": "Title",
+      "createdDate": "Created Date",
+      "type": "Type",
+      "description": "Description",
+      "pages": "Pages",
+      "project": "Project"
+    }
+  }
+}

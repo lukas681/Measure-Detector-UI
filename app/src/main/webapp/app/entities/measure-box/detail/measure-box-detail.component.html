@@ -1,0 +1,58 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="measureBox">
+      <h2 data-cy="measureBoxDetailsHeading"><span jhiTranslate="measureDetectorApp.measureBox.detail.title">Measure Box</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ measureBox.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="measureDetectorApp.measureBox.ulx">Ulx</span></dt>
+        <dd>
+          <span>{{ measureBox.ulx }}</span>
+        </dd>
+        <dt><span jhiTranslate="measureDetectorApp.measureBox.uly">Uly</span></dt>
+        <dd>
+          <span>{{ measureBox.uly }}</span>
+        </dd>
+        <dt><span jhiTranslate="measureDetectorApp.measureBox.lrx">Lrx</span></dt>
+        <dd>
+          <span>{{ measureBox.lrx }}</span>
+        </dd>
+        <dt><span jhiTranslate="measureDetectorApp.measureBox.lry">Lry</span></dt>
+        <dd>
+          <span>{{ measureBox.lry }}</span>
+        </dd>
+        <dt><span jhiTranslate="measureDetectorApp.measureBox.measureCount">Measure Count</span></dt>
+        <dd>
+          <span>{{ measureBox.measureCount }}</span>
+        </dd>
+        <dt><span jhiTranslate="measureDetectorApp.measureBox.comment">Comment</span></dt>
+        <dd>
+          <span>{{ measureBox.comment }}</span>
+        </dd>
+        <dt><span jhiTranslate="measureDetectorApp.measureBox.page">Page</span></dt>
+        <dd>
+          <div *ngIf="measureBox.page">
+            <a [routerLink]="['/page', measureBox.page?.id, 'view']">{{ measureBox.page?.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/measure-box', measureBox.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

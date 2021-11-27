@@ -1,0 +1,9 @@
+{
+  "measureDetectorApp": {
+    "EditionType": {
+      "null": "",
+      "SCORE": "SCORE",
+      "SINGLEVOICE": "SINGLEVOICE"
+    }
+  }
+}

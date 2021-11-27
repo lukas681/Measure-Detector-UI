@@ -1,0 +1,42 @@
+{
+  "name": "Page",
+  "fields": [
+    {
+      "fieldName": "pageNr",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "imgFileReference",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "nextPage",
+      "fieldType": "Long"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "measureBox",
+      "otherEntityRelationshipName": "page",
+      "relationshipName": "measureBoxes"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "edition",
+      "otherEntityRelationshipName": "pages",
+      "relationshipName": "edition"
+    }
+  ],
+  "entityTableName": "page",
+  "dto": "no",
+  "pagination": "infinite-scroll",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20211127111026"
+}

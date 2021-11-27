@@ -1,0 +1,28 @@
+{
+  "measureDetectorApp": {
+    "page": {
+      "home": {
+        "title": "Pages",
+        "refreshListLabel": "Liste aktualisieren",
+        "createLabel": "Page erstellen",
+        "createOrEditLabel": "Page erstellen oder bearbeiten",
+        "notFound": "Keine Pages gefunden"
+      },
+      "created": "Page erstellt mit ID {{ param }}",
+      "updated": "Page aktualisiert mit ID {{ param }}",
+      "deleted": "Page gelöscht mit ID {{ param }}",
+      "delete": {
+        "question": "Soll Page {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Page"
+      },
+      "id": "ID",
+      "pageNr": "Page Nr",
+      "imgFileReference": "Img File Reference",
+      "nextPage": "Next Page",
+      "measureBoxes": "Measure Boxes",
+      "edition": "Edition"
+    }
+  }
+}
