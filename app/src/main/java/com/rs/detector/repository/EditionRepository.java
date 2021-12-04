@@ -23,7 +23,6 @@ public interface EditionRepository extends R2dbcRepository<Edition, Long>, Editi
     @Query("SELECT * FROM edition entity WHERE entity.project_id IS NULL")
     Flux<Edition> findAllWhereProjectIsNull();
 
-    // just to avoid having unambigous methods
     @Override
     Flux<Edition> findAll();
 

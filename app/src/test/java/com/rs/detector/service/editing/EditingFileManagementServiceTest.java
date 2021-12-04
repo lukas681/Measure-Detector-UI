@@ -2,6 +2,7 @@ package com.rs.detector.service.editing;
 
 import com.rs.detector.config.ApplicationProperties;
 import com.rs.detector.domain.Edition;
+import com.rs.detector.domain.Project;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class EditingFileManagementServiceTest {
 
     Edition testEdition;
+    Project testProject;
+
     String sep = File.separator;
 
     @Autowired
@@ -31,9 +34,15 @@ class EditingFileManagementServiceTest {
 
     @BeforeEach
     public void setup() {
+
+        testProject = new Project()
+            .name("TestProject")
+            .composer("Richi Strauß");
+
         testEdition = new Edition()
             .title("testTitle")
-            .pDFFileName("testEdition.pdf");
+            .pDFFileName("testEdition.pdf")
+        .project(testProject);
     }
 
     @Test
@@ -67,5 +76,14 @@ class EditingFileManagementServiceTest {
     void basePathLoadedCorrectly() {
         System.out.println(applicationProperties.getEditionResourceBasePath());
        assert(applicationProperties.getEditionResourceBasePath().equals("build/res"));
+    }
+
+    @Test
+    void uploadNewEdition() {
+
+    }
+
+    @Test
+    void processEdition() {
     }
 }

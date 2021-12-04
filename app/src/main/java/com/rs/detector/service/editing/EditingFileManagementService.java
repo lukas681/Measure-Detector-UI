@@ -77,6 +77,8 @@ public class EditingFileManagementService {
         return document;
     }
 
+// TODO Decide if necessary public PDDocument deletePdfFile(Edition edition) throws IOException {
+
     /**
      * Checks, whether the PDF file provided is encrypted
       * @param pdf
