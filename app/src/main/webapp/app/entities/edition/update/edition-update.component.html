@@ -20,6 +20,14 @@
             <small class="form-text text-danger" *ngIf="editForm.get('title')?.errors?.required" jhiTranslate="entity.validation.required">
               This field is required.
             </small>
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('title')?.errors?.pattern"
+              jhiTranslate="entity.validation.pattern"
+              [translateValues]="{ pattern: 'Title' }"
+            >
+              This field should follow pattern for "Title".
+            </small>
           </div>
         </div>
 
@@ -61,6 +69,20 @@
             id="field_description"
             data-cy="description"
             formControlName="description"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="measureDetectorApp.edition.pDFFileName" for="field_pDFFileName"
+            >P DF File Name</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="pDFFileName"
+            id="field_pDFFileName"
+            data-cy="pDFFileName"
+            formControlName="pDFFileName"
           />
         </div>
 

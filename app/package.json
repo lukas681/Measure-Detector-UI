@@ -5,6 +5,7 @@
   "description": "Description for MeasureDetector",
   "license": "UNLICENSED",
   "scripts": {
+    "generate:api": "openapi-generator-cli generate -g typescript-angular -i ./api/api.yml -o ./src/main/webapp/app/shared/model/openapi --global-property models" ,
     "app:start": "./gradlew",
     "backend:build-cache": "npm run backend:info && npm run backend:nohttp:test && npm run ci:e2e:package",
     "backend:doc:test": "./gradlew javadoc -x webapp",
@@ -85,6 +86,7 @@
     "@ng-bootstrap/ng-bootstrap": "10.0.0",
     "@ngx-translate/core": "13.0.0",
     "@ngx-translate/http-loader": "6.0.0",
+    "@openapitools/openapi-generator-cli": "^2.4.18",
     "bootstrap": "4.6.1",
     "bootswatch": "4.6.1",
     "dayjs": "1.10.7",

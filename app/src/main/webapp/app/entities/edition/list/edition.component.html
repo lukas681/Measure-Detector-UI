@@ -45,6 +45,9 @@
           <th scope="col" jhiSortBy="description">
             <span jhiTranslate="measureDetectorApp.edition.description">Description</span> <fa-icon icon="sort"></fa-icon>
           </th>
+          <th scope="col" jhiSortBy="pDFFileName">
+            <span jhiTranslate="measureDetectorApp.edition.pDFFileName">P DF File Name</span> <fa-icon icon="sort"></fa-icon>
+          </th>
           <th scope="col" jhiSortBy="project.id">
             <span jhiTranslate="measureDetectorApp.edition.project">Project</span> <fa-icon icon="sort"></fa-icon>
           </th>
@@ -60,6 +63,7 @@
           <td>{{ edition.createdDate | formatMediumDatetime }}</td>
           <td jhiTranslate="{{ 'measureDetectorApp.EditionType.' + edition.type }}">{{ edition.type }}</td>
           <td>{{ edition.description }}</td>
+          <td>{{ edition.pDFFileName }}</td>
           <td>
             <div *ngIf="edition.project">
               <a [routerLink]="['/project', edition.project?.id, 'view']">{{ edition.project?.id }}</a>

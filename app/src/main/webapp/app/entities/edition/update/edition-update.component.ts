@@ -26,10 +26,11 @@ export class EditionUpdateComponent implements OnInit {
 
   editForm = this.fb.group({
     id: [],
-    title: [null, [Validators.required]],
+    title: [null, [Validators.required, Validators.pattern('^[A-Z-a-z\\d]+$')]],
     createdDate: [],
     type: [],
     description: [],
+    pDFFileName: [],
     project: [],
   });
 
@@ -97,6 +98,7 @@ export class EditionUpdateComponent implements OnInit {
       createdDate: edition.createdDate ? edition.createdDate.format(DATE_TIME_FORMAT) : null,
       type: edition.type,
       description: edition.description,
+      pDFFileName: edition.pDFFileName,
       project: edition.project,
     });
 
@@ -123,6 +125,7 @@ export class EditionUpdateComponent implements OnInit {
         : undefined,
       type: this.editForm.get(['type'])!.value,
       description: this.editForm.get(['description'])!.value,
+      pDFFileName: this.editForm.get(['pDFFileName'])!.value,
       project: this.editForm.get(['project'])!.value,
     };
   }

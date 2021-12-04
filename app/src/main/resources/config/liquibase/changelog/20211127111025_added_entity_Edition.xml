@@ -15,7 +15,7 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="title" type="varchar(255)">
-                <constraints nullable="false" />
+                <constraints nullable="false" unique="true" uniqueConstraintName="ux_edition__title" />
             </column>
             <column name="created_date" type="${datetimeType}">
                 <constraints nullable="true" />
@@ -24,6 +24,9 @@
                 <constraints nullable="true" />
             </column>
             <column name="description" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="p_df_file_name" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
             <column name="project_id" type="bigint">
@@ -55,6 +58,7 @@
             <column name="created_date" type="date"/>
             <column name="type" type="string"/>
             <column name="description" type="string"/>
+            <column name="p_df_file_name" type="string"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

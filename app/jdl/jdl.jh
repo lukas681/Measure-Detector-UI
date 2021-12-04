@@ -15,10 +15,13 @@ entity Project  {
 }
 
 entity Edition {
-  title String required,
+ /**
+ */
+  title String required pattern(/^[A-Z-a-z\d]+$/) unique required,
   createdDate Instant,
   type EditionType,
-  description String
+  description String,
+  PDFFileName String
 }
 
 entity Page {

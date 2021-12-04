@@ -9,6 +9,7 @@ export interface IEdition {
   createdDate?: dayjs.Dayjs | null;
   type?: EditionType | null;
   description?: string | null;
+  pDFFileName?: string | null;
   pages?: IPage[] | null;
   project?: IProject | null;
 }
@@ -20,6 +21,7 @@ export class Edition implements IEdition {
     public createdDate?: dayjs.Dayjs | null,
     public type?: EditionType | null,
     public description?: string | null,
+    public pDFFileName?: string | null,
     public pages?: IPage[] | null,
     public project?: IProject | null
   ) {}

@@ -30,6 +30,7 @@ describe('Edition Service', () => {
       createdDate: currentDate,
       type: EditionType.SCORE,
       description: 'AAAAAAA',
+      pDFFileName: 'AAAAAAA',
     };
   });
 
@@ -80,6 +81,7 @@ describe('Edition Service', () => {
           createdDate: currentDate.format(DATE_TIME_FORMAT),
           type: 'BBBBBB',
           description: 'BBBBBB',
+          pDFFileName: 'BBBBBB',
         },
         elemDefault
       );
@@ -102,6 +104,7 @@ describe('Edition Service', () => {
       const patchObject = Object.assign(
         {
           title: 'BBBBBB',
+          pDFFileName: 'BBBBBB',
         },
         new Edition()
       );
@@ -130,6 +133,7 @@ describe('Edition Service', () => {
           createdDate: currentDate.format(DATE_TIME_FORMAT),
           type: 'BBBBBB',
           description: 'BBBBBB',
+          pDFFileName: 'BBBBBB',
         },
         elemDefault
       );
@@ -186,7 +190,7 @@ describe('Edition Service', () => {
       });
 
       it('should add only unique Edition to an array', () => {
-        const editionArray: IEdition[] = [{ id: 123 }, { id: 456 }, { id: 58873 }];
+        const editionArray: IEdition[] = [{ id: 123 }, { id: 456 }, { id: 54733 }];
         const editionCollection: IEdition[] = [{ id: 123 }];
         expectedResult = service.addEditionToCollectionIfMissing(editionCollection, ...editionArray);
         expect(expectedResult).toHaveLength(3);

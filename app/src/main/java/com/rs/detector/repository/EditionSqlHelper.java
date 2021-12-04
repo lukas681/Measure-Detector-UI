@@ -15,6 +15,7 @@ public class EditionSqlHelper {
         columns.add(Column.aliased("created_date", table, columnPrefix + "_created_date"));
         columns.add(Column.aliased("type", table, columnPrefix + "_type"));
         columns.add(Column.aliased("description", table, columnPrefix + "_description"));
+        columns.add(Column.aliased("p_df_file_name", table, columnPrefix + "_p_df_file_name"));
 
         columns.add(Column.aliased("project_id", table, columnPrefix + "_project_id"));
         return columns;

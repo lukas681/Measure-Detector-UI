@@ -1,8 +1,8 @@
 openapi: 3.0.0
 info:
   version: 1.0.0
-  title: Sample API
-  description: A sample API to illustrate OpenAPI concepts
+  title: API Measure Detector UI
+  description: Provides a bunch of useful REST Endpoints for the Measure Detector UI
 paths:
   /api/list:
     get:
@@ -10,3 +10,45 @@ paths:
       responses:
         '200':
           description: Successful response
+
+  /api/addEdition:
+    post:
+      summary: Adds a new edition + a corresponding
+      operationId: addEdition
+      tags:
+        - edition
+        - add
+      responses:
+        "200":
+          description: Expected response to a valid request
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/ApiOrchChartHome'
+        "404":
+          description: not found
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/ApiOrchError'
+        "501":
+          description: server misconfiguration
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/ApiOrchError'
+components:
+  schemas:
+    ApiOrchAsyncJob:
+      type: object
+      properties:
+        id:
+          type: number
+        type:
+          type: string
+        data:
+          type: string
+        status:
+          type: string
+        vib:
+          type: object

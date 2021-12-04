@@ -32,6 +32,7 @@ public class EditionRowMapper implements BiFunction<Row, String, Edition> {
         entity.setCreatedDate(converter.fromRow(row, prefix + "_created_date", Instant.class));
         entity.setType(converter.fromRow(row, prefix + "_type", EditionType.class));
         entity.setDescription(converter.fromRow(row, prefix + "_description", String.class));
+        entity.setpDFFileName(converter.fromRow(row, prefix + "_p_df_file_name", String.class));
         entity.setProjectId(converter.fromRow(row, prefix + "_project_id", Long.class));
         return entity;
     }

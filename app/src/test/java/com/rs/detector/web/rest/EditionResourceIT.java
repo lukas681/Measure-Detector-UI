@@ -47,6 +47,9 @@ class EditionResourceIT {
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
+    private static final String DEFAULT_P_DF_FILE_NAME = "AAAAAAAAAA";
+    private static final String UPDATED_P_DF_FILE_NAME = "BBBBBBBBBB";
+
     private static final String ENTITY_API_URL = "/api/editions";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -75,7 +78,8 @@ class EditionResourceIT {
             .title(DEFAULT_TITLE)
             .createdDate(DEFAULT_CREATED_DATE)
             .type(DEFAULT_TYPE)
-            .description(DEFAULT_DESCRIPTION);
+            .description(DEFAULT_DESCRIPTION)
+            .pDFFileName(DEFAULT_P_DF_FILE_NAME);
         return edition;
     }
 
@@ -90,7 +94,8 @@ class EditionResourceIT {
             .title(UPDATED_TITLE)
             .createdDate(UPDATED_CREATED_DATE)
             .type(UPDATED_TYPE)
-            .description(UPDATED_DESCRIPTION);
+            .description(UPDATED_DESCRIPTION)
+            .pDFFileName(UPDATED_P_DF_FILE_NAME);
         return edition;
     }
 
@@ -134,6 +139,7 @@ class EditionResourceIT {
         assertThat(testEdition.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
         assertThat(testEdition.getType()).isEqualTo(DEFAULT_TYPE);
         assertThat(testEdition.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
+        assertThat(testEdition.getpDFFileName()).isEqualTo(DEFAULT_P_DF_FILE_NAME);
     }
 
     @Test
@@ -204,7 +210,9 @@ class EditionResourceIT {
             .jsonPath("$.[*].type")
             .value(hasItem(DEFAULT_TYPE.toString()))
             .jsonPath("$.[*].description")
-            .value(hasItem(DEFAULT_DESCRIPTION));
+            .value(hasItem(DEFAULT_DESCRIPTION))
+            .jsonPath("$.[*].pDFFileName")
+            .value(hasItem(DEFAULT_P_DF_FILE_NAME));
     }
 
     @Test
@@ -232,7 +240,9 @@ class EditionResourceIT {
             .jsonPath("$.type")
             .value(is(DEFAULT_TYPE.toString()))
             .jsonPath("$.description")
-            .value(is(DEFAULT_DESCRIPTION));
+            .value(is(DEFAULT_DESCRIPTION))
+            .jsonPath("$.pDFFileName")
+            .value(is(DEFAULT_P_DF_FILE_NAME));
     }
 
     @Test
@@ -256,7 +266,12 @@ class EditionResourceIT {
 
         // Update the edition
         Edition updatedEdition = editionRepository.findById(edition.getId()).block();
-        updatedEdition.title(UPDATED_TITLE).createdDate(UPDATED_CREATED_DATE).type(UPDATED_TYPE).description(UPDATED_DESCRIPTION);
+        updatedEdition
+            .title(UPDATED_TITLE)
+            .createdDate(UPDATED_CREATED_DATE)
+            .type(UPDATED_TYPE)
+            .description(UPDATED_DESCRIPTION)
+            .pDFFileName(UPDATED_P_DF_FILE_NAME);
 
         webTestClient
             .put()
@@ -275,6 +290,7 @@ class EditionResourceIT {
         assertThat(testEdition.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
         assertThat(testEdition.getType()).isEqualTo(UPDATED_TYPE);
         assertThat(testEdition.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+        assertThat(testEdition.getpDFFileName()).isEqualTo(UPDATED_P_DF_FILE_NAME);
     }
 
     @Test
@@ -365,6 +381,7 @@ class EditionResourceIT {
         assertThat(testEdition.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
         assertThat(testEdition.getType()).isEqualTo(DEFAULT_TYPE);
         assertThat(testEdition.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
+        assertThat(testEdition.getpDFFileName()).isEqualTo(DEFAULT_P_DF_FILE_NAME);
     }
 
     @Test
@@ -378,7 +395,12 @@ class EditionResourceIT {
         Edition partialUpdatedEdition = new Edition();
         partialUpdatedEdition.setId(edition.getId());
 
-        partialUpdatedEdition.title(UPDATED_TITLE).createdDate(UPDATED_CREATED_DATE).type(UPDATED_TYPE).description(UPDATED_DESCRIPTION);
+        partialUpdatedEdition
+            .title(UPDATED_TITLE)
+            .createdDate(UPDATED_CREATED_DATE)
+            .type(UPDATED_TYPE)
+            .description(UPDATED_DESCRIPTION)
+            .pDFFileName(UPDATED_P_DF_FILE_NAME);
 
         webTestClient
             .patch()
@@ -397,6 +419,7 @@ class EditionResourceIT {
         assertThat(testEdition.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
         assertThat(testEdition.getType()).isEqualTo(UPDATED_TYPE);
         assertThat(testEdition.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+        assertThat(testEdition.getpDFFileName()).isEqualTo(UPDATED_P_DF_FILE_NAME);
     }
 
     @Test

@@ -60,6 +60,9 @@ public class EditionService {
                 if (edition.getDescription() != null) {
                     existingEdition.setDescription(edition.getDescription());
                 }
+                if (edition.getpDFFileName() != null) {
+                    existingEdition.setpDFFileName(edition.getpDFFileName());
+                }
 
                 return existingEdition;
             })

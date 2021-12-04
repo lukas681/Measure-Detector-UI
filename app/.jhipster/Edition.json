@@ -4,7 +4,8 @@
     {
       "fieldName": "title",
       "fieldType": "String",
-      "fieldValidateRules": ["required"]
+      "fieldValidateRules": ["required", "pattern", "unique"],
+      "fieldValidateRulesPattern": "^[A-Z-a-z\\d]+$"
     },
     {
       "fieldName": "createdDate",
@@ -17,6 +18,10 @@
     },
     {
       "fieldName": "description",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "pDFFileName",
       "fieldType": "String"
     }
   ],

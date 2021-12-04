@@ -25,6 +25,7 @@ public class Edition implements Serializable {
     private Long id;
 
     @NotNull(message = "must not be null")
+    @Pattern(regexp = "^[A-Z-a-z\\d]+$")
     @Column("title")
     private String title;
 
@@ -36,6 +37,9 @@ public class Edition implements Serializable {
 
     @Column("description")
     private String description;
+
+    @Column("p_df_file_name")
+    private String pDFFileName;
 
     @Transient
     @JsonIgnoreProperties(value = { "measureBoxes", "edition" }, allowSetters = true)
@@ -113,6 +117,19 @@ public class Edition implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getpDFFileName() {
+        return this.pDFFileName;
+    }
+
+    public Edition pDFFileName(String pDFFileName) {
+        this.setpDFFileName(pDFFileName);
+        return this;
+    }
+
+    public void setpDFFileName(String pDFFileName) {
+        this.pDFFileName = pDFFileName;
     }
 
     public Set<Page> getPages() {
@@ -196,6 +213,7 @@ public class Edition implements Serializable {
             ", createdDate='" + getCreatedDate() + "'" +
             ", type='" + getType() + "'" +
             ", description='" + getDescription() + "'" +
+            ", pDFFileName='" + getpDFFileName() + "'" +
             "}";
     }
 }
