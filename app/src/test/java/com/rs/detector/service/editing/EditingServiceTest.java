@@ -72,6 +72,8 @@ class EditingServiceTest {
         var pdf = PDDocument.load(new File("src/test/resources/scores/aegyptische-helena.pdf"));
         // Should create a new object and stores the file
 
+        // We do not want to generate everything of the 248 example pages ... This is something for the user only :)
+        editingService.getEditingFileManagementService().setStartIndex(243);
         editingService.uploadNewEdition(testEdition, pdf);
         editingService.extractImagesFromPDF(testEdition);
     }

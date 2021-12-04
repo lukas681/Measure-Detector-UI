@@ -58,7 +58,7 @@ public class FileUtils {
      * Extracts all pages from a PDF document and stores it to a defined location.
      * @param documentToConvert the document to convert
      * @param outputPath The location where the pngs should be stores
-     * @param firstPage first page on which to start converting
+     * @param firstPage first page on which to start converting. Index Starting at zero.
      * @throws IOException
      */
     public void convertPdf2Img2(@NotNull PDDocument documentToConvert, @NotNull Path outputPath, int firstPage) throws IOException {
@@ -67,12 +67,25 @@ public class FileUtils {
         var pdfRenderer = new PDFRenderer(documentToConvert);
         String fileName = "";
 
+
         for (int pageNumber = firstPage; pageNumber < documentToConvert.getNumberOfPages(); ++pageNumber) {
+            // TODO maybe, we have to increase the rendered DPI size to achieve better result in the recognition
+            //  afterwards.
             BufferedImage bim = pdfRenderer.renderImage(pageNumber);
             var destDir = outputPath.toString() + File.separator + fileName + "_" + pageNumber + ".png";
             log.debug("Destination: " + destDir);
             ImageIO.write(bim, "png", new File(destDir));
         }
         documentToConvert.close();
+    }
+
+    /**
+     * Extracts all pages from a PDF document and stores it to a defined location.
+     * @param documentToConvert the document to convert
+     * @param outputPath The location where the pngs should be stores
+     * @throws IOException
+     */
+    public void convertPdf2Img2(@NotNull PDDocument documentToConvert, @NotNull Path outputPath) throws IOException {
+        this.convertPdf2Img2(documentToConvert, outputPath, 0);
     }
 }

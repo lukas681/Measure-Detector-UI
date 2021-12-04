@@ -37,7 +37,11 @@ public class EditingService {
      * Extracts  the pages as images from an Edition
      * @param e
      */
-    public void extractImagesFromPDF(Edition e) {
+    public void extractImagesFromPDF(Edition e) throws IOException {
         editingFileManagementService.extractImagesFromPDF(e);
+    }
+
+    public EditingFileManagementService getEditingFileManagementService() {
+        return this.editingFileManagementService;
     }
 }

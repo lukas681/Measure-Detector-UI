@@ -2,6 +2,7 @@ package com.rs.detector.service.editing;
 
 import com.rs.detector.config.ApplicationProperties;
 import com.rs.detector.domain.Edition;
+import com.rs.detector.domain.Project;
 import com.rs.detector.service.ProjectService;
 import com.rs.detector.service.util.FileUtils;
 import com.sun.istack.NotNull;
@@ -35,6 +36,7 @@ public class EditingFileManagementService {
 
     private Path basePathEditionPath; // To be filled in constructor.
 
+    private int startIndex = 0;
 
     public EditingFileManagementService(ApplicationProperties applicationProperties) throws IOException {
         basePathEditionPath =  Path.of(applicationProperties.getEditionResourceBasePath());
@@ -69,14 +71,12 @@ public class EditingFileManagementService {
      * @return
      */
     public PDDocument loadPdfFile(Edition edition) throws IOException {
+        // TODO Add project reference!
         assert(edition.getpDFFileName() != null);
         assert(edition.getTitle() != null);
 
-        String pdfPath =
-            basePathEditionPath.toString() +
-                File.separator + edition.getTitle() +
-                File.separator + edition.getpDFFileName();
-        // TODO Maybe unneccesary.
+        String pdfPath = constructPathFronProjectAndEdition(null, edition) + File.separator + edition.getpDFFileName();
+
         if(!edition.getpDFFileName().endsWith(".pdf")) {
            pdfPath += ".pdf";
         }
@@ -84,12 +84,26 @@ public class EditingFileManagementService {
 
         return document;
     }
-    public void extractImagesFromPDF(Edition e) {
+    public void extractImagesFromPDF(Edition e) throws IOException {
         assert(e.getProjectId() != null);
+
         var parentProject = projectService.findOne(e.getProjectId()).block();
         System.out.println(parentProject);
 
-        System.out.println("Test");
+        PDDocument loadedEditionPdf = this.loadPdfFile(e);
+
+        Path imageStorageLocation = Path.of(constructPathFronProjectAndEdition(null, e) + "/split");
+        createOutputPathIfNotExistent(imageStorageLocation);
+
+        fileUtils.convertPdf2Img2(loadedEditionPdf, imageStorageLocation, startIndex);
+
+    }
+
+
+    private void createOutputPathIfNotExistent(Path imageStorageLocation) throws IOException {
+        if(!Files.exists(imageStorageLocation)) {
+            Files.createDirectories(imageStorageLocation);
+        }
     }
 
 // TODO Decide if necessary public PDDocument deletePdfFile(Edition edition) throws IOException {
@@ -112,5 +126,17 @@ public class EditingFileManagementService {
             Files.createDirectories(basePathEditionPath);
         }
     }
+    public String constructPathFronProjectAndEdition(Project p, Edition e) {
+        // TODO add project here.
+        return basePathEditionPath.toString() +
+                File.separator + e.getTitle();
+    }
 
+    public int getStartIndex() {
+        return startIndex;
+    }
+
+    public void setStartIndex(int startIndex) {
+        this.startIndex = startIndex;
+    }
 }
