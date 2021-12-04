@@ -3,6 +3,7 @@ package com.rs.detector.service.util;
 import com.rs.detector.config.ApplicationProperties;
 import com.rs.detector.security.DomainUserDetailsService;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.h2.api.Interval;
 import org.slf4j.Logger;
@@ -79,7 +80,7 @@ public class FileUtils {
 
 
         for (int pageNumber = firstPage; pageNumber < documentToConvert.getNumberOfPages(); ++pageNumber) {
-            BufferedImage bim = pdfRenderer.renderImageWithDPI(pageNumber, imageSplitDPI);
+            BufferedImage bim = pdfRenderer.renderImageWithDPI(pageNumber, imageSplitDPI, ImageType.RGB);
             var destDir = outputPath.toString() + File.separator + fileName + "_" + pageNumber + ".png";
             log.debug("Destination: " + destDir);
             ImageIO.write(bim, "png", new File(destDir));

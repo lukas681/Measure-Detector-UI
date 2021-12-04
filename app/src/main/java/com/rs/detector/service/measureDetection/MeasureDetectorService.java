@@ -1,11 +1,13 @@
 package com.rs.detector.service.measureDetection;
 
-import org.springframework.stereotype.Service;
+import java.awt.image.BufferedImage;
 
-@Service
-public class MeasureDetectorService {
+public interface MeasureDetectorService {
 
-   public void test() {
 
-   }
+    /**
+     *
+     * @return
+     */
+    public MeasureDetectorResult process(BufferedImage pngImage);
 }

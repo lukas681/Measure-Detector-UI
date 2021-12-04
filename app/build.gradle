@@ -277,8 +277,11 @@ dependencies {
     testImplementation "io.r2dbc:r2dbc-h2"
     implementation "io.r2dbc:r2dbc-h2"
     developmentOnly "org.springframework.boot:spring-boot-devtools:${springBootVersion}"
-    implementation "org.tensorflow:libtensorflow:1.5.0"
-    implementation "org.tensorflow:libtensorflow_jni_gpu:1.5.0"
+    implementation "org.tensorflow:libtensorflow:1.13.1"
+//    implementation "org.tensorflow:libtensorflow_jni_gpu:1.13.1"
+    implementation 'org.processing:core:3.3.6'
+
+    implementation "org.tensorflow:libtensorflow_jni:1.13.1"
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
 }
 
@@ -306,11 +309,9 @@ task downloadMeasureDetectorModel(type: Download) {
     // Not sure, whether this is a perma link
     acceptAnyCertificate true
     src "https://github.com/OMR-Research/MeasureDetector/releases/download/v1.0/2019-05-16_faster-rcnn-inception-resnet-v2.pb"
-    dest buildDir.toString() + "/measure-detector-tf-model"
+    dest buildDir.toString() + "/measure-detector-tf-model/md-model.pb"
     overwrite false
-
 }
-
 
 if (project.hasProperty("nodeInstall")) {
     // Workaround node grade plugin not working on apple silicon https://github.com/node-gradle/gradle-node-plugin/issues/154
@@ -323,5 +324,6 @@ if (project.hasProperty("nodeInstall")) {
         download = downloadNode
     }
 }
+
 compileJava.dependsOn processResources
 processResources.dependsOn bootBuildInfo

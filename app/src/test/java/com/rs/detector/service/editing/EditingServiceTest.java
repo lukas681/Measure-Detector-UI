@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @TestPropertySource(properties = {
     "application.editionResourceBasePath=build/res",
-    "application.imageSplitDPI=450"
+    "application.imageSplitDPI=400"
 })
 class EditingServiceTest {
 
