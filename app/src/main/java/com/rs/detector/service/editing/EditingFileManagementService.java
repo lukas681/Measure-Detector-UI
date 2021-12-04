@@ -6,7 +6,7 @@ import com.sun.istack.NotNull;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -21,17 +21,18 @@ import java.nio.file.Path;
  */
 public class EditingFileManagementService {
 
-    @Autowired
-    ApplicationProperties applicationProperties;
-
     private final Logger log = LoggerFactory.getLogger(EditingFileManagementService.class);
 
-    public EditingFileManagementService () throws IOException {
-        createNecessaryDirs();
-    }
+    private final ApplicationProperties applicationProperties;
 
-    // TODO outsource property
-    private final Path basePathEdition = Path.of(applicationProperties.getEditionResourceBasePath());
+    private Path basePathEditionPath; // To be filled in constructor.
+
+
+    public EditingFileManagementService(ApplicationProperties applicationProperties) throws IOException {
+        basePathEditionPath =  Path.of(applicationProperties.getEditionResourceBasePath());
+        createNecessaryDirs();
+        this.applicationProperties = applicationProperties;
+    }
 
     /**
      * Overwrites
@@ -42,7 +43,7 @@ public class EditingFileManagementService {
         assert(edition.getpDFFileName() != null);
         assert(edition.getTitle() != null);
 
-        String dir = basePathEdition + File.separator + edition.getTitle() + File.separator;
+        String dir = basePathEditionPath.toString() + File.separator + edition.getTitle() + File.separator;
         Files.createDirectories(Path.of(dir));
         Path pdfPath = Path.of(dir + Path.of(edition.getpDFFileName()));
 
@@ -64,7 +65,7 @@ public class EditingFileManagementService {
         assert(edition.getTitle() != null);
 
         String pdfPath =
-            basePathEdition +
+            basePathEditionPath.toString() +
                 File.separator + edition.getTitle() +
                 File.separator + edition.getpDFFileName();
         // TODO Maybe unneccesary.
@@ -86,12 +87,12 @@ public class EditingFileManagementService {
     }
 
     public String getBasePathEdition() {
-        return basePathEdition.toString();
+        return basePathEditionPath.toString();
     }
 
     public void createNecessaryDirs () throws IOException {
-        if(!Files.exists(basePathEdition)){
-            Files.createDirectories(basePathEdition);
+        if(!Files.exists(basePathEditionPath)){
+            Files.createDirectories(basePathEditionPath);
         }
     }
 }
