@@ -10,18 +10,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import reactor.core.publisher.Flux;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestPropertySource(properties = {
     "application.editionResourceBasePath=build/res",
-    "application.imageSplitDPI=200"
+    "application.imageSplitDPI=450"
 })
 class EditingServiceTest {
 
@@ -78,6 +76,7 @@ class EditingServiceTest {
 
         // We do not want to generate everything of the 248 example pages ... This is something for the user only :)
         editingService.getEditingFileManagementService().setStartIndex(243);
+
         editingService.uploadNewEdition(testEdition, pdf);
         editingService.extractImagesFromPDF(testEdition);
     }

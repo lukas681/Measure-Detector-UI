@@ -23,7 +23,7 @@ public class FileUtils {
     private final Logger log = LoggerFactory.getLogger(FileUtils.class);
 
     final ApplicationProperties applicationProperties;
-    private float imageSplitDPI;
+    private int imageSplitDPI;
 
     public FileUtils(ApplicationProperties applicationProperties)  {
         this.applicationProperties = applicationProperties;
@@ -79,9 +79,7 @@ public class FileUtils {
 
 
         for (int pageNumber = firstPage; pageNumber < documentToConvert.getNumberOfPages(); ++pageNumber) {
-            // TODO maybe, we have to increase the rendered DPI size to achieve better result in the recognition
-            //  afterwards.
-            BufferedImage bim = pdfRenderer.renderImageWithDPI(pageNumber, 150);
+            BufferedImage bim = pdfRenderer.renderImageWithDPI(pageNumber, imageSplitDPI);
             var destDir = outputPath.toString() + File.separator + fileName + "_" + pageNumber + ".png";
             log.debug("Destination: " + destDir);
             ImageIO.write(bim, "png", new File(destDir));

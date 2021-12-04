@@ -27,6 +27,7 @@ plugins {
     id "org.sonarqube"
     id "io.spring.nohttp"
     id "com.github.andygoossens.gradle-modernizer-plugin"
+    id "de.undercouch.download" version "4.1.2"
     //jhipster-needle-gradle-plugins - JHipster will add additional gradle plugins here
 }
 
@@ -276,6 +277,8 @@ dependencies {
     testImplementation "io.r2dbc:r2dbc-h2"
     implementation "io.r2dbc:r2dbc-h2"
     developmentOnly "org.springframework.boot:spring-boot-devtools:${springBootVersion}"
+    implementation "org.tensorflow:libtensorflow:1.5.0"
+    implementation "org.tensorflow:libtensorflow_jni_gpu:1.5.0"
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
 }
 
@@ -297,6 +300,15 @@ task cleanResources(type: Delete) {
 
 wrapper {
     gradleVersion = "7.0.2"
+}
+
+task downloadMeasureDetectorModel(type: Download) {
+    // Not sure, whether this is a perma link
+    acceptAnyCertificate true
+    src "https://github.com/OMR-Research/MeasureDetector/releases/download/v1.0/2019-05-16_faster-rcnn-inception-resnet-v2.pb"
+    dest "model"
+    overwrite false
+
 }
 
 
