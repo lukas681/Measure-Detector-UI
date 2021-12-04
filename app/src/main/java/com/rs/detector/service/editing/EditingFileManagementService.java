@@ -1,10 +1,12 @@
 package com.rs.detector.service.editing;
 
+import com.rs.detector.config.ApplicationProperties;
 import com.rs.detector.domain.Edition;
 import com.sun.istack.NotNull;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -19,6 +21,9 @@ import java.nio.file.Path;
  */
 public class EditingFileManagementService {
 
+    @Autowired
+    ApplicationProperties applicationProperties;
+
     private final Logger log = LoggerFactory.getLogger(EditingFileManagementService.class);
 
     public EditingFileManagementService () throws IOException {
@@ -26,7 +31,7 @@ public class EditingFileManagementService {
     }
 
     // TODO outsource property
-    private final Path basePathEdition = Path.of("res" + File.separator);
+    private final Path basePathEdition = Path.of(applicationProperties.getEditionResourceBasePath());
 
     /**
      * Overwrites
@@ -48,14 +53,20 @@ public class EditingFileManagementService {
     }
 
     /**
-     * Loads the corresponding PDF file from a edition
+     * Loads the corresponding PDF file from a edition.
+     *
+     * TODO: Harden this method. Not save for penetration testing.
      * @param edition
      * @return
      */
     public PDDocument loadPdfFile(Edition edition) throws IOException {
         assert(edition.getpDFFileName() != null);
+        assert(edition.getTitle() != null);
 
-        String pdfPath = basePathEdition + File.separator +  edition.getpDFFileName();
+        String pdfPath =
+            basePathEdition +
+                File.separator + edition.getTitle() +
+                File.separator + edition.getpDFFileName();
         // TODO Maybe unneccesary.
         if(!edition.getpDFFileName().endsWith(".pdf")) {
            pdfPath += ".pdf";
