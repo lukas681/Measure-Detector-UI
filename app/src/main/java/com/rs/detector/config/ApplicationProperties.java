@@ -15,12 +15,22 @@ public class ApplicationProperties {
 
     private String editionResourceBasePath;
 
+    private int imageSplitDPI;
+
     public String getEditionResourceBasePath() {
         return editionResourceBasePath;
     }
 
     public void setEditionResourceBasePath(String editionResourceBasePath) {
         this.editionResourceBasePath = editionResourceBasePath;
+    }
+
+    public int getImageSplitDPI() {
+        return imageSplitDPI;
+    }
+
+    public void setImageSplitDPI(int imageSplitDPI) {
+        this.imageSplitDPI = imageSplitDPI;
     }
 }
 

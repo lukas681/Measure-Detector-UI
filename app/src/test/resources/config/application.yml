@@ -91,3 +91,4 @@ jhipster:
 
 application:
   editionResourceBasePath: "res/editions"
+  imageSplitDPI: 150

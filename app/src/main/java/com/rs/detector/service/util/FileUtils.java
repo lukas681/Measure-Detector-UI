@@ -1,11 +1,13 @@
 package com.rs.detector.service.util;
 
+import com.rs.detector.config.ApplicationProperties;
 import com.rs.detector.security.DomainUserDetailsService;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.h2.api.Interval;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
@@ -19,6 +21,14 @@ import java.nio.file.Path;
 public class FileUtils {
 
     private final Logger log = LoggerFactory.getLogger(FileUtils.class);
+
+    final ApplicationProperties applicationProperties;
+    private float imageSplitDPI;
+
+    public FileUtils(ApplicationProperties applicationProperties)  {
+        this.applicationProperties = applicationProperties;
+        imageSplitDPI = applicationProperties.getImageSplitDPI();
+    }
 
     // TODO REFACTOR
     public String convertPdf2Img(String fileInput, Path path, int firstPage) {
@@ -40,7 +50,7 @@ public class FileUtils {
                 String fileName = sourceFile.getName().replace(".pdf", "");
 
                 for (int pageNumber = firstPage; pageNumber < document.getNumberOfPages(); ++pageNumber) {
-                    BufferedImage bim = pdfRenderer.renderImage(pageNumber);
+                    BufferedImage bim = pdfRenderer.renderImageWithDPI(pageNumber, imageSplitDPI);
                     destDir = destinationDir + File.separator + fileName + "_" + pageNumber + ".png";
                     log.debug("Destination Directory: " + destinationDir);
                     ImageIO.write(bim, "png", new File(destDir));
@@ -71,7 +81,7 @@ public class FileUtils {
         for (int pageNumber = firstPage; pageNumber < documentToConvert.getNumberOfPages(); ++pageNumber) {
             // TODO maybe, we have to increase the rendered DPI size to achieve better result in the recognition
             //  afterwards.
-            BufferedImage bim = pdfRenderer.renderImage(pageNumber);
+            BufferedImage bim = pdfRenderer.renderImageWithDPI(pageNumber, 150);
             var destDir = outputPath.toString() + File.separator + fileName + "_" + pageNumber + ".png";
             log.debug("Destination: " + destDir);
             ImageIO.write(bim, "png", new File(destDir));

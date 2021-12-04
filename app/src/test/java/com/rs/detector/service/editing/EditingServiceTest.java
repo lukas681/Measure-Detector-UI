@@ -14,11 +14,15 @@ import reactor.core.publisher.Flux;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@TestPropertySource(properties = {"application.editionResourceBasePath=build/res"})
+@TestPropertySource(properties = {
+    "application.editionResourceBasePath=build/res",
+    "application.imageSplitDPI=200"
+})
 class EditingServiceTest {
 
     private Project testProject;

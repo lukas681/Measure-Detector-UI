@@ -157,3 +157,7 @@ jhipster:
 
 application:
   editionResourceBasePath: "res/editions"
+
+  # PDFBox's default value is 72.
+  # Higher number can decrease performance, but increase the Measure Detection accuracy. TODO: Experiments with the best values.
+  imageSplitDPI: 150
