@@ -5,6 +5,9 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.CascadeType;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
@@ -35,6 +38,7 @@ public class Project implements Serializable {
 
     @Transient
     @JsonIgnoreProperties(value = { "pages", "project" }, allowSetters = true)
+//    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private Set<Edition> editions = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

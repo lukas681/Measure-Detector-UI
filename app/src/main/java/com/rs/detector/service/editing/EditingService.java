@@ -1,14 +1,11 @@
 package com.rs.detector.service.editing;
 
 import com.rs.detector.domain.Edition;
-import com.rs.detector.domain.Project;
-import com.rs.detector.repository.EditionRepository;
-import com.rs.detector.repository.EditionSqlHelper;
 import com.rs.detector.service.EditionService;
+import com.rs.detector.service.ProjectService;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,9 +34,10 @@ public class EditingService {
     }
 
     /**
-     *
+     * Extracts  the pages as images from an Edition
+     * @param e
      */
-    public void processEdition() {
-
+    public void extractImagesFromPDF(Edition e) {
+        editingFileManagementService.extractImagesFromPDF(e);
     }
 }

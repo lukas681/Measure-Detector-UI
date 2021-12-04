@@ -2,11 +2,13 @@ package com.rs.detector.service.editing;
 
 import com.rs.detector.config.ApplicationProperties;
 import com.rs.detector.domain.Edition;
+import com.rs.detector.service.ProjectService;
+import com.rs.detector.service.util.FileUtils;
 import com.sun.istack.NotNull;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -22,6 +24,12 @@ import java.nio.file.Path;
 public class EditingFileManagementService {
 
     private final Logger log = LoggerFactory.getLogger(EditingFileManagementService.class);
+
+    @Autowired
+    FileUtils fileUtils;
+
+    @Autowired
+    private ProjectService projectService;
 
     private final ApplicationProperties applicationProperties;
 
@@ -76,6 +84,13 @@ public class EditingFileManagementService {
 
         return document;
     }
+    public void extractImagesFromPDF(Edition e) {
+        assert(e.getProjectId() != null);
+        var parentProject = projectService.findOne(e.getProjectId()).block();
+        System.out.println(parentProject);
+
+        System.out.println("Test");
+    }
 
 // TODO Decide if necessary public PDDocument deletePdfFile(Edition edition) throws IOException {
 
@@ -97,4 +112,5 @@ public class EditingFileManagementService {
             Files.createDirectories(basePathEditionPath);
         }
     }
+
 }

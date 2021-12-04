@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 import reactor.core.publisher.Flux;
 
 import java.io.File;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@TestPropertySource(properties = {"application.editionResourceBasePath=build/res"})
 class EditingServiceTest {
 
     private Project testProject;
@@ -40,6 +42,7 @@ class EditingServiceTest {
         testProject = new Project()
             .name("TestProject")
             .composer("Richi Strauß");
+        projectRepository.save(testProject).block();
 
         testEdition = new Edition()
             .title("testTitle")
@@ -55,10 +58,21 @@ class EditingServiceTest {
 
        // Testing the creation
        var res = editionRepository.findAll().collectList().block();
-        System.out.println(res);
+       assert(res.get(0).getTitle().equals("testTitle"));
+
+        var projects = projectRepository.findAll().collectList().block();
+       assert(projects.size()>0);
+
+
+//        var res2 = projectRepository.findAllBy().collectList().block();
     }
 
     @Test
-    void processEdition() {
+    void UploadAndsplitPDF() throws IOException {
+        var pdf = PDDocument.load(new File("src/test/resources/scores/aegyptische-helena.pdf"));
+        // Should create a new object and stores the file
+
+        editingService.uploadNewEdition(testEdition, pdf);
+        editingService.extractImagesFromPDF(testEdition);
     }
 }
