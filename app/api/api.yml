@@ -42,13 +42,20 @@ components:
     ApiMeasureDetectorResult:
       type: object
       properties:
-        id:
-          type: number
-        type:
+        measures:
+          $ref: '#/components/schemas/MeasureBoxArray'
+    MeasureBoxArray:
+      type: array
+      items:
+        $ref: '#/components/schemas/MeasureBox'
+    MeasureBox:
+      type: object
+      properties:
+        left:
           type: string
-        data:
+        top:
           type: string
-        status:
+        right:
           type: string
-        vib:
-          type: object
+        bottom:
+          type: string

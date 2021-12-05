@@ -1,6 +1,7 @@
 package com.rs.detector.service.measureDetection.webclient;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rs.detector.web.api.model.ApiMeasureDetectorResult;
 import io.netty.handler.logging.LogLevel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +49,7 @@ public class MeasureDetectorWebClient {
             .build();
     }
 
-    public String detectMeasures(File img) {
+    public ApiMeasureDetectorResult detectMeasures(File img) {
 
         String query = ""; // Empty, but to mark that there WOULD be the option.
         String url = "localhost:8080/upload";
@@ -73,7 +74,7 @@ public class MeasureDetectorWebClient {
 //            })
             .exchange()
             .block()
-            .bodyToMono(String.class)
+            .bodyToMono(ApiMeasureDetectorResult.class)
             .block();
 //            .bodyToMono(new ParameterizedTypeReference<List<ApiMeasureDetectorResult>>() {});
         return result;
