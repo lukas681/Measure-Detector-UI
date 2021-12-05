@@ -39,7 +39,7 @@ paths:
 #                $ref: '#/components/schemas/ApiOrchError'
 components:
   schemas:
-    ApiOrchAsyncJob:
+    ApiMeasureDetectorResult:
       type: object
       properties:
         id:

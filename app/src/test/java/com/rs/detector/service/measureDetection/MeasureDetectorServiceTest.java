@@ -14,6 +14,6 @@ class MeasureDetectorServiceTest {
 
     @Test
     void test1() {
-        measureDetectorService.test();
+//        measureDetectorService.test();
     }
 }
