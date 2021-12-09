@@ -104,6 +104,7 @@ class EditingFileManagementServiceTest {
         editingFileManagementService.extractPagesFromEdition(testProject, testEdition);
         assert(Files.exists(fileLocation));
 
+        pdf.close();
     }
     @Test
     void fileExistentMethodWorkingAndSplittingProcess() throws IOException {
@@ -121,7 +122,8 @@ class EditingFileManagementServiceTest {
 
         editingFileManagementService.setStartIndex(245);
         editingFileManagementService.extractPagesFromEdition(testProject, testEdition);
-       assert(editingFileManagementService.isPageExistent(testProject, testEdition, 245)) ;
+       assert(editingFileManagementService.isPageExistent(testProject, testEdition, 245, ".png")) ;
+       pdf.close();
     }
 
 }

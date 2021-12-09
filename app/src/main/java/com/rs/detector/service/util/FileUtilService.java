@@ -1,14 +1,11 @@
 package com.rs.detector.service.util;
 
 import com.rs.detector.config.ApplicationProperties;
-import com.rs.detector.security.DomainUserDetailsService;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
-import org.h2.api.Interval;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
@@ -19,19 +16,18 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 @Service
-public class FileUtils {
+public class FileUtilService {
 
-    private final Logger log = LoggerFactory.getLogger(FileUtils.class);
+    private final Logger log = LoggerFactory.getLogger(FileUtilService.class);
 
     final ApplicationProperties applicationProperties;
     private int imageSplitDPI;
 
-    public FileUtils(ApplicationProperties applicationProperties)  {
+    public FileUtilService(ApplicationProperties applicationProperties)  {
         this.applicationProperties = applicationProperties;
         imageSplitDPI = applicationProperties.getImageSplitDPI();
     }
 
-    // TODO REFACTOR
     public String convertPdf2Img(String fileInput, Path path, int firstPage) {
         var destDir = "";
         try {

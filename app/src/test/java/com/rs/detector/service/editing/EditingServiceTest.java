@@ -60,7 +60,7 @@ class EditingServiceTest {
 
        // Testing the creation
        var res = editionRepository.findAll().collectList().block();
-       assert(res.get(0).getTitle().equals("testTitle"));
+       assert(res.get(0).getTitle().equals("1"));
 
         var projects = projectRepository.findAll().collectList().block();
        assert(projects.size()>0);

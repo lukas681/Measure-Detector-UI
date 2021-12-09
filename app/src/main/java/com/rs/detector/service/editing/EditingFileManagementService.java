@@ -4,7 +4,7 @@ import com.rs.detector.config.ApplicationProperties;
 import com.rs.detector.domain.Edition;
 import com.rs.detector.domain.Project;
 import com.rs.detector.service.ProjectService;
-import com.rs.detector.service.util.FileUtils;
+import com.rs.detector.service.util.FileUtilService;
 import com.sun.istack.NotNull;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.slf4j.Logger;
@@ -27,7 +27,7 @@ public class EditingFileManagementService {
     private final Logger log = LoggerFactory.getLogger(EditingFileManagementService.class);
 
     @Autowired
-    FileUtils fileUtils;
+    FileUtilService fileUtilService;
 
     @Autowired
     private ProjectService projectService;
@@ -95,7 +95,7 @@ public class EditingFileManagementService {
         Path imageStorageLocation = Path.of(constructPathFromProjectAndEdition(p, e) + "/split");
         createOutputPathIfNotExistent(imageStorageLocation);
 
-        fileUtils.convertPdf2Img2(loadedEditionPdf, imageStorageLocation, startIndex);
+        fileUtilService.convertPdf2Img2(loadedEditionPdf, imageStorageLocation, startIndex);
     }
 
     /**
@@ -107,9 +107,9 @@ public class EditingFileManagementService {
      * @param pageNr
      * @return
      */
-    public boolean isPageExistent(Project p, Edition e, int pageNr) {
+    public boolean isPageExistent(Project p, Edition e, int pageNr, String fileFormat) {
         return Files.exists(
-            Path.of(constructPathFromProjectAndEdition(p, e) + "/split/_" + pageNr)
+            Path.of(constructPathFromProjectAndEdition(p, e) + "/split/_" + pageNr + fileFormat)
         );
     }
 
