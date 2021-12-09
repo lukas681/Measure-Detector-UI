@@ -1,10 +1,13 @@
 package com.rs.detector.service.measureDetection.webclient;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rs.detector.config.ApplicationProperties;
 import com.rs.detector.web.api.model.ApiMeasureDetectorResult;
 import io.netty.handler.logging.LogLevel;
+import jogamp.newt.driver.android.MD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -26,6 +29,9 @@ import java.io.File;
 
 @Service
 public class MeasureDetectorWebClient {
+
+    @Autowired
+    ApplicationProperties applicationProperties;
 
     private final Logger log = LoggerFactory.getLogger(MeasureDetectorWebClient.class);
 
@@ -51,21 +57,18 @@ public class MeasureDetectorWebClient {
 
     public ApiMeasureDetectorResult detectMeasures(File img) {
 
-        String query = ""; // Empty, but to mark that there WOULD be the option.
-        String url = "localhost:8080/upload";
+        String url = constructUrl();
+        String imageName = img.getName();
 
         var builder = new MultipartBodyBuilder();
-//        builder.part("image", new FileSystemResource(img.getPath()))
-//        .header("Content-Disposition", "form-data; name=image; filename=image.ong");
-
         var image = new FileSystemResource(img.getPath());
-        builder.part("image", image)
-            .header("Content-Disposition", "form-data; name=image; filename=image.ong");
-        MultiValueMap<String, HttpEntity<?>> multipartBody = builder.build();
 
+        builder.part("image", image)
+            .header("Content-Disposition", "form-data; name=image; filename=" + imageName);
+        MultiValueMap<String, HttpEntity<?>> multipartBody = builder.build();
         var result = client.post()
             .uri(url)
-            .header(HttpHeaders.CONTENT_LENGTH, "123") // This fucking header MUST be explicitly set .
+            .header(HttpHeaders.CONTENT_LENGTH, "1") // This fucking header MUST be explicitly set .
             .contentType(MediaType.MULTIPART_FORM_DATA)
 //            .body(BodyInserters.fromMultipartData("image", image))
             .bodyValue(multipartBody)
@@ -73,11 +76,20 @@ public class MeasureDetectorWebClient {
 //                httpHeaders.add(HttpHeaders.ACCEPT, MediaType.MULTIPART_FORM_DATA);
 //            })
             .exchange()
+            // TODO This blocks the threat until we have a response. Maybe we should wait asynchonously
             .block()
             .bodyToMono(ApiMeasureDetectorResult.class)
             .block();
-//            .bodyToMono(new ParameterizedTypeReference<List<ApiMeasureDetectorResult>>() {});
         return result;
+    }
+
+
+    private String constructUrl() {
+        int    MDport = applicationProperties.getMeasureDetector().getPort();
+        String MDhost = applicationProperties.getMeasureDetector().getHost();
+        String MDendpoint = applicationProperties.getMeasureDetector().getEndpoint();
+
+        return MDhost + ":" + MDport + MDendpoint;
     }
 
     private ExchangeStrategies getExchangeStrategies() {
@@ -97,6 +109,10 @@ public class MeasureDetectorWebClient {
             .build();
     }
 
+    /**
+     * Just some simple logger...
+     * @return
+     */
     ExchangeFilterFunction logRequest() {
         return ExchangeFilterFunction.ofRequestProcessor(clientRequest -> {
             if (log.isDebugEnabled()) {

@@ -2,22 +2,24 @@ package com.rs.detector.service.measureDetection.webclient;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rs.detector.IntegrationTest;
+import com.rs.detector.config.ApplicationProperties;
 import com.rs.detector.web.api.model.ApiMeasureDetectorResult;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.nio.file.Path;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class MeasureDetectorWebClientTest {
+@IntegrationTest
+class MeasureDetectorWebClientTestIT {
 
     @Autowired
     MeasureDetectorWebClient measureDetectorWebClient;
+
+    @Autowired
+    ApplicationProperties applicationProperties;
 
     @Test
     void detectMeasuresAndTestConnectionToMeas() {
@@ -25,6 +27,7 @@ class MeasureDetectorWebClientTest {
         var res = (measureDetectorWebClient.detectMeasures(f));
         assert(res != null);
         System.out.println(res);
+        System.out.println(applicationProperties.getMeasureDetector().getPort());
     }
     @Test
     void testCorrectJSONParsing() throws JsonProcessingException {

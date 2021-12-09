@@ -17,6 +17,16 @@ public class ApplicationProperties {
 
     private int imageSplitDPI;
 
+    public MeasureDetector getMeasureDetector() {
+        return measureDetector;
+    }
+
+    public void setMeasureDetector(MeasureDetector measureDetector) {
+        this.measureDetector = measureDetector;
+    }
+
+    private MeasureDetector measureDetector;
+
     public String getEditionResourceBasePath() {
         return editionResourceBasePath;
     }
@@ -31,6 +41,40 @@ public class ApplicationProperties {
 
     public void setImageSplitDPI(int imageSplitDPI) {
         this.imageSplitDPI = imageSplitDPI;
+    }
+
+    public static class MeasureDetector {
+
+        private String host;
+
+        public String getHost() {
+            return host;
+        }
+
+        public void setHost(String host) {
+            this.host = host;
+        }
+
+        private int port;
+        private String endpoint;
+
+        public String getEndpoint() {
+            return endpoint;
+        }
+
+        public void setEndpoint(String endpoint) {
+            this.endpoint = endpoint;
+        }
+
+
+        public int getPort() {
+            return port;
+        }
+
+        public void setPort(int port) {
+            this.port = port;
+        }
+
     }
 }
 

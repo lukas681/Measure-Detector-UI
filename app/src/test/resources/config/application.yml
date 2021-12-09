@@ -100,3 +100,7 @@ jhipster:
 application:
   editionResourceBasePath: "res/editions"
   imageSplitDPI: 150
+  measure-detector:
+    host: http://localhost
+    port: 8080
+    endpoint: /upload
