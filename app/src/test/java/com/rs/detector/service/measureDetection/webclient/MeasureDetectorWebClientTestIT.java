@@ -27,8 +27,8 @@ class MeasureDetectorWebClientTestIT {
         var res = (measureDetectorWebClient.detectMeasures(f));
         assert(res != null);
         System.out.println(res);
-        System.out.println(applicationProperties.getMeasureDetector().getPort());
     }
+
     @Test
     void testCorrectJSONParsing() throws JsonProcessingException {
        String example= "{\"measures\": [{\"left\": 356.19469195604324, \"bottom\": 3745.3090223670006, " +

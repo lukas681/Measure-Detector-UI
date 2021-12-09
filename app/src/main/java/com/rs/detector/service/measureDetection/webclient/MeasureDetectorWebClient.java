@@ -48,7 +48,9 @@ public class MeasureDetectorWebClient {
         this.client = WebClient
             .builder()
             .filters(exchangeFilterFunctions -> {
-                exchangeFilterFunctions.add(logRequest());
+                if (log.isDebugEnabled()) {
+                    exchangeFilterFunctions.add(logRequest());
+                }
             })
             .clientConnector(conn)
             .exchangeStrategies(getExchangeStrategies())
