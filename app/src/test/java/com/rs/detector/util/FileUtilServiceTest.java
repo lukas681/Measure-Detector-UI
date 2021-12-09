@@ -15,7 +15,6 @@ import java.nio.file.Paths;
 @SpringBootTest
 class FileUtilServiceTest {
 
-    // "application.editionResourceBasePath=build/res",
     @Autowired
     EditingFileManagementService editingFileManagementService;
 
