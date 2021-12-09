@@ -44,7 +44,7 @@ class EditingFileManagementServiceTest {
         testEdition = new Edition()
             .id(1l)
             .title("testTitle")
-            .pDFFileName("testEdition.pdf")
+            .pDFFileName("aegyptische-helena.pdf")
         .project(testProject);
     }
 
