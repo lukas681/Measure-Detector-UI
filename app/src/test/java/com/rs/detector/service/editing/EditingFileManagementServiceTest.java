@@ -12,6 +12,7 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -84,26 +85,43 @@ class EditingFileManagementServiceTest {
     void PageExistingAfterSplit() throws IOException {
         String basePath = editingFileManagementService.getBasePathEdition();
 
-        // Storing
-        PDDocument pdf = new PDDocument();
+
+        var pdf = PDDocument.load(
+            new File("src/test/resources/scores/aegyptische-helena.pdf")
+        );
         editingFileManagementService.storePDFfile(testProject, testEdition, pdf);
-        Path fileLocation = Path.of(basePath + sep + "testTitle" + sep + "testEdition.pdf");
+
+        Path fileLocation = Path.of(basePath
+            + sep + "testProject"
+            + sep + "testTitle"
+            + sep + "aegyptische-helena.pdf");
+
         System.out.println(fileLocation.toAbsolutePath().toString());
 
 //        var parentProject = projectService.findOne(e.getProjectId()).block();
-       editingFileManagementService.extractPagesFromEdition(testProject, testEdition);
 
+        editingFileManagementService.setStartIndex(245);
+        editingFileManagementService.extractPagesFromEdition(testProject, testEdition);
         assert(Files.exists(fileLocation));
 
-
     }
-
     @Test
-    void processEdition() {
+    void fileExistentMethodWorkingAndSplittingProcess() throws IOException {
+        var basePath = editingFileManagementService.getBasePathEdition();
+
+        var pdf = PDDocument.load(
+            new File("src/test/resources/scores/aegyptische-helena.pdf")
+        );
+        editingFileManagementService.storePDFfile(testProject, testEdition, pdf);
+
+        Path fileLocation = Path.of(basePath
+            + sep + "testProject"
+            + sep + "testTitle"
+            + sep + "aegyptische-helena.pdf");
+
+        editingFileManagementService.setStartIndex(245);
+        editingFileManagementService.extractPagesFromEdition(testProject, testEdition);
+       assert(editingFileManagementService.isPageExistent(testProject, testEdition, 1)) ;
     }
 
-    @Test
-    void isPageExistent() {
-
-    }
 }

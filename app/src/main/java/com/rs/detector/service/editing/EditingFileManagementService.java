@@ -59,6 +59,7 @@ public class EditingFileManagementService {
 
         if(Files.exists(pdfPath)) {
             log.warn("The file already exists and is being replaced!");
+            log.warn("Path: " + pdfPath);
         }
         pdfDocument.save(new File(pdfPath.toString()));
     }
