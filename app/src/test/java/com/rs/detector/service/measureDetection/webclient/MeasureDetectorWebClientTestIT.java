@@ -29,6 +29,10 @@ class MeasureDetectorWebClientTestIT {
         System.out.println(res);
     }
 
+    /**
+     * Note: This test might fail as soon as the Measure Detector changes its API ...
+     * @throws JsonProcessingException
+     */
     @Test
     void testCorrectJSONParsing() throws JsonProcessingException {
        String example= "{\"measures\": [{\"left\": 356.19469195604324, \"bottom\": 3745.3090223670006, " +

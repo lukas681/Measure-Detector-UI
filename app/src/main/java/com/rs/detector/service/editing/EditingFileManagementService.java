@@ -49,11 +49,11 @@ public class EditingFileManagementService {
      * @param edition
      * @param pdfDocument
      */
-    public void storePDFfile(@NotNull Edition edition, @NotNull PDDocument pdfDocument) throws IOException {
+    public void storePDFfile(@NotNull Project project, @NotNull Edition edition, @NotNull PDDocument pdfDocument) throws IOException {
         assert(edition.getpDFFileName() != null);
         assert(edition.getTitle() != null);
 
-        String dir = basePathEditionPath.toString() + File.separator + edition.getTitle() + File.separator;
+        String dir = constructPathFromProjectAndEdition(project, edition);
         Files.createDirectories(Path.of(dir));
         Path pdfPath = Path.of(dir + Path.of(edition.getpDFFileName()));
 
@@ -70,33 +70,46 @@ public class EditingFileManagementService {
      * @param edition
      * @return
      */
-    public PDDocument loadPdfFile(Edition edition) throws IOException {
-        // TODO Add project reference!
+    public PDDocument loadPdfFile(Project p, Edition edition) throws IOException {
         assert(edition.getpDFFileName() != null);
         assert(edition.getTitle() != null);
 
-        String pdfPath = constructPathFronProjectAndEdition(null, edition) + File.separator + edition.getpDFFileName();
+        String pdfPath = constructPathFromProjectAndEdition(p, edition)
+            + File.separator + edition.getpDFFileName();
 
         if(!edition.getpDFFileName().endsWith(".pdf")) {
            pdfPath += ".pdf";
         }
+
         PDDocument document = PDDocument.load(new File(pdfPath));
 
         return document;
     }
-    public void extractImagesFromPDF(Edition e) throws IOException {
+
+    public void extractPagesFromEdition(Project p, Edition e) throws IOException {
         assert(e.getProjectId() != null);
+        assert(p != null);
+        PDDocument loadedEditionPdf = this.loadPdfFile(p, e);
 
-        var parentProject = projectService.findOne(e.getProjectId()).block();
-        System.out.println(parentProject);
-
-        PDDocument loadedEditionPdf = this.loadPdfFile(e);
-
-        Path imageStorageLocation = Path.of(constructPathFronProjectAndEdition(null, e) + "/split");
+        Path imageStorageLocation = Path.of(constructPathFromProjectAndEdition(p, e) + "/split");
         createOutputPathIfNotExistent(imageStorageLocation);
 
         fileUtils.convertPdf2Img2(loadedEditionPdf, imageStorageLocation, startIndex);
+    }
 
+    /**
+     * Returns true, if the page was already generated and a image with the correct page number is stored in the target
+     * location
+     * /split/_
+     * @param p
+     * @param e
+     * @param pageNr
+     * @return
+     */
+    public boolean isPageExistent(Project p, Edition e, int pageNr) {
+        return Files.exists(
+            Path.of(constructPathFromProjectAndEdition(p, e) + "/split/_" + pageNr)
+        );
     }
 
 
@@ -105,6 +118,7 @@ public class EditingFileManagementService {
             Files.createDirectories(imageStorageLocation);
         }
     }
+
 
 // TODO Decide if necessary public PDDocument deletePdfFile(Edition edition) throws IOException {
 
@@ -126,10 +140,9 @@ public class EditingFileManagementService {
             Files.createDirectories(basePathEditionPath);
         }
     }
-    public String constructPathFronProjectAndEdition(Project p, Edition e) {
-        // TODO add project here.
-        return basePathEditionPath.toString() +
-                File.separator + e.getTitle();
+    public String constructPathFromProjectAndEdition(Project p, Edition e) {
+        return basePathEditionPath.toString() + File.separator + p.getId() +
+                File.separator + e.getId() + "/";
     }
 
     public int getStartIndex() {

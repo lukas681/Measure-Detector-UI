@@ -36,10 +36,12 @@ class EditingFileManagementServiceTest {
     public void setup() {
 
         testProject = new Project()
+            .id(1l)
             .name("TestProject")
             .composer("Richi Strauß");
 
         testEdition = new Edition()
+            .id(1l)
             .title("testTitle")
             .pDFFileName("testEdition.pdf")
         .project(testProject);
@@ -48,7 +50,7 @@ class EditingFileManagementServiceTest {
     @Test
     void storePDFfileWithNullDocument() {
         try {
-            editingFileManagementService.storePDFfile(testEdition, null);
+            editingFileManagementService.storePDFfile(testProject, testEdition, null);
         }catch(Exception e) {
             return;
         }
@@ -61,13 +63,13 @@ class EditingFileManagementServiceTest {
 
         // Storing
         PDDocument pdf = new PDDocument();
-        editingFileManagementService.storePDFfile(testEdition, pdf);
+        editingFileManagementService.storePDFfile(testProject, testEdition, pdf);
         Path fileLocation = Path.of(basePath + sep + "testTitle" + sep + "testEdition.pdf");
         System.out.println(fileLocation.toAbsolutePath().toString());
         assert(Files.exists(fileLocation));
 
         // Now Loading
-        PDDocument doc = editingFileManagementService.loadPdfFile(testEdition);
+        PDDocument doc = editingFileManagementService.loadPdfFile(testProject, testEdition);
         assertNotNull(doc);
 
     }
@@ -79,11 +81,29 @@ class EditingFileManagementServiceTest {
     }
 
     @Test
-    void uploadNewEdition() {
+    void PageExistingAfterSplit() throws IOException {
+        String basePath = editingFileManagementService.getBasePathEdition();
+
+        // Storing
+        PDDocument pdf = new PDDocument();
+        editingFileManagementService.storePDFfile(testProject, testEdition, pdf);
+        Path fileLocation = Path.of(basePath + sep + "testTitle" + sep + "testEdition.pdf");
+        System.out.println(fileLocation.toAbsolutePath().toString());
+
+//        var parentProject = projectService.findOne(e.getProjectId()).block();
+       editingFileManagementService.extractPagesFromEdition(testProject, testEdition);
+
+        assert(Files.exists(fileLocation));
+
 
     }
 
     @Test
     void processEdition() {
+    }
+
+    @Test
+    void isPageExistent() {
+
     }
 }

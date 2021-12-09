@@ -1,13 +1,13 @@
 package com.rs.detector.service.editing;
 
 import com.rs.detector.domain.Edition;
+import com.rs.detector.domain.Project;
 import com.rs.detector.service.EditionService;
 import com.rs.detector.service.ProjectService;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -20,6 +20,9 @@ public class EditingService {
     EditingFileManagementService editingFileManagementService;
 
     @Autowired
+    ProjectService projectService;
+
+    @Autowired
     EditionService editionService;
 
     /**
@@ -28,9 +31,10 @@ public class EditingService {
      * @param e The Edition
      * @param pdfFile A PDF file with the music sheet
      */
-    public void uploadNewEdition(Edition e, PDDocument pdfFile) throws IOException {
+    public void uploadNewEdition(Project project, Edition e, PDDocument pdfFile) throws IOException {
+
         editionService.save(e).block();
-        editingFileManagementService.storePDFfile(e, pdfFile);
+        editingFileManagementService.storePDFfile(project, e, pdfFile);
     }
 
     /**
@@ -38,7 +42,16 @@ public class EditingService {
      * @param e
      */
     public void extractImagesFromPDF(Edition e) throws IOException {
-        editingFileManagementService.extractImagesFromPDF(e);
+        // Get project
+        var relatedProject = projectService.findOne(e.getProjectId())
+            .block();
+
+        editingFileManagementService.extractPagesFromEdition(relatedProject, e);
+    }
+
+
+    public void triggerMeasureDetection(Edition e) {
+
     }
 
     public EditingFileManagementService getEditingFileManagementService() {
