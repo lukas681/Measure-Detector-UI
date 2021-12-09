@@ -92,8 +92,8 @@ class EditingFileManagementServiceTest {
         editingFileManagementService.storePDFfile(testProject, testEdition, pdf);
 
         Path fileLocation = Path.of(basePath
-            + sep + "testProject"
-            + sep + "testTitle"
+            + sep + "1"
+            + sep + "1"
             + sep + "aegyptische-helena.pdf");
 
         System.out.println(fileLocation.toAbsolutePath().toString());
@@ -121,7 +121,7 @@ class EditingFileManagementServiceTest {
 
         editingFileManagementService.setStartIndex(245);
         editingFileManagementService.extractPagesFromEdition(testProject, testEdition);
-       assert(editingFileManagementService.isPageExistent(testProject, testEdition, 1)) ;
+       assert(editingFileManagementService.isPageExistent(testProject, testEdition, 245)) ;
     }
 
 }
