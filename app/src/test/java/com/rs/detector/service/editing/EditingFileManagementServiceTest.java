@@ -15,15 +15,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestPropertySource(properties = {"application.editionResourceBasePath=build/res"})
-class EditingFileManagementServiceTest {
+class EditingFileManagementServiceTest extends SimpleDataInitialization {
 
-    Edition testEdition;
-    Project testProject;
 
     String sep = File.separator;
 
@@ -35,23 +34,13 @@ class EditingFileManagementServiceTest {
 
     @BeforeEach
     public void setup() {
-
-        testProject = new Project()
-            .id(1l)
-            .name("TestProject")
-            .composer("Richi Strauß");
-
-        testEdition = new Edition()
-            .id(1l)
-            .title("testTitle")
-            .pDFFileName("aegyptische-helena.pdf")
-        .project(testProject);
+       super.setup();
     }
 
     @Test
     void storePDFfileWithNullDocument() {
         try {
-            editingFileManagementService.storePDFfile(testProject, testEdition, null);
+            editingFileManagementService.storePDFfile(testEdition, null);
         }catch(Exception e) {
             return;
         }
@@ -64,13 +53,13 @@ class EditingFileManagementServiceTest {
 
         // Storing
         PDDocument pdf = new PDDocument();
-        editingFileManagementService.storePDFfile(testProject, testEdition, pdf);
+        editingFileManagementService.storePDFfile(testEdition, pdf);
         Path fileLocation = Path.of(basePath + sep + "testTitle" + sep + "testEdition.pdf");
         System.out.println(fileLocation.toAbsolutePath().toString());
         assert(Files.exists(fileLocation));
 
         // Now Loading
-        PDDocument doc = editingFileManagementService.loadPdfFile(testProject, testEdition);
+        PDDocument doc = editingFileManagementService.loadPdfFile(testEdition);
         assertNotNull(doc);
 
     }
@@ -89,7 +78,7 @@ class EditingFileManagementServiceTest {
         var pdf = PDDocument.load(
             new File("src/test/resources/scores/aegyptische-helena.pdf")
         );
-        editingFileManagementService.storePDFfile(testProject, testEdition, pdf);
+        editingFileManagementService.storePDFfile(testEdition, pdf);
 
         Path fileLocation = Path.of(basePath
             + sep + "1"
@@ -101,29 +90,49 @@ class EditingFileManagementServiceTest {
 //        var parentProject = projectService.findOne(e.getProjectId()).block();
 
         editingFileManagementService.setStartIndex(245);
-        editingFileManagementService.extractPagesFromEdition(testProject, testEdition);
+        editingFileManagementService.extractPagesFromEdition(testEdition);
         assert(Files.exists(fileLocation));
 
         pdf.close();
     }
     @Test
     void fileExistentMethodWorkingAndSplittingProcess() throws IOException {
-        var basePath = editingFileManagementService.getBasePathEdition();
+        var pdf = PDDocument.load(
+            new File("src/test/resources/scores/aegyptische-helena.pdf")
+        );
+
+        editingFileManagementService.storePDFfile(testEdition, pdf);
+        editingFileManagementService.setStartIndex(245);
+        editingFileManagementService.extractPagesFromEdition(testEdition);
+        assert(editingFileManagementService.isPageExistent(testEdition, 245, ".png")) ;
+        pdf.close();
+    }
+
+    @Test
+    void testGetAllFileNamesAfterGeneration() throws IOException {
+        var assertedPageNames = new ArrayList<> (){
+            {
+                add("_243.png");
+                add("_244.png");
+                add("_245.png");
+                add("_246.png");
+                add("_247.png");
+            }
+        };
 
         var pdf = PDDocument.load(
             new File("src/test/resources/scores/aegyptische-helena.pdf")
         );
-        editingFileManagementService.storePDFfile(testProject, testEdition, pdf);
 
-        Path fileLocation = Path.of(basePath
-            + sep + "testProject"
-            + sep + "testTitle"
-            + sep + "aegyptische-helena.pdf");
-
+        editingFileManagementService.storePDFfile(testEdition, pdf);
         editingFileManagementService.setStartIndex(245);
-        editingFileManagementService.extractPagesFromEdition(testProject, testEdition);
-       assert(editingFileManagementService.isPageExistent(testProject, testEdition, 245, ".png")) ;
-       pdf.close();
+        editingFileManagementService.extractPagesFromEdition(testEdition);
+
+        var res =
+            editingFileManagementService.getAllGeneratedScorePageFiles(testEdition);
+        System.out.println(res);
+        assert(assertedPageNames.containsAll(res));
+
     }
 
 }

@@ -16,6 +16,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 /**
@@ -37,6 +39,7 @@ public class EditingFileManagementService {
     private Path basePathEditionPath;
 
     private int startIndex = 0;
+    private String splitDir = "/split";
 
     public EditingFileManagementService(ApplicationProperties applicationProperties) throws IOException {
         basePathEditionPath =  Path.of(applicationProperties.getEditionResourceBasePath());
@@ -49,11 +52,11 @@ public class EditingFileManagementService {
      * @param edition
      * @param pdfDocument
      */
-    public void storePDFfile(@NotNull Project project, @NotNull Edition edition, @NotNull PDDocument pdfDocument) throws IOException {
+    public void storePDFfile(@NotNull Edition edition, @NotNull PDDocument pdfDocument) throws IOException {
         assert(edition.getpDFFileName() != null);
         assert(edition.getTitle() != null);
 
-        String dir = constructPathFromProjectAndEdition(project, edition);
+        String dir = constructPathFromEdition(edition);
         Files.createDirectories(Path.of(dir));
         Path pdfPath = Path.of(dir + Path.of(edition.getpDFFileName()));
 
@@ -71,11 +74,11 @@ public class EditingFileManagementService {
      * @param edition
      * @return
      */
-    public PDDocument loadPdfFile(Project p, Edition edition) throws IOException {
+    public PDDocument loadPdfFile(Edition edition) throws IOException {
         assert(edition.getpDFFileName() != null);
         assert(edition.getTitle() != null);
 
-        String pdfPath = constructPathFromProjectAndEdition(p, edition)
+        String pdfPath = constructPathFromEdition(edition)
             + File.separator + edition.getpDFFileName();
 
         if(!edition.getpDFFileName().endsWith(".pdf")) {
@@ -87,12 +90,11 @@ public class EditingFileManagementService {
         return document;
     }
 
-    public void extractPagesFromEdition(Project p, Edition e) throws IOException {
+    public void extractPagesFromEdition(Edition e) throws IOException {
         assert(e.getProjectId() != null);
-        assert(p != null);
-        PDDocument loadedEditionPdf = this.loadPdfFile(p, e);
+        PDDocument loadedEditionPdf = this.loadPdfFile(e);
 
-        Path imageStorageLocation = Path.of(constructPathFromProjectAndEdition(p, e) + "/split");
+        Path imageStorageLocation = Path.of(constructPathFromEdition(e) + splitDir);
         createOutputPathIfNotExistent(imageStorageLocation);
 
         fileUtilService.convertPdf2Img2(loadedEditionPdf, imageStorageLocation, startIndex);
@@ -102,14 +104,13 @@ public class EditingFileManagementService {
      * Returns true, if the page was already generated and a image with the correct page number is stored in the target
      * location
      * /split/_
-     * @param p
      * @param e
      * @param pageNr
      * @return
      */
-    public boolean isPageExistent(Project p, Edition e, int pageNr, String fileFormat) {
+    public boolean isPageExistent(Edition e, int pageNr, String fileFormat) {
         return Files.exists(
-            Path.of(constructPathFromProjectAndEdition(p, e) + "/split/_" + pageNr + fileFormat)
+            Path.of(constructPathFromEdition(e) + splitDir + "/_" + pageNr + fileFormat)
         );
     }
 
@@ -138,9 +139,27 @@ public class EditingFileManagementService {
         }
     }
 
-    public String constructPathFromProjectAndEdition(Project p, Edition e) {
-        return basePathEditionPath.toString() + File.separator + p.getId() +
+    public String constructPathFromEdition(Edition e) {
+        return basePathEditionPath.toString() + File.separator + e.getProjectId() +
                 File.separator + e.getId() + "/";
+    }
+
+    private String constructPathForSplittedPagesFromEdition(Edition e) {
+        return constructPathFromEdition(e) + splitDir;
+    }
+
+    /**
+     * If the splitting was already done, this method returns all the page Names.
+     * @return
+     */
+    public List<String> getAllGeneratedScorePageFiles(Edition e) {
+        return Arrays.stream(new File(
+            constructPathForSplittedPagesFromEdition(e)
+        )
+            .listFiles())
+            .filter(File::isFile)
+            .map(File::getName)
+            .collect(Collectors.toList());
     }
 
     public int getStartIndex() {

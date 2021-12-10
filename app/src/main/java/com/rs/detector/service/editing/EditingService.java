@@ -1,6 +1,7 @@
 package com.rs.detector.service.editing;
 
 import com.rs.detector.domain.Edition;
+import com.rs.detector.domain.Page;
 import com.rs.detector.domain.Project;
 import com.rs.detector.service.EditionService;
 import com.rs.detector.service.ProjectService;
@@ -36,7 +37,7 @@ public class EditingService {
         System.out.println(e.getProjectId());
         editionService.save(e).block();
 
-        editingFileManagementService.storePDFfile(e.getProject(), e, pdfFile);
+        editingFileManagementService.storePDFfile(e, pdfFile);
 
     }
 
@@ -46,14 +47,18 @@ public class EditingService {
      */
     public void extractImagesFromPDF(Edition e) throws IOException {
         // Get project
-        var relatedProject = projectService.findOne(e.getProjectId())
-            .block();
+        // Deprecated. Shoul dbe contained in Edition
+//        var relatedProject = projectService.findOne(e.getProjectId())
+//            .block();
 
-        editingFileManagementService.extractPagesFromEdition(relatedProject, e);
+        editingFileManagementService.extractPagesFromEdition(e);
     }
 
+    public void triggerMeasureDetectionFull(Edition e) {
 
-    public void triggerMeasureDetection(Edition e) {
+    }
+
+    public void triggerMeasureDetectionPage(Page p) {
 
     }
 

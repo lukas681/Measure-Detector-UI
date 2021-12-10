@@ -1,5 +1,6 @@
 package com.rs.detector.repository;
 
+import com.rs.detector.domain.Edition;
 import com.rs.detector.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.Query;
@@ -26,6 +27,8 @@ public interface PageRepository extends R2dbcRepository<Page, Long>, PageReposit
     // just to avoid having unambigous methods
     @Override
     Flux<Page> findAll();
+
+    Flux<Page> findAllByEdition(Edition e);
 
     @Override
     Mono<Page> findById(Long id);
