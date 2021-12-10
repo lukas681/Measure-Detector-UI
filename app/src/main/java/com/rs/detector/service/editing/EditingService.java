@@ -33,8 +33,6 @@ public class EditingService {
      * @param pdfFile A PDF file with the music sheet
      */
     public void uploadNewEdition(Edition e, PDDocument pdfFile) throws IOException {
-
-        System.out.println(e.getProjectId());
         editionService.save(e).block();
 
         editingFileManagementService.storePDFfile(e, pdfFile);
