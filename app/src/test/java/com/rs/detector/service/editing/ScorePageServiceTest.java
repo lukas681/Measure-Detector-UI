@@ -14,6 +14,7 @@ import reactor.test.StepVerifier;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -58,6 +59,18 @@ class ScorePageServiceTest extends SimpleDataInitialization {
             .then( () -> System.out.println("Test"))
             .expectComplete()
             .verify();
+        var res=  pageRepository.findAllByEditionId(testEdition.getId())
+            .collect(Collectors.toList())
+            .block();
+        res.forEach(System.out::println);
+        assert(res.size() == 5);
+
+        scorePageService.generatePageObjectIfNotExistent(testEdition).collect(Collectors.toList()).block();
+        res=  pageRepository.findAllByEditionId(testEdition.getId())
+            .collect(Collectors.toList())
+            .block();
+        res.forEach(System.out::println);
+        assert(res.size() == 5); // Nothing should have changed.
     }
 
     @Test
