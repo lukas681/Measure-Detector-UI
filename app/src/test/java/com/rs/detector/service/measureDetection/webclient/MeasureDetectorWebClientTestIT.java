@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.File;
+import java.io.IOException;
 
 @SpringBootTest
 @IntegrationTest
@@ -22,7 +23,7 @@ class MeasureDetectorWebClientTestIT {
     ApplicationProperties applicationProperties;
 
     @Test
-    void detectMeasuresAndTestConnectionToMeas() {
+    void detectMeasuresAndTestConnectionToMeas() throws IOException {
         File f = new File("src/test/resources/scores/split/_243.png");
         var res = (measureDetectorWebClient.detectMeasures(f));
         assert(res != null);
