@@ -31,10 +31,13 @@ public class EditingService {
      * @param e The Edition
      * @param pdfFile A PDF file with the music sheet
      */
-    public void uploadNewEdition(Project project, Edition e, PDDocument pdfFile) throws IOException {
+    public void uploadNewEdition(Edition e, PDDocument pdfFile) throws IOException {
 
+        System.out.println(e.getProjectId());
         editionService.save(e).block();
-        editingFileManagementService.storePDFfile(project, e, pdfFile);
+
+        editingFileManagementService.storePDFfile(e.getProject(), e, pdfFile);
+
     }
 
     /**

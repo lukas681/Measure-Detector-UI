@@ -42,7 +42,7 @@ public class MeasureDetectorWebClientMock implements MeasureDetectorWebClient {
 
     @Override
     public ApiMeasureDetectorResult detectMeasures(File img) throws IOException {
-        File f = new File("src/test/resources/scores/measure-detector-responses/_243");
+        File f = new File("src/test/resources/scores/measure-detector-responses/_243.json");
         ObjectMapper o = new ObjectMapper();
         return o.readValue(f, ApiMeasureDetectorResult.class);
     }

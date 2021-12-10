@@ -34,7 +34,7 @@ public class EditingFileManagementService {
 
     private final ApplicationProperties applicationProperties;
 
-    private Path basePathEditionPath; // To be filled in constructor.
+    private Path basePathEditionPath;
 
     private int startIndex = 0;
 
@@ -113,15 +113,11 @@ public class EditingFileManagementService {
         );
     }
 
-
     private void createOutputPathIfNotExistent(Path imageStorageLocation) throws IOException {
         if(!Files.exists(imageStorageLocation)) {
             Files.createDirectories(imageStorageLocation);
         }
     }
-
-
-// TODO Decide if necessary public PDDocument deletePdfFile(Edition edition) throws IOException {
 
     /**
      * Checks, whether the PDF file provided is encrypted
@@ -141,6 +137,7 @@ public class EditingFileManagementService {
             Files.createDirectories(basePathEditionPath);
         }
     }
+
     public String constructPathFromProjectAndEdition(Project p, Edition e) {
         return basePathEditionPath.toString() + File.separator + p.getId() +
                 File.separator + e.getId() + "/";
