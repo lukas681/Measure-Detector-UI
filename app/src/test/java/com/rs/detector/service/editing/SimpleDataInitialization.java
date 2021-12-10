@@ -30,12 +30,16 @@ public class SimpleDataInitialization {
     Project testProject;
     Page testPage;
 
-
     public void setup() {
         log.debug("Starting initialization");
-        // Restoring the whole database
-        editionRepository.deleteAll();
-        projectRepository.deleteAll();
+        // Restoring the whole database in parallel
+        var c1= editionRepository.deleteAll();
+        var c2 = projectRepository.deleteAll();
+        var c3 = pageRepository.deleteAll();
+
+        c1.block();
+        c2.block();
+        c3.block();
 
         testProject = new Project()
             .id(1l) // Should be automatically done by deleting whole database.
@@ -51,7 +55,7 @@ public class SimpleDataInitialization {
         testPage = new Page()
             .id(1l)
             .edition(testEdition)
-            .pageNr(1l);
+            .pageNr(245l);
 
         projectRepository.insert(testProject).block();
         editionRepository.insert(testEdition).block();

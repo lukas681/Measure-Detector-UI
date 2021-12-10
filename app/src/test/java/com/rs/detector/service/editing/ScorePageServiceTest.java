@@ -8,14 +8,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 import reactor.test.StepVerifier;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@TestPropertySource(properties = {
+    "application.editionResourceBasePath=build/res",
+    "application.imageSplitDPI=400"
+})
 class ScorePageServiceTest extends SimpleDataInitialization {
 
     @Autowired
@@ -47,9 +53,25 @@ class ScorePageServiceTest extends SimpleDataInitialization {
 
         StepVerifier
             .create(scorePageService.generatePageObjectIfNotExistent(testEdition))
-            .expectNextMatches((m->m.getEditionId() == 245l))
+            // Page 243 should not have been generated so far.
+            .expectNextMatches((m->m.getPageNr() == 243l))
             .then( () -> System.out.println("Test"))
             .expectComplete()
             .verify();
+    }
+
+    @Test
+    void sortAndFillNextLinks() {
+        var pageList = new ArrayList<Page>();
+
+        for(Long i = 20l; i > 0; i--) {
+            pageList.add(new Page().pageNr(i));
+        }
+
+        scorePageService.sortAndFillNextLinks(pageList);
+        for(int i = 0; i < 10; i++) {
+            assert(pageList.get(i).getNextPage().equals(pageList.get(i+1).getPageNr()));
+        }
+
     }
 }
