@@ -59,6 +59,8 @@ public class EditingService {
 
     // TODO Catch Exception
     public void triggerMeasureDetectionFull(@NotNull Edition e) throws IOException {
+        // TODO maybe delete Boxes/Pages if already run beforehand
+
         var allGeneratedAvailableScorePages = editingFileManagementService.getAllGeneratedScorePageFilesAsPageNr(e);
         for(var pageNr: allGeneratedAvailableScorePages) {
             var measureDetectorResult = runMeasureDetectionOnPage(e, pageNr);
@@ -67,9 +69,9 @@ public class EditingService {
     }
 
     public ApiMeasureDetectorResult runMeasureDetectionOnPage(@NotNull Edition e, long pageNr) throws IOException {
-        // TODO Implement
-        var bufferedImage = scorePageService.getBufferedImageFromPage(e, pageNr);
-        File f = new File("asd");
+        File f = new File(
+            editingFileManagementService.constructPagePath(e, (int) pageNr)
+        );
         return measureDetectorService.process(f);
     }
 

@@ -4,6 +4,7 @@ import com.rs.detector.domain.Edition;
 import com.rs.detector.domain.Project;
 import com.rs.detector.repository.EditionRepository;
 import com.rs.detector.repository.ProjectRepository;
+import com.rs.detector.service.editing.exceptions.PagesMightNotHaveBeenGeneratedException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,35 +22,17 @@ import static org.junit.jupiter.api.Assertions.*;
     "application.editionResourceBasePath=build/res",
     "application.imageSplitDPI=400"
 })
-class EditingServiceTest {
-
-    private Project testProject;
-    private Edition testEdition;
+class EditingServiceTest extends SimpleDataInitialization {
 
     @Autowired
-    private EditionRepository editionRepository;
-
-    @Autowired
-    private ProjectRepository projectRepository;
+    ScorePageService scorePageService;
 
     @Autowired
     EditingService editingService;
 
     @BeforeEach
     public void setup() {
-        projectRepository.deleteAll().block();
-        editionRepository.deleteAll().block();
-
-
-        testProject = new Project()
-            .name("TestProject")
-            .composer("Richi Strauß");
-        projectRepository.save(testProject).block();
-
-        testEdition = new Edition()
-            .title("testTitle")
-            .pDFFileName("testEdition.pdf")
-            .project(testProject);
+        super.setup();
     }
 
     @Test
@@ -76,5 +59,22 @@ class EditingServiceTest {
 
         editingService.uploadNewEdition(testEdition, pdf);
         editingService.extractImagesFromPDF(testEdition);
+    }
+
+    @Test
+    void runMeasureDetectionOnPage() throws IOException, PagesMightNotHaveBeenGeneratedException {
+        // Setup :)
+        var pdf = PDDocument.load(new File("src/test/resources/scores/aegyptische-helena.pdf"));
+        editingService.getEditingFileManagementService().setStartIndex(243);
+
+        editingService.uploadNewEdition(testEdition, pdf);
+        editingService.extractImagesFromPDF(testEdition);
+        scorePageService.generatePageObjectIfNotExistent(testEdition);
+        //__________________________________________________________
+
+        var res = editingService.runMeasureDetectionOnPage(testEdition, 243);
+        assertNotNull(res);
+
+
     }
 }
