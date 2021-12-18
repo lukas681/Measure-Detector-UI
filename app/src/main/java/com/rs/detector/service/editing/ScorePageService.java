@@ -4,14 +4,18 @@ import com.rs.detector.domain.Edition;
 import com.rs.detector.domain.Page;
 import com.rs.detector.repository.PageRepository;
 import com.rs.detector.service.EditionService;
+import com.rs.detector.service.MeasureBoxService;
 import com.rs.detector.service.editing.exceptions.PagesMightNotHaveBeenGeneratedException;
+import com.rs.detector.web.api.model.ApiMeasureDetectorResult;
+import com.rs.detector.web.api.model.MeasureBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,6 +32,9 @@ public class ScorePageService {
     EditingFileManagementService editingFileManagementService;
 
     @Autowired
+    MeasureBoxService measureBoxService;
+
+    @Autowired
     PageRepository pageRepository;
 
     @Autowired
@@ -40,9 +47,9 @@ public class ScorePageService {
      * @return
      */
     public Flux<Page> generatePageObjectIfNotExistent(Edition e) throws PagesMightNotHaveBeenGeneratedException {
-        var allGeneratedPageNames = editingFileManagementService.getAllGeneratedScorePageFiles(e);
+        var allGeneratedPages = editingFileManagementService.getAllGeneratedScorePageFiles(e);
 
-        if (allGeneratedPageNames.size() == 0) {
+        if (allGeneratedPages.size() == 0) {
             throw new PagesMightNotHaveBeenGeneratedException();
         }
         // Fetch, if there already have been some pages generated
@@ -51,15 +58,16 @@ public class ScorePageService {
             .collect(Collectors.toList())
             .block();
 
-        for(var p:allGeneratedPageNames) {
-            var filenameToPageNumber = convertFileNameToPageNumber(p);
-
-            if(pages.stream().filter(x->x.getPageNr().equals(filenameToPageNumber)).count() == 0) {
+        for(var p:allGeneratedPages) {
+            var fileNameToPageNr = EditingFileManagementService.convertFileNameToPageNumber(p);
+            if(pages.stream().noneMatch(x -> x.getPageNr().equals(fileNameToPageNr))) {
                pages.add(new Page()
                    .imgFileReference(p)
-                   .pageNr(filenameToPageNumber)
+                   .pageNr(fileNameToPageNr)
                    .edition(e)
                );
+            } else {
+                // TODO update Page
             }
         }
         sortAndFillNextLinks(pages);
@@ -82,10 +90,49 @@ public class ScorePageService {
         pages.forEach(x->log.debug(String.valueOf(x)));
     }
 
-    private Long convertFileNameToPageNumber(String p) {
-        p = StringUtils.stripFilenameExtension(p);
-        return Long.parseLong(
-            p.replace("_","")
-        );
+    public BufferedImage getBufferedImageFromPage(Edition e, long pageNr ) {
+        assert(e != null);
+//        return editingFileManagementService.getBufferedPage(e, );
+
+        return null;
+//        BufferedImage img = null;
+//        try {
+//            img = ImageIO.read(new File(""));
+//        }
+    }
+
+    // TODO: How to handle recalculations? deleting everything. Ignoring it?
+    public Flux<com.rs.detector.domain.MeasureBox> addMeasureDetectorResultBoxesToPage(ApiMeasureDetectorResult mdr, Edition e, long pageNr) {
+        var page = this.findPageByEditionIdAndPageNr(e, pageNr);
+        List<com.rs.detector.domain.MeasureBox> measureBoxes = new ArrayList<>();
+
+        mdr.getMeasures().forEach(measureBox->{
+            measureBoxes.add(convertMeasureBoxDto(page, measureBox));
+        });
+
+       return measureBoxService.saveAll(measureBoxes);
+    }
+
+    private com.rs.detector.domain.MeasureBox convertMeasureBoxDto(Page p, MeasureBox mb) {
+        return new com.rs.detector.domain.MeasureBox()
+            .page(p)
+            .comment("")
+            .measureCount(-1l)
+            .lrx(valueOfCutDecimals(mb.getRight())) // Lower Right X
+            .lry(valueOfCutDecimals(mb.getBottom())) // Lower Right Y
+            .ulx(valueOfCutDecimals(mb.getLeft())) // Upper Left X
+            .uly(valueOfCutDecimals(mb.getTop())); // Upper Left Y
+    }
+
+    // Cuts off all the (variable-lengthed) decimals and casts it to a long
+    public static long valueOfCutDecimals(String pixelDecimal) {
+        return (long)Double.parseDouble(pixelDecimal);
+    }
+
+    public Page findPageByEditionIdAndPageNr(Edition e, long pageNr) {
+        var res = pageRepository.findAllByEditionIdAndPageNr(e.getId(),pageNr)
+            .collect(Collectors.toList())
+            .block();
+        return (res.size()==0?null :res.get(0));
     }
 }

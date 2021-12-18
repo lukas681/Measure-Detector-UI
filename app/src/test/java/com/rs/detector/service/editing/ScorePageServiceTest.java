@@ -102,4 +102,19 @@ class ScorePageServiceTest extends SimpleDataInitialization {
         var res = scorePageService.findPageByEditionIdAndPageNr(testEdition, 244l);
         assertNotNull(res);
     }
+
+    @Test
+    void valueOfCutDecimals() {
+        String s1 = "1234.1234567856";
+        String s2 = "0.00000002";
+        String s3 = "123.123123123123123123";
+        String s4 = "123455";
+        String s5 = "123.123123123123123123123123123";
+
+        assert(ScorePageService.valueOfCutDecimals(s1)==1234);
+        assert(ScorePageService.valueOfCutDecimals(s2)==0);
+        assert(ScorePageService.valueOfCutDecimals(s3)==123);
+        assert(ScorePageService.valueOfCutDecimals(s4)==123455);
+        assert(ScorePageService.valueOfCutDecimals(s5)==123);
+    }
 }
