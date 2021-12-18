@@ -106,7 +106,7 @@ springBoot {
 }
 
 test {
-    bootRun.systemProperty('spring.profiles.active', 'dev-mock')
+    systemProperty 'spring.profiles.active', 'dev-mock'
     useJUnitPlatform()
     exclude "**/*IT*", "**/*IntTest*"
     testLogging {

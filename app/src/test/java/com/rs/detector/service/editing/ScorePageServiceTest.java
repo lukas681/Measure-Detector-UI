@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import reactor.test.StepVerifier;
@@ -39,8 +40,10 @@ class ScorePageServiceTest extends SimpleDataInitialization {
     @BeforeEach
     void init() {
         super.setup();
-
     }
+
+    @Value("${spring.profiles.active}")
+    private String activeProfiles;
 
     @Test
     void generatePageObjectIfNotExistent() throws PagesMightNotHaveBeenGeneratedException, IOException {
@@ -124,7 +127,8 @@ class ScorePageServiceTest extends SimpleDataInitialization {
     }
 
     @Test
-    void addMeasureDetectorResultBoxesToPage() throws IOException {
+    void ddMeasureDetectorResultBoxesToPage() throws IOException {
+        System.out.println("Active Profile:" + activeProfiles);
         var res =  measureDetectorService.process(null);
         System.out.println(res);
     }

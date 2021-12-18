@@ -33,13 +33,13 @@ public class SimpleDataInitialization {
     public void setup() {
         log.debug("Starting initialization");
         // Restoring the whole database in parallel
+        var c3 = pageRepository.deleteAll();
         var c1= editionRepository.deleteAll();
         var c2 = projectRepository.deleteAll();
-        var c3 = pageRepository.deleteAll();
 
+        c3.block();
         c1.block();
         c2.block();
-        c3.block();
 
         testProject = new Project()
             .id(1l) // Should be automatically done by deleting whole database.
