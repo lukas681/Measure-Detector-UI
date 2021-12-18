@@ -141,6 +141,7 @@ class ScorePageServiceTest extends SimpleDataInitialization {
             .collect(Collectors.toList()).block();
 
         dbRes.forEach(System.out::println);
+        assert(dbRes.size()==8);
         System.out.println(res);
     }
 }
