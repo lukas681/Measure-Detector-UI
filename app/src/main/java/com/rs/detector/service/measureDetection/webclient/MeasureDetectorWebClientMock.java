@@ -32,6 +32,7 @@ import java.io.IOException;
 @Profile("dev-mock")
 public class MeasureDetectorWebClientMock implements MeasureDetectorWebClient {
 
+
     @Autowired
     ApplicationProperties applicationProperties;
 
@@ -40,6 +41,7 @@ public class MeasureDetectorWebClientMock implements MeasureDetectorWebClient {
     public MeasureDetectorWebClientMock() {
     }
 
+    //statically returning the same results. img explicitly allowed to be null
     @Override
     public ApiMeasureDetectorResult detectMeasures(File img) throws IOException {
         File f = new File("src/test/resources/scores/measure-detector-responses/_243.json");

@@ -2,6 +2,8 @@ package com.rs.detector.service.editing;
 
 import com.rs.detector.domain.Page;
 import com.rs.detector.service.editing.exceptions.PagesMightNotHaveBeenGeneratedException;
+import com.rs.detector.service.measureDetection.MeasureDetectorService;
+import com.rs.detector.web.api.model.ApiMeasureDetectorResult;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,6 +29,9 @@ class ScorePageServiceTest extends SimpleDataInitialization {
 
     @Autowired
     ScorePageService scorePageService;
+
+    @Autowired
+    MeasureDetectorService measureDetectorService;
 
     @Autowired
     EditingService editingService;
@@ -116,5 +121,11 @@ class ScorePageServiceTest extends SimpleDataInitialization {
         assert(ScorePageService.valueOfCutDecimals(s3)==123);
         assert(ScorePageService.valueOfCutDecimals(s4)==123455);
         assert(ScorePageService.valueOfCutDecimals(s5)==123);
+    }
+
+    @Test
+    void addMeasureDetectorResultBoxesToPage() throws IOException {
+        var res =  measureDetectorService.process(null);
+        System.out.println(res);
     }
 }

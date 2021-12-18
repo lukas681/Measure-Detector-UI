@@ -106,6 +106,7 @@ springBoot {
 }
 
 test {
+    bootRun.systemProperty('spring.profiles.active', 'dev-mock')
     useJUnitPlatform()
     exclude "**/*IT*", "**/*IntTest*"
     testLogging {
@@ -123,13 +124,13 @@ test {
         ]
     }
 }
-
 modernizer {
     failOnViolations = true
     includeTestClasses = true
 }
 
 task integrationTest(type: Test) {
+    bootRun.systemProperty('spring.profiles.active', 'dev')
     useJUnitPlatform()
     description = "Execute integration tests."
     group = "verification"

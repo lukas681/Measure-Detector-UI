@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -56,7 +57,8 @@ public class EditingService {
         editingFileManagementService.extractPagesFromEdition(e);
     }
 
-    public void triggerMeasureDetectionFull(@NotNull Edition e) {
+    // TODO Catch Exception
+    public void triggerMeasureDetectionFull(@NotNull Edition e) throws IOException {
         var allGeneratedAvailableScorePages = editingFileManagementService.getAllGeneratedScorePageFilesAsPageNr(e);
         for(var pageNr: allGeneratedAvailableScorePages) {
             var measureDetectorResult = runMeasureDetectionOnPage(e, pageNr);
@@ -64,9 +66,11 @@ public class EditingService {
         }
     }
 
-    public ApiMeasureDetectorResult runMeasureDetectionOnPage(@NotNull Edition e, long pageNr) {
+    public ApiMeasureDetectorResult runMeasureDetectionOnPage(@NotNull Edition e, long pageNr) throws IOException {
+        // TODO Implement
         var bufferedImage = scorePageService.getBufferedImageFromPage(e, pageNr);
-        return measureDetectorService.process(bufferedImage);
+        File f = new File("asd");
+        return measureDetectorService.process(f);
     }
 
     public EditingFileManagementService getEditingFileManagementService() {

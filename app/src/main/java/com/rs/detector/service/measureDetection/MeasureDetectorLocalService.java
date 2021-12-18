@@ -1,6 +1,7 @@
 package com.rs.detector.service.measureDetection;
 
 import com.rs.detector.web.api.model.ApiMeasureDetectorResult;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.tensorflow.*;
 import org.tensorflow.types.UInt8;
@@ -15,9 +16,10 @@ import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import processing.core.*;
 
 @Service
+// Deactivates the class as it is not required by now. Later to be configured via build.gradle
+@Profile("!dev & dev")
 /**
  * This is a very experimental version of the MeasureDetector which currently does not work, yet. Maybe, we can
  * directly embedd the MeasureDetecture in the future, but for a start, we will use an external service to connect
@@ -87,7 +89,7 @@ public class MeasureDetectorLocalService implements MeasureDetectorService{
     // TODO Increase computing time by reusing this session!
     //  https://stackoverflow.com/questions/49819047/sess-run-is-too-slow
     // TODO Change signature
-    public ApiMeasureDetectorResult process(BufferedImage imgPassed) {
+    public ApiMeasureDetectorResult process(File imgPassed) {
 
         Tensor inputTensor = null;
         List<Tensor<?>> output = null;
