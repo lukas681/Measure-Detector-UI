@@ -4,6 +4,7 @@ import com.rs.detector.domain.Edition;
 import com.rs.detector.domain.Page;
 import com.rs.detector.domain.Project;
 import com.rs.detector.repository.EditionRepository;
+import com.rs.detector.repository.MeasureBoxRepository;
 import com.rs.detector.repository.PageRepository;
 import com.rs.detector.repository.ProjectRepository;
 import com.rs.detector.service.util.FileUtilService;
@@ -24,6 +25,9 @@ public class SimpleDataInitialization {
     EditionRepository editionRepository;
 
     @Autowired
+    MeasureBoxRepository measureBoxRepository;
+
+    @Autowired
     PageRepository pageRepository;
 
     Edition testEdition;
@@ -32,7 +36,8 @@ public class SimpleDataInitialization {
 
     public void setup() {
         log.debug("Starting initialization");
-        // Restoring the whole database in parallel
+        // Restoring the whole database in parallel, Maybe not even required as we use in-memory h2 database for testing
+        var c4 = measureBoxRepository.deleteAll();
         var c3 = pageRepository.deleteAll();
         var c1= editionRepository.deleteAll();
         var c2 = projectRepository.deleteAll();

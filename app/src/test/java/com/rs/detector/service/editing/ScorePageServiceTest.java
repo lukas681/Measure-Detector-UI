@@ -1,6 +1,7 @@
 package com.rs.detector.service.editing;
 
 import com.rs.detector.domain.Page;
+import com.rs.detector.repository.MeasureBoxRepository;
 import com.rs.detector.service.editing.exceptions.PagesMightNotHaveBeenGeneratedException;
 import com.rs.detector.service.measureDetection.MeasureDetectorService;
 import com.rs.detector.web.api.model.ApiMeasureDetectorResult;
@@ -33,6 +34,9 @@ class ScorePageServiceTest extends SimpleDataInitialization {
 
     @Autowired
     MeasureDetectorService measureDetectorService;
+
+    @Autowired
+    MeasureBoxRepository measureBoxRepository;
 
     @Autowired
     EditingService editingService;
@@ -127,9 +131,16 @@ class ScorePageServiceTest extends SimpleDataInitialization {
     }
 
     @Test
-    void ddMeasureDetectorResultBoxesToPage() throws IOException {
+    void addMeasureDetectorResultBoxesToPage() throws IOException {
         System.out.println("Active Profile:" + activeProfiles);
         var res =  measureDetectorService.process(null);
+        scorePageService.addMeasureDetectorResultBoxesToPage(res, testEdition, 243l);
+//        var dbRes = measureBoxRepository.findAll().collect(Collectors.toList()).block();
+        var dbRes = measureBoxRepository
+            .findByPage(testPage.getId())
+            .collect(Collectors.toList()).block();
+
+        dbRes.forEach(System.out::println);
         System.out.println(res);
     }
 }
