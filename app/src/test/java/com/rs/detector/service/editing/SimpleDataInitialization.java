@@ -42,6 +42,7 @@ public class SimpleDataInitialization {
         var c1= editionRepository.deleteAll();
         var c2 = projectRepository.deleteAll();
 
+        c4.block();
         c3.block();
         c1.block();
         c2.block();
