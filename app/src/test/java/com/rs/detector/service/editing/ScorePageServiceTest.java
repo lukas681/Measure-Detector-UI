@@ -55,10 +55,11 @@ class ScorePageServiceTest extends SimpleDataInitialization {
         StepVerifier
             .create(scorePageService.generatePageObjectIfNotExistent(testEdition))
             // Page 243 should not have been generated so far.
-            .expectNextMatches((m->m.getPageNr() == 243l))
+            .expectNextMatches((m->m.getPageNr() == 244l))
             .then( () -> System.out.println("Test"))
             .expectComplete()
             .verify();
+
         var res=  pageRepository.findAllByEditionId(testEdition.getId())
             .collect(Collectors.toList())
             .block();
@@ -86,5 +87,19 @@ class ScorePageServiceTest extends SimpleDataInitialization {
             assert(pageList.get(i).getNextPage().equals(pageList.get(i+1).getPageNr()));
         }
 
+    }
+
+    @Test
+    void findPageByEditionIdAndPageNr() throws PagesMightNotHaveBeenGeneratedException, IOException {
+        var pdf = PDDocument
+            .load(new File("src/test/resources/scores/aegyptische-helena.pdf")
+            );
+        editingService.getEditingFileManagementService().setStartIndex(243);
+        editingService.uploadNewEdition(testEdition, pdf);
+        editingService.extractImagesFromPDF(testEdition);
+        scorePageService.generatePageObjectIfNotExistent(testEdition).blockLast();
+
+        var res = scorePageService.findPageByEditionIdAndPageNr(testEdition, 244l);
+        assertNotNull(res);
     }
 }

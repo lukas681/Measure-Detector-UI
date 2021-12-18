@@ -5,10 +5,13 @@ import com.rs.detector.domain.Page;
 import com.rs.detector.domain.Project;
 import com.rs.detector.service.EditionService;
 import com.rs.detector.service.ProjectService;
+import com.rs.detector.service.measureDetection.MeasureDetectorResult;
+import com.rs.detector.service.measureDetection.MeasureDetectorService;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
 
 /**
@@ -19,6 +22,12 @@ public class EditingService {
 
     @Autowired
     EditingFileManagementService editingFileManagementService;
+
+    @Autowired
+    MeasureDetectorService measureDetectorService;
+
+    @Autowired
+    ScorePageService scorePageService;
 
     @Autowired
     ProjectService projectService;
@@ -44,20 +53,20 @@ public class EditingService {
      * @param e
      */
     public void extractImagesFromPDF(Edition e) throws IOException {
-        // Get project
-        // Deprecated. Shoul dbe contained in Edition
-//        var relatedProject = projectService.findOne(e.getProjectId())
-//            .block();
-
         editingFileManagementService.extractPagesFromEdition(e);
     }
 
-    public void triggerMeasureDetectionFull(Edition e) {
-
+    public void triggerMeasureDetectionFull(@NotNull Edition e) {
+        var allGeneratedAvailableScorePages = editingFileManagementService.getAllGeneratedScorePageFilesAsPageNr(e);
+        for(var pageNr: allGeneratedAvailableScorePages) {
+            var measureDetectorResult = runMeasureDetectionOnPage(e, pageNr);
+//            scorePageService.updatePage();
+        }
     }
 
-    public void triggerMeasureDetectionPage(Page p) {
-
+    public MeasureDetectorResult runMeasureDetectionOnPage(@NotNull Edition e, long pageNr) {
+        var bufferedImage = scorePageService.getBufferedImageFromPage(e, pageNr);
+        return measureDetectorService.process(bufferedImage);
     }
 
     public EditingFileManagementService getEditingFileManagementService() {

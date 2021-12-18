@@ -3,6 +3,7 @@ package com.rs.detector.service.editing;
 import com.rs.detector.config.ApplicationProperties;
 import com.rs.detector.domain.Edition;
 import com.rs.detector.domain.Project;
+import com.rs.detector.service.editing.exceptions.PagesMightNotHaveBeenGeneratedException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -25,6 +27,7 @@ class EditingFileManagementServiceTest extends SimpleDataInitialization {
 
 
     String sep = File.separator;
+    String fileFormat = ".png"; // TODO Outsource in config
 
     @Autowired
     EditingFileManagementService editingFileManagementService;
@@ -104,7 +107,7 @@ class EditingFileManagementServiceTest extends SimpleDataInitialization {
         editingFileManagementService.storePDFfile(testEdition, pdf);
         editingFileManagementService.setStartIndex(245);
         editingFileManagementService.extractPagesFromEdition(testEdition);
-        assert(editingFileManagementService.isPageExistent(testEdition, 245, ".png")) ;
+        assert(editingFileManagementService.isPageExistent(testEdition, 245)) ;
         pdf.close();
     }
 
@@ -135,4 +138,17 @@ class EditingFileManagementServiceTest extends SimpleDataInitialization {
 
     }
 
+    @Test
+    void loadPage() throws IOException, PagesMightNotHaveBeenGeneratedException {
+        var pdf = PDDocument.load(
+            new File("src/test/resources/scores/aegyptische-helena.pdf")
+        );
+
+        editingFileManagementService.storePDFfile(testEdition, pdf);
+        editingFileManagementService.setStartIndex(245);
+        editingFileManagementService.extractPagesFromEdition(testEdition);
+
+        var bufferedImage = editingFileManagementService.loadPage(testEdition, 245);
+        assertNotNull(bufferedImage);
+    }
 }

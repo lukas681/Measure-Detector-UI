@@ -30,6 +30,8 @@ public interface PageRepository extends R2dbcRepository<Page, Long>, PageReposit
 
     Flux<Page> findAllByEditionId(Long l);
 
+    Flux<Page> findAllByEditionIdAndPageNr(Long l, Long pageNr);
+
     @Override
     Mono<Page> findById(Long id);
 
