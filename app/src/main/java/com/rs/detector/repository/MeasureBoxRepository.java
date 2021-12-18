@@ -1,6 +1,7 @@
 package com.rs.detector.repository;
 
 import com.rs.detector.domain.MeasureBox;
+import com.rs.detector.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
@@ -22,6 +23,8 @@ public interface MeasureBoxRepository extends R2dbcRepository<MeasureBox, Long>,
 
     @Query("SELECT * FROM measure_box entity WHERE entity.page_id IS NULL")
     Flux<MeasureBox> findAllWherePageIsNull();
+
+    Flux<MeasureBox> findAllByPage(Page p);
 
     // just to avoid having unambigous methods
     @Override

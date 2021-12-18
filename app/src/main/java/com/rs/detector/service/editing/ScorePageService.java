@@ -11,13 +11,12 @@ import com.rs.detector.web.api.model.MeasureBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.annotation.Transient;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -102,15 +101,16 @@ public class ScorePageService {
     }
 
     // TODO: How to handle recalculations? deleting everything. Ignoring it?
-    public Flux<com.rs.detector.domain.MeasureBox> addMeasureDetectorResultBoxesToPage(ApiMeasureDetectorResult mdr, Edition e, long pageNr) {
+    public Flux<com.rs.detector.domain.MeasureBox> addMeasureDetectorResultBoxesToPage(ApiMeasureDetectorResult mdr,
+                                                                                       Edition e, long pageNr) {
         var page = this.findPageByEditionIdAndPageNr(e, pageNr);
-        List<com.rs.detector.domain.MeasureBox> measureBoxes = new ArrayList<>();
+        Set<com.rs.detector.domain.MeasureBox> measureBoxes = new HashSet<>();
 
+        // TODO what happens with old childs? Not being deleted automatically, right?
         mdr.getMeasures().forEach(measureBox->{
             measureBoxes.add(convertMeasureBoxDto(page, measureBox));
         });
-
-       return measureBoxService.saveAll(measureBoxes);
+       return measureBoxService.saveAll(new ArrayList<>(measureBoxes));
     }
 
     private com.rs.detector.domain.MeasureBox convertMeasureBoxDto(Page p, MeasureBox mb) {

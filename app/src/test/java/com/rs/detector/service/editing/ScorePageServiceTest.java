@@ -134,7 +134,7 @@ class ScorePageServiceTest extends SimpleDataInitialization {
     void addMeasureDetectorResultBoxesToPage() throws IOException {
         System.out.println("Active Profile:" + activeProfiles);
         var res =  measureDetectorService.process(null);
-        scorePageService.addMeasureDetectorResultBoxesToPage(res, testEdition, 243l);
+        scorePageService.addMeasureDetectorResultBoxesToPage(res, testEdition, 245l).blockLast();
 //        var dbRes = measureBoxRepository.findAll().collect(Collectors.toList()).block();
         var dbRes = measureBoxRepository
             .findByPage(testPage.getId())
