@@ -30,9 +30,9 @@ public class SimpleDataInitialization {
     @Autowired
     PageRepository pageRepository;
 
-    Edition testEdition;
-    Project testProject;
-    Page testPage;
+    public Edition testEdition;
+    public Project testProject;
+    public Page testPage;
 
     public void setup() {
         log.debug("Starting initialization");
