@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import java.util.*;
 
 /**
  * Service Implementation for managing {@link MeasureBox}.
@@ -35,7 +36,16 @@ public class MeasureBoxService {
         log.debug("Request to save MeasureBox : {}", measureBox);
         return measureBoxRepository.save(measureBox);
     }
-
+    /**
+     * Saved a collection of Measure Boxes .
+     *
+     * @param measureBox the entity to save.
+     * @return the persisted entity.
+     */
+    public Flux<MeasureBox> saveAll(List<MeasureBox> measureBox) {
+        log.debug("Request to save the following MeasureBoxes : {}", measureBox);
+        return measureBoxRepository.saveAll(measureBox);
+    }
     /**
      * Partially update a measureBox.
      *
@@ -115,4 +125,6 @@ public class MeasureBoxService {
         log.debug("Request to delete MeasureBox : {}", id);
         return measureBoxRepository.deleteById(id);
     }
+
+
 }

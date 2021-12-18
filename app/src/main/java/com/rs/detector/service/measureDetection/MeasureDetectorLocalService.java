@@ -1,5 +1,6 @@
 package com.rs.detector.service.measureDetection;
 
+import com.rs.detector.web.api.model.ApiMeasureDetectorResult;
 import org.springframework.stereotype.Service;
 import org.tensorflow.*;
 import org.tensorflow.types.UInt8;
@@ -86,7 +87,7 @@ public class MeasureDetectorLocalService implements MeasureDetectorService{
     // TODO Increase computing time by reusing this session!
     //  https://stackoverflow.com/questions/49819047/sess-run-is-too-slow
     // TODO Change signature
-    public MeasureDetectorResult process(BufferedImage imgPassed) {
+    public ApiMeasureDetectorResult process(BufferedImage imgPassed) {
 
         Tensor inputTensor = null;
         List<Tensor<?>> output = null;

@@ -5,8 +5,8 @@ import com.rs.detector.domain.Page;
 import com.rs.detector.domain.Project;
 import com.rs.detector.service.EditionService;
 import com.rs.detector.service.ProjectService;
-import com.rs.detector.service.measureDetection.MeasureDetectorResult;
 import com.rs.detector.service.measureDetection.MeasureDetectorService;
+import com.rs.detector.web.api.model.ApiMeasureDetectorResult;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -64,7 +64,7 @@ public class EditingService {
         }
     }
 
-    public MeasureDetectorResult runMeasureDetectionOnPage(@NotNull Edition e, long pageNr) {
+    public ApiMeasureDetectorResult runMeasureDetectionOnPage(@NotNull Edition e, long pageNr) {
         var bufferedImage = scorePageService.getBufferedImageFromPage(e, pageNr);
         return measureDetectorService.process(bufferedImage);
     }
