@@ -15,6 +15,7 @@ export type EntityArrayResponseType = HttpResponse<IEdition[]>;
 @Injectable({ providedIn: 'root' })
 export class EditionService {
   protected resourceUrl = this.applicationConfigService.getEndpointFor('api/editions');
+  protected resourceUrlEditionsByProject = this.applicationConfigService.getEndpointFor('api/editionsByProject');
 
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
@@ -45,11 +46,10 @@ export class EditionService {
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
- findByProjectId(id: number): Observable<EntityResponseType> {
-    // TODO NOT IMPLEMENED
+ findByProjectId(id: number): Observable<EntityArrayResponseType> {
     return this.http
-      .get<IEdition>(`${this.resourceUrl}/${id}`, { observe: 'response' })
-      .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+      .get<IEdition[]>(`${this.resourceUrlEditionsByProject}/${id}`, { observe: 'response' })
+      .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
   }
 
   query(req?: any): Observable<EntityArrayResponseType> {

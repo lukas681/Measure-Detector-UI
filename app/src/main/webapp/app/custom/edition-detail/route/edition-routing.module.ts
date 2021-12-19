@@ -13,7 +13,7 @@ const editionRoute: Routes = [
     path: ':id/',
     component: EditionComponent,
     resolve: {
-      requiredEditions: FindNecessaryEditionsService,
+      editions: FindNecessaryEditionsService,
     },
     canActivate: [UserRouteAccessService],
   },

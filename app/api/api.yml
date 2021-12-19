@@ -10,7 +10,6 @@ paths:
       responses:
         '200':
           description: Successful response
-
   /api/addEdition:
     post:
       summary: Adds a new edition + a corresponding

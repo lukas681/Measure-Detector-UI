@@ -23,7 +23,7 @@ export class EditionComponent implements OnInit {
   predicate: string;
   ascending: boolean;
 
-  constructor(protected activatedRouter: ActivatedRoute, protected editionService: EditionService, protected modalService: NgbModal, protected parseLinks: ParseLinks) {
+  constructor(protected activatedRoute: ActivatedRoute, protected editionService: EditionService, protected modalService: NgbModal, protected parseLinks: ParseLinks) {
     this.editions = [];
     this.itemsPerPage = ITEMS_PER_PAGE;
     this.page = 0;
@@ -35,7 +35,7 @@ export class EditionComponent implements OnInit {
   }
 
   loadAll(): void {
-    this.isLoading = true;
+    // this.isLoading = true;
   //
   //   this.editionService
   //     .query({
@@ -57,7 +57,7 @@ export class EditionComponent implements OnInit {
 
   reset(): void {
     this.page = 0;
-    this.editions = [];
+    // this.editions = [];
     this.loadAll();
   }
 
@@ -67,7 +67,17 @@ export class EditionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadAll();
+    this.activatedRoute.data.subscribe(({ editions}) => {
+      this.editions = editions;
+      // eslint-disable-next-line no-console
+      console.log(this.editions)
+      // eslint-disable-next-line no-console
+      console.log("HERE")
+    });
+
+    // eslint-disable-next-line no-console
+    console.log(this.editions)
+    // this.loadAll();
   }
 
   trackId(index: number, item: IEdition): number {

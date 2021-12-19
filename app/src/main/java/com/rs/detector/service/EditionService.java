@@ -112,4 +112,17 @@ public class EditionService {
         log.debug("Request to delete Edition : {}", id);
         return editionRepository.deleteById(id);
     }
+
+    /**
+     *
+     * Returns all the editions associated with a project
+     * @param id the id of the entity.
+     * @return the entity.
+     */
+    @Transactional(readOnly = true)
+    public Flux<Edition> findAllByProject(Long id) {
+        log.debug("Request to get Edition : {}", id);
+        return editionRepository.findByProject(id);
+    }
+
 }
