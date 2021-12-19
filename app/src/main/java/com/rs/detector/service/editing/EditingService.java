@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -67,29 +68,31 @@ public class EditingService {
     }
 
     // TODO Catch Exception
+    // TODO Remove Blocking also here.
     public void triggerMeasureDetectionFull(@NotNull Edition e) throws IOException {
-        // TODO maybe delete Boxes/Pages if already run beforehand
-
         var allGeneratedAvailableScorePages = editingFileManagementService.getAllGeneratedScorePageFilesAsPageNr(e);
         for(var pageNr: allGeneratedAvailableScorePages) {
-            var measureDetectorResult = runMeasureDetectionOnPage(e, pageNr);
-            var p =
-                pageRepository.findAllByEditionId(e.getId())
-                    .collect(Collectors.toList())
-                    .block()
-                    .stream()
-                    .filter(x->x.getPageNr()==pageNr)
-                    .collect(Collectors.toList())
-                    .stream()
-                    .findFirst();
-            if(p.isPresent()) {
-//                scorePageService.updatePageWithMDResult(p.get(), measureDetectorResult);
-
-            } else {
-                log.error("The page could not be found!");
-            }
-
+            runMeasureDetectionForSinglePage(e, pageNr);
         }
+    }
+
+    private void runMeasureDetectionForSinglePage(Edition e, Long pageNr) throws IOException {
+        var measureDetectorResult = runMeasureDetectionOnPage(e, pageNr);
+        var p =
+            searchPageInRepository(e, pageNr);
+        if(p.isPresent()) {
+            scorePageService.updatePageMeasureBoxesWithMDResult(p.get(), measureDetectorResult).blockLast();
+        } else {
+            log.error("The desired page could not be found. Maybe it has not been created so far?!");
+        }
+    }
+
+    private Optional<Page> searchPageInRepository(Edition e, Long pageNr) {
+        return pageRepository.findAllByEditionId(e.getId())
+            .collect(Collectors.toList()).block()
+            .stream().filter(x -> x.getPageNr() == pageNr)
+            .collect(Collectors.toList()).stream()
+            .findFirst();
     }
 
     public ApiMeasureDetectorResult runMeasureDetectionOnPage(@NotNull Edition e, long pageNr) throws IOException {
