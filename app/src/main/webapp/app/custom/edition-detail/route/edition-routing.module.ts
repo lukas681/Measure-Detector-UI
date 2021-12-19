@@ -6,11 +6,15 @@ import { EditionComponent } from '../list/edition.component';
 import { EditionDetailComponent } from '../detail/edition-detail.component';
 import { EditionUpdateComponent } from '../update/edition-update.component';
 import { EditionRoutingResolveService } from './edition-routing-resolve.service';
+import {FindNecessaryEditionsService} from "./find-necessary-editions.service";
 
 const editionRoute: Routes = [
   {
     path: ':id/',
     component: EditionComponent,
+    resolve: {
+      requiredEditions: FindNecessaryEditionsService,
+    },
     canActivate: [UserRouteAccessService],
   },
   {

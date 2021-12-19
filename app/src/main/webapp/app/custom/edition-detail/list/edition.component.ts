@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ActivatedRoute } from '@angular/router';
 
 import { IEdition } from '../edition-detail.model';
 
@@ -22,7 +23,7 @@ export class EditionComponent implements OnInit {
   predicate: string;
   ascending: boolean;
 
-  constructor(protected editionService: EditionService, protected modalService: NgbModal, protected parseLinks: ParseLinks) {
+  constructor(protected activatedRouter: ActivatedRoute, protected editionService: EditionService, protected modalService: NgbModal, protected parseLinks: ParseLinks) {
     this.editions = [];
     this.itemsPerPage = ITEMS_PER_PAGE;
     this.page = 0;
@@ -35,22 +36,23 @@ export class EditionComponent implements OnInit {
 
   loadAll(): void {
     this.isLoading = true;
-
-    this.editionService
-      .query({
-        page: this.page,
-        size: this.itemsPerPage,
-        sort: this.sort(),
-      })
-      .subscribe(
-        (res: HttpResponse<IEdition[]>) => {
-          this.isLoading = false;
-          this.paginateEditions(res.body, res.headers);
-        },
-        () => {
-          this.isLoading = false;
-        }
-      );
+  //
+  //   this.editionService
+  //     .query({
+  //       id: this.activatedRouter.data.id,
+  //       page: this.page,
+  //       size: this.itemsPerPage,
+  //       sort: this.sort(),
+  //     })
+  //     .subscribe(
+  //       (res: HttpResponse<IEdition[]>) => {
+  //         this.isLoading = false;
+  //         this.paginateEditions(res.body, res.headers);
+  //       },
+  //       () => {
+  //         this.isLoading = false;
+  //       }
+  //     );
   }
 
   reset(): void {

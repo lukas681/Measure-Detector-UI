@@ -45,6 +45,13 @@ export class EditionService {
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
+ findByProjectId(id: number): Observable<EntityResponseType> {
+    // TODO NOT IMPLEMENED
+    return this.http
+      .get<IEdition>(`${this.resourceUrl}/${id}`, { observe: 'response' })
+      .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+  }
+
   query(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
     return this.http
@@ -94,4 +101,5 @@ export class EditionService {
     }
     return res;
   }
+
 }
