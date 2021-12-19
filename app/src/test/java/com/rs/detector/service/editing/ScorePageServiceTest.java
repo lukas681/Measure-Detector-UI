@@ -1,5 +1,6 @@
 package com.rs.detector.service.editing;
 
+import com.rs.detector.domain.MeasureBox;
 import com.rs.detector.domain.Page;
 import com.rs.detector.repository.MeasureBoxRepository;
 import com.rs.detector.service.PageService;
@@ -20,6 +21,7 @@ import reactor.test.StepVerifier;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -159,18 +161,37 @@ class ScorePageServiceTest extends SimpleDataInitialization {
             .findByPage(testPage.getId())
             .collect(Collectors.toList()).block();
         assert(dbRes.size()==8);
-        System.out.println("Started to Delete");
-//        measureBoxRepository.deleteAll().block();
-//        var all = measureBoxRepository.findAll().collectList().block();
-//        for(var x: all) {
-//            measureBoxRepository.deleteById(x.getId()).block();
-//        }
 
+        // TODO NON Reactive with Step Verifier, but this might be more complicated as we have to do multiple calls
         pageService.deleteAllMeasureBoxes(testPage.getId()).blockLast();
 
         dbRes = measureBoxRepository
             .findByPage(testPage.getId())
             .collect(Collectors.toList()).block();
         assert(dbRes.size() == 0); //Asuming prepulated by super.setup
+    }
+
+    @Test
+    void updatePageMeasureBoxesWithMDResult() throws IOException {
+        List<com.rs.detector.web.api.model.MeasureBox> newMeasureBoxes = new ArrayList() {
+            {
+                add(new com.rs.detector.web.api.model.MeasureBox().left("123").right("235").top("567").bottom("765"));
+                add(new com.rs.detector.web.api.model.MeasureBox().left("126").right("239").top("576").bottom("770"));
+                add(new com.rs.detector.web.api.model.MeasureBox().left("128").right("235").top("667").bottom("795"));
+                add(new com.rs.detector.web.api.model.MeasureBox().left("129").right("235").top("767").bottom("805"));
+            }
+        };
+        var newMeasureDetectorResult = new ApiMeasureDetectorResult()
+            .measures(newMeasureBoxes);
+
+        var res =  measureDetectorService.process(null);
+        scorePageService.addMeasureDetectorResultBoxesToPage(res, testEdition, 245l).blockLast();
+        var debug = scorePageService.updatePageMeasureBoxesWithMDResult(testPage, newMeasureDetectorResult).blockLast();
+
+        var dbRes = measureBoxRepository
+            .findByPage(testPage.getId())
+            .collect(Collectors.toList()).block();
+
+        assert(dbRes.size() == 4); //Asuming prepulated by super.setup
     }
 }

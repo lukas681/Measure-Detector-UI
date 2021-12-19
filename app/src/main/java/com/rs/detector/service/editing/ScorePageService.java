@@ -5,17 +5,16 @@ import com.rs.detector.domain.Page;
 import com.rs.detector.repository.PageRepository;
 import com.rs.detector.service.EditionService;
 import com.rs.detector.service.MeasureBoxService;
+import com.rs.detector.service.PageService;
 import com.rs.detector.service.editing.exceptions.PagesMightNotHaveBeenGeneratedException;
 import com.rs.detector.web.api.model.ApiMeasureDetectorResult;
 import com.rs.detector.web.api.model.MeasureBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.annotation.Transient;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
-import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,6 +30,9 @@ public class ScorePageService {
     EditingFileManagementService editingFileManagementService;
 
     @Autowired
+    PageService pageService;
+
+    @Autowired
     MeasureBoxService measureBoxService;
 
     @Autowired
@@ -41,8 +43,9 @@ public class ScorePageService {
 
     /**
      * This method will prepopulate the database with new page.
+     * <p>
+     * iiii @param e
      *
-     *iiii @param e
      * @return
      */
     public Flux<Page> generatePageObjectIfNotExistent(Edition e) throws PagesMightNotHaveBeenGeneratedException {
@@ -57,14 +60,14 @@ public class ScorePageService {
             .collect(Collectors.toList())
             .block();
 
-        for(var p:allGeneratedPages) {
+        for (var p : allGeneratedPages) {
             var fileNameToPageNr = EditingFileManagementService.convertFileNameToPageNumber(p);
-            if(pages.stream().noneMatch(x -> x.getPageNr().equals(fileNameToPageNr))) {
-               pages.add(new Page()
-                   .imgFileReference(p)
-                   .pageNr(fileNameToPageNr)
-                   .edition(e)
-               );
+            if (pages.stream().noneMatch(x -> x.getPageNr().equals(fileNameToPageNr))) {
+                pages.add(new Page()
+                    .imgFileReference(p)
+                    .pageNr(fileNameToPageNr)
+                    .edition(e)
+                );
             } else {
                 // TODO update Page
             }
@@ -76,17 +79,17 @@ public class ScorePageService {
     public List<Page> sortAndFillNextLinks(List<Page> pages) {
         logPages(pages);
         pages.sort(Comparator.comparing(Page::getPageNr));
-        if(pages.size() == 1) {
+        if (pages.size() == 1) {
             return pages;
         }
-        for(int i = 0; i < pages.size()-1; i++) {
-           pages.get(i).setNextPage(pages.get(i+1).getPageNr()); // Page number is a mantatory field
+        for (int i = 0; i < pages.size() - 1; i++) {
+            pages.get(i).setNextPage(pages.get(i + 1).getPageNr()); // Page number is a mantatory field
         }
         return pages;
     }
 
     private void logPages(List<Page> pages) {
-        pages.forEach(x->log.debug(String.valueOf(x)));
+        pages.forEach(x -> log.debug(String.valueOf(x)));
     }
 
     // TODO: How to handle recalculations? deleting everything. Ignoring it?
@@ -96,10 +99,10 @@ public class ScorePageService {
         Set<com.rs.detector.domain.MeasureBox> measureBoxes = new HashSet<>();
 
         // TODO what happens with old childs? Not being deleted automatically, right?
-        mdr.getMeasures().forEach(measureBox->{
+        mdr.getMeasures().forEach(measureBox -> {
             measureBoxes.add(convertMeasureBoxDto(page, measureBox));
         });
-       return measureBoxService.saveAll(new ArrayList<>(measureBoxes));
+        return measureBoxService.saveAll(new ArrayList<>(measureBoxes));
     }
 
     private com.rs.detector.domain.MeasureBox convertMeasureBoxDto(Page p, MeasureBox mb) {
@@ -115,18 +118,35 @@ public class ScorePageService {
 
     // Cuts off all the (variable-lengthed) decimals and casts it to a long
     public static long valueOfCutDecimals(String pixelDecimal) {
-        return (long)Double.parseDouble(pixelDecimal);
+        return (long) Double.parseDouble(pixelDecimal);
     }
 
     public Page findPageByEditionIdAndPageNr(Edition e, long pageNr) {
-        var res = pageRepository.findAllByEditionIdAndPageNr(e.getId(),pageNr)
+        var res = pageRepository.findAllByEditionIdAndPageNr(e.getId(), pageNr)
             .collect(Collectors.toList())
             .block();
-        return (res.size()==0?null :res.get(0));
+        return (res.size() == 0 ? null : res.get(0));
     }
 
-    public void updatePageMeasureBoxesWithMDResult(Page page, ApiMeasureDetectorResult measureDetectorResult) {
+    /**
+     * Takes a new Measure Detector Run (@{@link ApiMeasureDetectorResult}, deletes the attached boxes on the page
+     * and replaces them.
+     * @param page
+     * @param measureDetectorResult
+     * @return
+     */
+    public Flux<com.rs.detector.domain.MeasureBox> updatePageMeasureBoxesWithMDResult(Page page, ApiMeasureDetectorResult measureDetectorResult) {
+        assert (page.getId() != null);
+        // TODO Later: Replace this blockig behaviour. But I already tried with .flatMap(..) as a chain, but this did
+        //  not really execute.
 
-//        private void deleteAllMeasureBoxesOfOPageM;
+        pageService.deleteAllMeasureBoxes(page.getId()).blockLast();
+
+        Set<com.rs.detector.domain.MeasureBox> measureBoxes = new HashSet<>();
+        measureDetectorResult.getMeasures().forEach(measureBox ->
+            measureBoxes.add(convertMeasureBoxDto(page, measureBox))
+        );
+        log.debug("Replacing the old Measure Boxes");
+        return measureBoxService.saveAll(new ArrayList<>(measureBoxes));
     }
 }
