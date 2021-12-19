@@ -7,6 +7,9 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+import javax.persistence.CascadeType;
+import javax.persistence.ManyToOne;
+
 /**
  * A MeasureBox.
  */

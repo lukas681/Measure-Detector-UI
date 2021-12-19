@@ -1,9 +1,5 @@
 package com.rs.detector.service.editing;
 
-import com.rs.detector.domain.Edition;
-import com.rs.detector.domain.Project;
-import com.rs.detector.repository.EditionRepository;
-import com.rs.detector.repository.ProjectRepository;
 import com.rs.detector.service.editing.exceptions.PagesMightNotHaveBeenGeneratedException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.junit.jupiter.api.BeforeEach;
@@ -69,12 +65,26 @@ class EditingServiceTest extends SimpleDataInitialization {
 
         editingService.uploadNewEdition(testEdition, pdf);
         editingService.extractImagesFromPDF(testEdition);
-        scorePageService.generatePageObjectIfNotExistent(testEdition);
+        scorePageService.generatePageObjectIfNotExistent(testEdition).blockLast();
         //__________________________________________________________
 
         var res = editingService.runMeasureDetectionOnPage(testEdition, 243);
         assertNotNull(res);
 
+
+    }
+
+    @Test
+    void runFullMeasureDetectionOverEdition() throws IOException, PagesMightNotHaveBeenGeneratedException {
+        var pdf = PDDocument.load(new File("src/test/resources/scores/aegyptische-helena.pdf"));
+        editingService.getEditingFileManagementService().setStartIndex(245);
+        editingService.uploadNewEdition(testEdition, pdf);
+        editingService.extractImagesFromPDF(testEdition);
+        scorePageService.generatePageObjectIfNotExistent(testEdition).blockLast();
+
+        editingService.runFullMeasureDetectionOverEdition(testEdition);
+
+        var res = pageRepository.findAllByEditionId(testEdition.getId()).collectList().block();
 
     }
 }

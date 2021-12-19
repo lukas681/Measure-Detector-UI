@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
@@ -37,6 +39,7 @@ public class Page implements Serializable {
 
     @Transient
     @JsonIgnoreProperties(value = { "page" }, allowSetters = true)
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
     private Set<MeasureBox> measureBoxes = new HashSet<>();
 
     @Transient

@@ -69,7 +69,19 @@ public class EditingService {
 
     // TODO Catch Exception
     // TODO Remove Blocking also here.
-    public void triggerMeasureDetectionFull(@NotNull Edition e) throws IOException {
+
+    /**
+     * Triggeres the Measure Detection on all Pages. Requires the methods and uploaded Edition and the extracted
+     * Images, so make sure to call that beforehand. For example:
+     *
+     * editingService.uploadNewEdition(testEdition, pdf);
+     * editingService.extractImagesFromPDF(testEdition);
+     * scorePageService.generatePageObjectIfNotExistent(testEdition);
+     *
+     * @param e the complete edition to be processed
+     * @throws IOException
+     */
+    public void runFullMeasureDetectionOverEdition(@NotNull Edition e) throws IOException {
         var allGeneratedAvailableScorePages = editingFileManagementService.getAllGeneratedScorePageFilesAsPageNr(e);
         for(var pageNr: allGeneratedAvailableScorePages) {
             runMeasureDetectionForSinglePage(e, pageNr);
@@ -83,14 +95,14 @@ public class EditingService {
         if(p.isPresent()) {
             scorePageService.updatePageMeasureBoxesWithMDResult(p.get(), measureDetectorResult).blockLast();
         } else {
-            log.error("The desired page could not be found. Maybe it has not been created so far?!");
+            log.error("The desired page " + pageNr +" could not be found. Maybe it has not been created so far?!");
         }
     }
 
     private Optional<Page> searchPageInRepository(Edition e, Long pageNr) {
         return pageRepository.findAllByEditionId(e.getId())
             .collect(Collectors.toList()).block()
-            .stream().filter(x -> x.getPageNr() == pageNr)
+            .stream().filter(x -> x.getPageNr().equals(pageNr))
             .collect(Collectors.toList()).stream()
             .findFirst();
     }
