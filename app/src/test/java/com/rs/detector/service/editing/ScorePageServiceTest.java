@@ -2,6 +2,7 @@ package com.rs.detector.service.editing;
 
 import com.rs.detector.domain.Page;
 import com.rs.detector.repository.MeasureBoxRepository;
+import com.rs.detector.service.PageService;
 import com.rs.detector.service.editing.exceptions.PagesMightNotHaveBeenGeneratedException;
 import com.rs.detector.service.measureDetection.MeasureDetectorService;
 import com.rs.detector.web.api.model.ApiMeasureDetectorResult;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.io.File;
@@ -31,6 +33,9 @@ class ScorePageServiceTest extends SimpleDataInitialization {
 
     @Autowired
     ScorePageService scorePageService;
+
+    @Autowired
+    PageService pageService;
 
     @Autowired
     MeasureDetectorService measureDetectorService;
@@ -143,5 +148,29 @@ class ScorePageServiceTest extends SimpleDataInitialization {
         dbRes.forEach(System.out::println);
         assert(dbRes.size()==8);
         System.out.println(res);
+    }
+
+    @Test
+    void deleteAllMeasureBoxes() throws IOException, InterruptedException {
+        System.out.println("Active Profile:" + activeProfiles);
+        var res =  measureDetectorService.process(null);
+        scorePageService.addMeasureDetectorResultBoxesToPage(res, testEdition, 245l).blockLast();
+        var dbRes = measureBoxRepository
+            .findByPage(testPage.getId())
+            .collect(Collectors.toList()).block();
+        assert(dbRes.size()==8);
+        System.out.println("Started to Delete");
+//        measureBoxRepository.deleteAll().block();
+//        var all = measureBoxRepository.findAll().collectList().block();
+//        for(var x: all) {
+//            measureBoxRepository.deleteById(x.getId()).block();
+//        }
+
+        pageService.deleteAllMeasureBoxes(testPage.getId()).blockLast();
+
+        dbRes = measureBoxRepository
+            .findByPage(testPage.getId())
+            .collect(Collectors.toList()).block();
+        assert(dbRes.size() == 0); //Asuming prepulated by super.setup
     }
 }

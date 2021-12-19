@@ -1,6 +1,7 @@
 package com.rs.detector.service;
 
 import com.rs.detector.domain.MeasureBox;
+import com.rs.detector.domain.Page;
 import com.rs.detector.repository.MeasureBoxRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +46,13 @@ public class MeasureBoxService {
     public Flux<MeasureBox> saveAll(List<MeasureBox> measureBox) {
         log.debug("Request to save the following MeasureBoxes : {}", measureBox);
         return measureBoxRepository.saveAll(measureBox);
+    }
+
+    @Transactional(readOnly = true)
+    public Flux<MeasureBox> findAllByPageId(Long pageId) {
+        assert(pageId != null);
+        log.debug("Finding all by Page Id: " + pageId);
+        return measureBoxRepository.findByPage(pageId);
     }
     /**
      * Partially update a measureBox.
@@ -126,5 +134,9 @@ public class MeasureBoxService {
         return measureBoxRepository.deleteById(id);
     }
 
+    public Mono<Void> deleteAllById(List<Long> ids) {
+        log.debug("Deleting the following boxes: " + ids);
+        return measureBoxRepository.deleteAllById(ids);
+    }
 
 }

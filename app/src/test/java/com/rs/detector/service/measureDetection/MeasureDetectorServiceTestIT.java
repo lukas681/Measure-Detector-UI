@@ -48,7 +48,9 @@ class MeasureDetectorServiceTestIT extends SimpleDataInitialization {
         scorePageService.generatePageObjectIfNotExistent(testEdition);
         //__________________________________________________________
 
+        // NOTE: This already works with the previously generated ong files!
         var res = editingService.runMeasureDetectionOnPage(testEdition, 245);
         assertNotNull(res);
+        assert(res.getMeasures().size()==4);
     }
 }

@@ -21,6 +21,8 @@ public interface MeasureBoxRepository extends R2dbcRepository<MeasureBox, Long>,
     @Query("SELECT * FROM measure_box entity WHERE entity.page_id = :id")
     Flux<MeasureBox> findByPage(Long id);
 
+    Flux<MeasureBox> findByPageId(Long id);
+
     @Query("SELECT * FROM measure_box entity WHERE entity.page_id IS NULL")
     Flux<MeasureBox> findAllWherePageIsNull();
 

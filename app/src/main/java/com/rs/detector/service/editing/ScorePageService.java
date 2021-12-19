@@ -89,17 +89,6 @@ public class ScorePageService {
         pages.forEach(x->log.debug(String.valueOf(x)));
     }
 
-    public BufferedImage getBufferedImageFromPage(Edition e, long pageNr ) {
-        assert(e != null);
-//        return editingFileManagementService.getBufferedPage(e, );
-
-        return null;
-//        BufferedImage img = null;
-//        try {
-//            img = ImageIO.read(new File(""));
-//        }
-    }
-
     // TODO: How to handle recalculations? deleting everything. Ignoring it?
     public Flux<com.rs.detector.domain.MeasureBox> addMeasureDetectorResultBoxesToPage(ApiMeasureDetectorResult mdr,
                                                                                        Edition e, long pageNr) {
@@ -134,5 +123,10 @@ public class ScorePageService {
             .collect(Collectors.toList())
             .block();
         return (res.size()==0?null :res.get(0));
+    }
+
+    public void updatePageMeasureBoxesWithMDResult(Page page, ApiMeasureDetectorResult measureDetectorResult) {
+
+//        private void deleteAllMeasureBoxesOfOPageM;
     }
 }

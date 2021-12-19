@@ -1,6 +1,7 @@
 package com.rs.detector.service;
 
 import com.rs.detector.domain.Page;
+import com.rs.detector.repository.MeasureBoxRepository;
 import com.rs.detector.repository.PageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +22,14 @@ public class PageService {
 
     private final PageRepository pageRepository;
 
-    public PageService(PageRepository pageRepository) {
+    private final MeasureBoxService measureBoxService;
+
+    private final MeasureBoxRepository measureBoxRepository;
+
+    public PageService(PageRepository pageRepository, MeasureBoxService measureBoxService, MeasureBoxRepository measureBoxRepository) {
         this.pageRepository = pageRepository;
+        this.measureBoxService = measureBoxService;
+        this.measureBoxRepository = measureBoxRepository;
     }
 
     /**
@@ -105,5 +112,20 @@ public class PageService {
     public Mono<Void> delete(Long id) {
         log.debug("Request to delete Page : {}", id);
         return pageRepository.deleteById(id);
+    }
+
+
+    /**
+     * Deletes all boxes attached to one page
+     * @param pageId
+     * @return
+     */
+    public Flux<Void> deleteAllMeasureBoxes(Long pageId) {
+        log.debug("Fetching all Measure Boxes");
+
+        return measureBoxRepository.findByPageId(pageId)
+          .flatMap(x->
+              measureBoxRepository.deleteById(x.getId())
+          );
     }
 }

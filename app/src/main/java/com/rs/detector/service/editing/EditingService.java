@@ -3,17 +3,21 @@ package com.rs.detector.service.editing;
 import com.rs.detector.domain.Edition;
 import com.rs.detector.domain.Page;
 import com.rs.detector.domain.Project;
+import com.rs.detector.repository.PageRepository;
 import com.rs.detector.service.EditionService;
 import com.rs.detector.service.ProjectService;
 import com.rs.detector.service.measureDetection.MeasureDetectorService;
 import com.rs.detector.web.api.model.ApiMeasureDetectorResult;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 /**
  * This service projects the process of editing music. Therefore, it provides methods to create new Editins along with the corresponding scanned sheets.
@@ -21,8 +25,13 @@ import java.io.IOException;
 @Service
 public class EditingService {
 
+    private final Logger log = LoggerFactory.getLogger(EditingService.class);
+
     @Autowired
     EditingFileManagementService editingFileManagementService;
+
+    @Autowired
+    PageRepository pageRepository;
 
     @Autowired
     MeasureDetectorService measureDetectorService;
@@ -64,7 +73,22 @@ public class EditingService {
         var allGeneratedAvailableScorePages = editingFileManagementService.getAllGeneratedScorePageFilesAsPageNr(e);
         for(var pageNr: allGeneratedAvailableScorePages) {
             var measureDetectorResult = runMeasureDetectionOnPage(e, pageNr);
-//            scorePageService.updatePage();
+            var p =
+                pageRepository.findAllByEditionId(e.getId())
+                    .collect(Collectors.toList())
+                    .block()
+                    .stream()
+                    .filter(x->x.getPageNr()==pageNr)
+                    .collect(Collectors.toList())
+                    .stream()
+                    .findFirst();
+            if(p.isPresent()) {
+//                scorePageService.updatePageWithMDResult(p.get(), measureDetectorResult);
+
+            } else {
+                log.error("The page could not be found!");
+            }
+
         }
     }
 
