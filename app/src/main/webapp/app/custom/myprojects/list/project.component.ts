@@ -35,8 +35,6 @@ export class ProjectComponent implements OnInit {
   }
 
   loadAll(): void {
-    this.storageService.setActiveProjectID(1);
-
     this.isLoading = true;
 
     this.projectService

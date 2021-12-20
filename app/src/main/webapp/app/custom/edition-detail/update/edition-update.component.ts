@@ -45,15 +45,16 @@ export class EditionUpdateComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+
+    // If something arrives: Edit Mode
     this.activatedRoute.data.subscribe(({ edition }) => {
 
       if (edition.id === undefined) {
-        const today = dayjs().startOf('day');
-        edition.createdDate = today;
+        // Create.New Mode
+        edition.createdDate = dayjs();
+        edition.projectId = this.storageService.getActiveProjectId();
       }
-
       this.updateForm(edition);
-
       this.loadRelationshipsOptions();
     });
   }
@@ -98,22 +99,18 @@ export class EditionUpdateComponent implements OnInit {
 
 
   protected updateForm(edition: IEdition): void {
-    // eslint-disable-next-line no-console
-    console.log(this.storageService.getActiveProjectId())
 
     this.editForm.patchValue({
       // id: edition.id,
       id: edition.id,
       title: edition.title,
       createdDate: edition.createdDate ? edition.createdDate.format(DATE_TIME_FORMAT) : null,
-      type: "Test",
-      // type: edition.type,
+      type: edition.type,
       description: edition.description,
       pDFFileName: edition.pDFFileName,
       // project: this.storageService.getActiveProjectId(),
       projectId: edition.projectId,
     });
-
     this.projectsSharedCollection = this.projectService.addProjectToCollectionIfMissing(this.projectsSharedCollection, edition.project);
   }
 

@@ -81,12 +81,12 @@
             class="form-control"
             name="pDFFileName"
             id="field_pDFFileName"
-            data-cy="pDFFileName"
+            data-cy="p_DFFileName"
             formControlName="pDFFileName"
           />
         </div>
 
-          <div class="form-group" [hidden]="editForm.get('projectId')!.value == null">
+          <div class="form-group">
             <label class="form-control-label" jhiTranslate="measureDetectorApp.edition.project" for="field_project"
             >Project</label>
             <input
@@ -94,14 +94,11 @@
               class="form-control"
               name="projectId"
               readonly="true"
-              [contentEditable]="false"
-              contenteditable="false"
               id="field_project"
               data-cy="projectId"
               formControlName="projectId"
             />
           </div>
-
       </div>
       <div>
         <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">

@@ -14,7 +14,7 @@ export class EditionRoutingResolveService implements Resolve<IEdition> {
 
   resolve(route: ActivatedRouteSnapshot): Observable<IEdition> | Observable<never> {
     const id = route.params['id'];
-    this.storageService.setActiveProjectID(id);
+    // this.storageService.setActiveProjectID(id);
 
     if (id) {
       return this.service.find(id).pipe(

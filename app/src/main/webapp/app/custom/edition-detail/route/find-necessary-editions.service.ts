@@ -15,7 +15,6 @@ export class FindNecessaryEditionsService implements Resolve<IEdition[]> {
 
   resolve(route: ActivatedRouteSnapshot): Observable<IEdition[]> | Observable<never> {
     const id = route.params['id'];
-
     if (id) {
       return this.service.findByProjectId(id).pipe(
         mergeMap((edition: HttpResponse<Edition[]>) => {

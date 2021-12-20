@@ -68,6 +68,9 @@ export class EditionComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const z = this.storageService.getActiveProjectId()
+    // eslint-disable-next-line no-console
+    console.log(z);
     this.activatedRoute.data.subscribe(({ editions}) => {
       this.editions = editions;
       // eslint-disable-next-line no-console
