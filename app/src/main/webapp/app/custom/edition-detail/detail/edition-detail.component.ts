@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
+import {StorageService} from '../service/edition-storage.service'
 import { IEdition } from '../edition-detail.model';
 
 @Component({
@@ -10,7 +10,8 @@ import { IEdition } from '../edition-detail.model';
 export class EditionDetailComponent implements OnInit {
   edition: IEdition | null = null;
 
-  constructor(protected activatedRoute: ActivatedRoute) {}
+
+  constructor(protected storageService: StorageService, protected activatedRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ edition }) => {

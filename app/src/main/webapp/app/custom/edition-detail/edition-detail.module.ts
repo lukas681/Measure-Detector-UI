@@ -7,7 +7,7 @@ import { EditionDeleteDialogComponent } from './delete/edition-delete-dialog.com
 import { EditionRoutingModule } from './route/edition-routing.module';
 
 @NgModule({
-  imports: [SharedModule, EditionRoutingModule],
+  imports: [SharedModule, EditionRoutingModule, ],
   declarations: [EditionComponent, EditionDetailComponent, EditionUpdateComponent, EditionDeleteDialogComponent],
   entryComponents: [EditionDeleteDialogComponent],
 })

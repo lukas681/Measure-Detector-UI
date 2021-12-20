@@ -65,9 +65,7 @@
           <td>{{ edition.description }}</td>
           <td>{{ edition.pDFFileName }}</td>
           <td>
-            <div *ngIf="edition.project">
-              <a [routerLink]="['/project', edition.project?.id, 'view']">{{ edition.project?.id }}</a>
-            </div>
+              <a [routerLink]="['/myprojects', edition.projectId, 'view']">{{ edition.projectId }}</a>
           </td>
           <td class="text-right">
             <div class="btn-group">

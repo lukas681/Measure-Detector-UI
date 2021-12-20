@@ -8,6 +8,7 @@ import { ASC, DESC, ITEMS_PER_PAGE } from 'app/config/pagination.constants';
 import { ProjectService } from '../service/project.service';
 import { ProjectDeleteDialogComponent } from '../delete/project-delete-dialog.component';
 import { ParseLinks } from 'app/core/util/parse-links.service';
+import {StorageService} from "../../edition-detail/service/edition-storage.service";
 
 @Component({
   selector: 'jhi-project',
@@ -22,7 +23,7 @@ export class ProjectComponent implements OnInit {
   predicate: string;
   ascending: boolean;
 
-  constructor(protected projectService: ProjectService, protected modalService: NgbModal, protected parseLinks: ParseLinks) {
+  constructor(protected storageService: StorageService, protected projectService: ProjectService, protected modalService: NgbModal, protected parseLinks: ParseLinks) {
     this.projects = [];
     this.itemsPerPage = ITEMS_PER_PAGE;
     this.page = 0;
@@ -34,6 +35,8 @@ export class ProjectComponent implements OnInit {
   }
 
   loadAll(): void {
+    this.storageService.setActiveProjectID(1);
+
     this.isLoading = true;
 
     this.projectService
@@ -106,4 +109,5 @@ export class ProjectComponent implements OnInit {
       }
     }
   }
+
 }

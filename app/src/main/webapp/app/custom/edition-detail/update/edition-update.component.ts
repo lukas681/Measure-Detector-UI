@@ -13,6 +13,8 @@ import { EditionService } from '../service/edition.service';
 import { IProject } from 'app/entities/project/project.model';
 import { ProjectService } from 'app/entities/project/service/project.service';
 import { EditionType } from 'app/entities/enumerations/edition-type.model';
+import {StorageService} from '../service/edition-storage.service'
+
 
 @Component({
   selector: 'jhi-edition-update',
@@ -31,10 +33,11 @@ export class EditionUpdateComponent implements OnInit {
     type: [],
     description: [],
     pDFFileName: [],
-    project: [],
+    project: [1],
   });
 
   constructor(
+    protected storageService: StorageService,
     protected editionService: EditionService,
     protected projectService: ProjectService,
     protected activatedRoute: ActivatedRoute,
@@ -43,6 +46,7 @@ export class EditionUpdateComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ edition }) => {
+
       if (edition.id === undefined) {
         const today = dayjs().startOf('day');
         edition.createdDate = today;
@@ -55,6 +59,7 @@ export class EditionUpdateComponent implements OnInit {
   }
 
   previousState(): void {
+
     window.history.back();
   }
 
@@ -92,14 +97,20 @@ export class EditionUpdateComponent implements OnInit {
   }
 
   protected updateForm(edition: IEdition): void {
+    // eslint-disable-next-line no-console
+    console.log(this.storageService.getActiveProjectId())
+
     this.editForm.patchValue({
+      // id: edition.id,
       id: edition.id,
       title: edition.title,
       createdDate: edition.createdDate ? edition.createdDate.format(DATE_TIME_FORMAT) : null,
-      type: edition.type,
+      type: "Test",
+      // type: edition.type,
       description: edition.description,
       pDFFileName: edition.pDFFileName,
-      project: edition.project,
+      // project: this.storageService.getActiveProjectId(),
+      project: edition.projectId,
     });
 
     this.projectsSharedCollection = this.projectService.addProjectToCollectionIfMissing(this.projectsSharedCollection, edition.project);

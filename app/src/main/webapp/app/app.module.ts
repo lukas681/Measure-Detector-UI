@@ -17,6 +17,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { HomeModule } from './home/home.module';
 import { EntityRoutingModule } from './entities/entity-routing.module';
 import { CustomRoutingModule} from './custom/custom-routing.module';
+import { StorageService} from "./custom/edition-detail/service/edition-storage.service";
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import { NgbDateDayjsAdapter } from './config/datepicker-adapter';
 import { fontAwesomeIcons } from './config/font-awesome-icons';
@@ -55,6 +56,7 @@ import { ErrorComponent } from './layouts/error/error.component';
     }),
   ],
   providers: [
+    StorageService,
     Title,
     { provide: LOCALE_ID, useValue: 'de' },
     { provide: NgbDateAdapter, useClass: NgbDateDayjsAdapter },

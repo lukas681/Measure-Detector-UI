@@ -9,6 +9,7 @@ import { ASC, DESC, ITEMS_PER_PAGE } from 'app/config/pagination.constants';
 import { EditionService } from '../service/edition.service';
 import { EditionDeleteDialogComponent } from '../delete/edition-delete-dialog.component';
 import { ParseLinks } from 'app/core/util/parse-links.service';
+import {StorageService} from '../service/edition-storage.service'
 
 @Component({
   selector: 'jhi-edition',
@@ -23,7 +24,7 @@ export class EditionComponent implements OnInit {
   predicate: string;
   ascending: boolean;
 
-  constructor(protected activatedRoute: ActivatedRoute, protected editionService: EditionService, protected modalService: NgbModal, protected parseLinks: ParseLinks) {
+  constructor(protected storageService: StorageService, protected activatedRoute: ActivatedRoute, protected editionService: EditionService, protected modalService: NgbModal, protected parseLinks: ParseLinks) {
     this.editions = [];
     this.itemsPerPage = ITEMS_PER_PAGE;
     this.page = 0;
@@ -71,8 +72,6 @@ export class EditionComponent implements OnInit {
       this.editions = editions;
       // eslint-disable-next-line no-console
       console.log(this.editions)
-      // eslint-disable-next-line no-console
-      console.log("HERE")
     });
 
     // eslint-disable-next-line no-console

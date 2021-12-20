@@ -6,16 +6,20 @@ import { mergeMap } from 'rxjs/operators';
 
 import { IEdition, Edition } from '../edition-detail.model';
 import { EditionService } from '../service/edition.service';
+import {StorageService} from '../service/edition-storage.service'
 
 @Injectable({ providedIn: 'root' })
 export class FindNecessaryEditionsService implements Resolve<IEdition[]> {
-  constructor(protected service: EditionService, protected router: Router) {}
+
+  constructor(private storageService: StorageService, protected service: EditionService, protected router: Router) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<IEdition[]> | Observable<never> {
     const id = route.params['id'];
+
     if (id) {
       return this.service.findByProjectId(id).pipe(
         mergeMap((edition: HttpResponse<Edition[]>) => {
+          this.storageService.setActiveProjectID(id);
           if (edition.body) {
             return of(edition.body);
           } else {

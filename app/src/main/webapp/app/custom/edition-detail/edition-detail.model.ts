@@ -12,6 +12,8 @@ export interface IEdition {
   pDFFileName?: string | null;
   pages?: IPage[] | null;
   project?: IProject | null;
+  projectId?: number | null;
+
 }
 
 export class Edition implements IEdition {
@@ -23,8 +25,9 @@ export class Edition implements IEdition {
     public description?: string | null,
     public pDFFileName?: string | null,
     public pages?: IPage[] | null,
-    public project?: IProject | null
-  ) {}
+    public project?: IProject | null,
+    public projectId?: number | null
+) {}
 }
 
 export function getEditionIdentifier(edition: IEdition): number | undefined {
