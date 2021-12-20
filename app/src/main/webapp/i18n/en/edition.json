@@ -22,7 +22,8 @@
       "createdDate": "Created Date",
       "type": "Type",
       "description": "Description",
-      "pDFFileName": "P DF File Name",
+      "pDFFileName": "PDF filename",
+      "file": "PDF file",
       "pages": "Pages",
       "project": "Project"
     }

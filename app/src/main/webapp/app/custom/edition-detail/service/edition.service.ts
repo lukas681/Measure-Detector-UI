@@ -20,7 +20,10 @@ export class EditionService {
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
   create(edition: IEdition): Observable<EntityResponseType> {
+   // TODO switch the endpoint to actually allow data uploads!
+
     const copy = this.convertDateFromClient(edition);
+    console.warn(edition)
     return this.http
       .post<IEdition>(this.resourceUrl, copy, { observe: 'response' })
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
@@ -28,6 +31,7 @@ export class EditionService {
 
   update(edition: IEdition): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(edition);
+    console.warn(edition)
     return this.http
       .put<IEdition>(`${this.resourceUrl}/${getEditionIdentifier(edition) as number}`, copy, { observe: 'response' })
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));

@@ -13,7 +13,7 @@ export interface IEdition {
   pages?: IPage[] | null;
   project?: IProject | null;
   projectId?: number | null;
-
+  pdfFile?: File | null;
 }
 
 export class Edition implements IEdition {
@@ -26,7 +26,8 @@ export class Edition implements IEdition {
     public pDFFileName?: string | null,
     public pages?: IPage[] | null,
     public project?: IProject | null,
-    public projectId?: number | null
+    public projectId?: number | null,
+    public pdfFile?: File | null
 ) {}
 }
 

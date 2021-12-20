@@ -34,6 +34,7 @@ export class EditionUpdateComponent implements OnInit {
     description: [],
     pDFFileName: [],
     projectId: [],
+    pdfFile: []
   });
 
   constructor(
@@ -78,6 +79,12 @@ export class EditionUpdateComponent implements OnInit {
     return item.id!;
   }
 
+  selectFile(event: any): void {
+    console.warn(event.target.files)
+    // if(event.target.files) {
+    // }
+  }
+
   protected subscribeToSaveResponse(result: Observable<HttpResponse<IEdition>>): void {
     result.pipe(finalize(() => this.onSaveFinalize())).subscribe(
       () => this.onSaveSuccess(),
@@ -110,6 +117,7 @@ export class EditionUpdateComponent implements OnInit {
       pDFFileName: edition.pDFFileName,
       // project: this.storageService.getActiveProjectId(),
       projectId: edition.projectId,
+     // TODO Maybe send the PDF file back?
     });
     this.projectsSharedCollection = this.projectService.addProjectToCollectionIfMissing(this.projectsSharedCollection, edition.project);
   }
@@ -136,6 +144,8 @@ export class EditionUpdateComponent implements OnInit {
       description: this.editForm.get(['description'])!.value,
       pDFFileName: this.editForm.get(['pDFFileName'])!.value,
       projectId: this.editForm.get(['projectId'])!.value,
+      pdfFile: this.editForm.get(['pdfFile'])!.value,
     };
   }
+
 }
