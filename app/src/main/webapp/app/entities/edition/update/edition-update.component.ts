@@ -44,7 +44,7 @@ export class EditionUpdateComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ edition }) => {
       if (edition.id === undefined) {
-        const today = dayjs().startOf('day');
+        const today = dayjs();
         edition.createdDate = today;
       }
 

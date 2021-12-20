@@ -30,7 +30,7 @@ export class ProjectUpdateComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ project }) => {
       if (project.id === undefined) {
-        const today = dayjs().startOf('day');
+        const today = dayjs();
         project.createdDate = today;
       }
 
