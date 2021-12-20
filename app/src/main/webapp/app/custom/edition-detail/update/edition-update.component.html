@@ -86,20 +86,23 @@
           />
         </div>
 
-        <div class="form-group">
-          <label class="form-control-label" jhiTranslate="measureDetectorApp.edition.project" for="field_project">Project</label>
-          <select class="form-control" id="field_project" data-cy="project" name="project" formControlName="project">
-            <option [ngValue]="null"></option>
-            <option
-              [ngValue]="projectOption.id === editForm.get('project')!.value?.id ? editForm.get('project')!.value : projectOption"
-              *ngFor="let projectOption of projectsSharedCollection; trackBy: trackProjectById"
-            >
-              {{ projectOption.id }}
-            </option>
-          </select>
-        </div>
-      </div>
+          <div class="form-group" [hidden]="editForm.get('projectId')!.value == null">
+            <label class="form-control-label" jhiTranslate="measureDetectorApp.edition.project" for="field_project"
+            >Project</label>
+            <input
+              type="text"
+              class="form-control"
+              name="projectId"
+              readonly="true"
+              [contentEditable]="false"
+              contenteditable="false"
+              id="field_project"
+              data-cy="projectId"
+              formControlName="projectId"
+            />
+          </div>
 
+      </div>
       <div>
         <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
           <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>

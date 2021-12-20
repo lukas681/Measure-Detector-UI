@@ -33,7 +33,7 @@ export class EditionUpdateComponent implements OnInit {
     type: [],
     description: [],
     pDFFileName: [],
-    project: [1],
+    projectId: [],
   });
 
   constructor(
@@ -96,6 +96,7 @@ export class EditionUpdateComponent implements OnInit {
     this.isSaving = false;
   }
 
+
   protected updateForm(edition: IEdition): void {
     // eslint-disable-next-line no-console
     console.log(this.storageService.getActiveProjectId())
@@ -110,7 +111,7 @@ export class EditionUpdateComponent implements OnInit {
       description: edition.description,
       pDFFileName: edition.pDFFileName,
       // project: this.storageService.getActiveProjectId(),
-      project: edition.projectId,
+      projectId: edition.projectId,
     });
 
     this.projectsSharedCollection = this.projectService.addProjectToCollectionIfMissing(this.projectsSharedCollection, edition.project);
@@ -121,7 +122,7 @@ export class EditionUpdateComponent implements OnInit {
       .query()
       .pipe(map((res: HttpResponse<IProject[]>) => res.body ?? []))
       .pipe(
-        map((projects: IProject[]) => this.projectService.addProjectToCollectionIfMissing(projects, this.editForm.get('project')!.value))
+        map((projects: IProject[]) => this.projectService.addProjectToCollectionIfMissing(projects, this.editForm.get('projectId')!.value))
       )
       .subscribe((projects: IProject[]) => (this.projectsSharedCollection = projects));
   }
@@ -137,7 +138,7 @@ export class EditionUpdateComponent implements OnInit {
       type: this.editForm.get(['type'])!.value,
       description: this.editForm.get(['description'])!.value,
       pDFFileName: this.editForm.get(['pDFFileName'])!.value,
-      project: this.editForm.get(['project'])!.value,
+      projectId: this.editForm.get(['projectId'])!.value,
     };
   }
 }
