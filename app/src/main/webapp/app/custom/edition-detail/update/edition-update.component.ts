@@ -80,9 +80,22 @@ export class EditionUpdateComponent implements OnInit {
   }
 
   selectFile(event: any): void {
-    console.warn(event.target.files)
-    // if(event.target.files) {
-    // }
+    const reader = new FileReader();
+
+    // console.warn(event.target.files[0])
+
+    if(event.target.files) {
+      const [file] = event.target.files
+      reader.readAsDataURL(file)
+      reader.onload = () =>{
+        this.editForm.patchValue({
+          pdfFile: reader.result,
+          pDFFilename: file.filename
+        })
+
+      }
+      // this.cd.markForCheck
+    }
   }
 
   protected subscribeToSaveResponse(result: Observable<HttpResponse<IEdition>>): void {
