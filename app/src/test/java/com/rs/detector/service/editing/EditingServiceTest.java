@@ -27,7 +27,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class EditingServiceTest extends SimpleDataInitialization {
 
     JobContext jobContext= JobContext.Null;
-    JobDashboardProgressBar progressBar = jobContext.progressBar(100); // Let's say, we have 100% ...
 
     @Autowired
     ScorePageService scorePageService;
@@ -89,7 +88,7 @@ class EditingServiceTest extends SimpleDataInitialization {
         editingService.getEditingFileManagementService().setStartIndex(243);
 
         editingService.uploadNewEdition(testEdition, pdf);
-        editingService.extractImagesFromPDF(testEdition, progressBar);
+        editingService.extractImagesFromPDF(testEdition, jobContext);
     }
 
     @Test
@@ -99,7 +98,7 @@ class EditingServiceTest extends SimpleDataInitialization {
         editingService.getEditingFileManagementService().setStartIndex(243);
 
         editingService.uploadNewEdition(testEdition, pdf);
-        editingService.extractImagesFromPDF(testEdition, progressBar);
+        editingService.extractImagesFromPDF(testEdition, jobContext);
         scorePageService.generatePageObjectIfNotExistent(testEdition).blockLast();
         //__________________________________________________________
 
@@ -114,7 +113,7 @@ class EditingServiceTest extends SimpleDataInitialization {
         var pdf = PDDocument.load(new File("src/test/resources/scores/aegyptische-helena.pdf"));
         editingService.getEditingFileManagementService().setStartIndex(245);
         editingService.uploadNewEdition(testEdition, pdf);
-        editingService.extractImagesFromPDF(testEdition, progressBar);
+        editingService.extractImagesFromPDF(testEdition, jobContext);
         scorePageService.generatePageObjectIfNotExistent(testEdition).blockLast();
 
         editingService.runFullMeasureDetectionOverEdition(testEdition);

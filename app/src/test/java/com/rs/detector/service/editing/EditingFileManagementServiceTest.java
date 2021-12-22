@@ -31,7 +31,6 @@ class EditingFileManagementServiceTest extends SimpleDataInitialization {
     String sep = File.separator;
     String fileFormat = ".png"; // TODO Outsource in config
     JobContext jobContext= JobContext.Null;
-    JobDashboardProgressBar progressBar = jobContext.progressBar(100); // Let's say, we have 100% ...
 
     @Autowired
     EditingFileManagementService editingFileManagementService;
@@ -97,7 +96,7 @@ class EditingFileManagementServiceTest extends SimpleDataInitialization {
 //        var parentProject = projectService.findOne(e.getProjectId()).block();
 
         editingFileManagementService.setStartIndex(245);
-        editingFileManagementService.extractPagesFromEdition(testEdition, progressBar);
+        editingFileManagementService.extractPagesFromEdition(testEdition, jobContext);
         assert(Files.exists(fileLocation));
 
         pdf.close();
@@ -110,7 +109,7 @@ class EditingFileManagementServiceTest extends SimpleDataInitialization {
 
         editingFileManagementService.storePDFfile(testEdition, pdf);
         editingFileManagementService.setStartIndex(245);
-        editingFileManagementService.extractPagesFromEdition(testEdition, progressBar);
+        editingFileManagementService.extractPagesFromEdition(testEdition, jobContext);
         assert(editingFileManagementService.isPageExistent(testEdition, 245)) ;
         pdf.close();
     }
@@ -133,7 +132,7 @@ class EditingFileManagementServiceTest extends SimpleDataInitialization {
 
         editingFileManagementService.storePDFfile(testEdition, pdf);
         editingFileManagementService.setStartIndex(245);
-        editingFileManagementService.extractPagesFromEdition(testEdition, progressBar);
+        editingFileManagementService.extractPagesFromEdition(testEdition, jobContext);
 
         var res =
             editingFileManagementService.getAllGeneratedScorePageFiles(testEdition);
@@ -150,7 +149,7 @@ class EditingFileManagementServiceTest extends SimpleDataInitialization {
 
         editingFileManagementService.storePDFfile(testEdition, pdf);
         editingFileManagementService.setStartIndex(245);
-        editingFileManagementService.extractPagesFromEdition(testEdition, progressBar);
+        editingFileManagementService.extractPagesFromEdition(testEdition, jobContext);
 
         var bufferedImage = editingFileManagementService.loadPage(testEdition, 245);
         assertNotNull(bufferedImage);

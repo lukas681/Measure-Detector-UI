@@ -15,7 +15,7 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="title" type="varchar(255)">
-                <constraints nullable="false" unique="true" uniqueConstraintName="ux_edition__title" />
+                <constraints nullable="false"/>
             </column>
             <column name="created_date" type="${datetimeType}">
                 <constraints nullable="true" />

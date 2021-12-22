@@ -72,7 +72,7 @@ class ScorePageServiceTest extends SimpleDataInitialization {
 
         // This already handles the database storage
         editingService.uploadNewEdition(testEdition, pdf);
-        editingService.extractImagesFromPDF(testEdition, progressBar);
+        editingService.extractImagesFromPDF(testEdition, jobContext);
 
         scorePageService.generatePageObjectIfNotExistent(testEdition);
 
@@ -120,7 +120,7 @@ class ScorePageServiceTest extends SimpleDataInitialization {
             );
         editingService.getEditingFileManagementService().setStartIndex(243);
         editingService.uploadNewEdition(testEdition, pdf);
-        editingService.extractImagesFromPDF(testEdition, progressBar);
+        editingService.extractImagesFromPDF(testEdition, jobContext);
         scorePageService.generatePageObjectIfNotExistent(testEdition).blockLast();
 
         var res = scorePageService.findPageByEditionIdAndPageNr(testEdition, 244l);

@@ -10,6 +10,7 @@ import com.rs.detector.service.ProjectService;
 import com.rs.detector.service.measureDetection.MeasureDetectorService;
 import com.rs.detector.web.api.model.ApiMeasureDetectorResult;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.jobrunr.jobs.context.JobContext;
 import org.jobrunr.jobs.context.JobDashboardProgressBar;
 import org.jobrunr.scheduling.BackgroundJob;
 import org.slf4j.Logger;
@@ -76,8 +77,8 @@ public class EditingService {
      * Extracts  the pages as images from an Edition
      * @param e
      */
-    public void extractImagesFromPDF(Edition e, JobDashboardProgressBar jobDashboardProgressBar) throws IOException {
-        editingFileManagementService.extractPagesFromEdition(e, jobDashboardProgressBar);
+    public void extractImagesFromPDF(Edition e, JobContext jobContext) throws IOException {
+        editingFileManagementService.extractPagesFromEdition(e, jobContext);
     }
 
     // TODO Catch Exception

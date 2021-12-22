@@ -37,21 +37,30 @@ public class EditionController implements EditionApiDelegate {
     }
 
     public void process(ApiOrchEditionWithFileAsString apiOrchEditionWithFileAsString, JobContext jobContext) throws IOException {
-        log.info("Object to be processed: " + apiOrchEditionWithFileAsString);
+        log("Starting. objects to be processed " + apiOrchEditionWithFileAsString, jobContext);
 
         var progressBar = jobContext.progressBar(100); // Let's say, we have 100% ...
         log.info("The PDF File Encoded: " + apiOrchEditionWithFileAsString.getPdfFile());
         var transformedText = parseDataFromBase64Encoded(apiOrchEditionWithFileAsString.getPdfFile());
+        log("Successfully Parsed incoming PDF file!", jobContext);
         progressBar.setValue(10);
         var parsedEdition = parseEdition(apiOrchEditionWithFileAsString);
         try {
+            log("Creating a new Edition", jobContext);
             editingService.uploadNewEdition(parsedEdition, PDDocument.load(transformedText));
         } catch (IOException e) {
             e.printStackTrace();
         }
         // TODO pass the progress!
-        editingService.extractImagesFromPDF(parsedEdition, progressBar);
+        editingService.extractImagesFromPDF(parsedEdition, jobContext);
         progressBar.setValue(100); // Setting finished
+        log("Finished Job", jobContext);
+    }
+
+    private void log(String message, JobContext jobContext) {
+        log.info(message);
+        jobContext.logger().info(message);
+
     }
 
     private Edition parseEdition(ApiOrchEditionWithFileAsString apiOrchEditionWithFileAsString) {

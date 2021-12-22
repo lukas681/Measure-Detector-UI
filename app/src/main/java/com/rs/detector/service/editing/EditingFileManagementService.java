@@ -7,6 +7,7 @@ import com.rs.detector.service.editing.exceptions.PagesMightNotHaveBeenGenerated
 import com.rs.detector.service.util.FileUtilService;
 import com.sun.istack.NotNull;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.jobrunr.jobs.context.JobContext;
 import org.jobrunr.jobs.context.JobDashboardProgressBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,14 +98,16 @@ public class EditingFileManagementService {
         return document;
     }
 
-    public void extractPagesFromEdition(Edition e, JobDashboardProgressBar jobDashboardProgressBar) throws IOException {
+    public void extractPagesFromEdition(Edition e, JobContext jobContext) throws IOException {
+        jobContext.logger().info("Starting to cut pages out of pdf!");
         assert(e.getProjectId() != null);
         PDDocument loadedEditionPdf = this.loadPdfFile(e);
 
         Path imageStorageLocation = Path.of(constructPathFromEdition(e) + SPLIT_DIR);
+        jobContext.logger().info("Output location: " + basePathEditionPath.toAbsolutePath());
         createOutputPathIfNotExistent(imageStorageLocation);
 
-        fileUtilService.convertPdf2Img2(loadedEditionPdf, imageStorageLocation, startIndex, jobDashboardProgressBar);
+        fileUtilService.convertPdf2Img2(loadedEditionPdf, imageStorageLocation, startIndex, jobContext);
     }
 
     /**

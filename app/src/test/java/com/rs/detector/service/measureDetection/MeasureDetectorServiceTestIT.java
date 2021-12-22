@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class MeasureDetectorServiceTestIT extends SimpleDataInitialization {
 
     JobContext jobContext= JobContext.Null;
-    JobDashboardProgressBar progressBar = jobContext.progressBar(100); // Let's say, we have 100% ...
 
     @Autowired
     MeasureDetectorService measureDetectorService;
@@ -36,6 +35,7 @@ class MeasureDetectorServiceTestIT extends SimpleDataInitialization {
     @Override
     @BeforeEach
     public void setup() {
+
         super.setup();
     }
 
@@ -49,7 +49,7 @@ class MeasureDetectorServiceTestIT extends SimpleDataInitialization {
         editingService.getEditingFileManagementService().setStartIndex(243);
 
         editingService.uploadNewEdition(testEdition, pdf);
-        editingService.extractImagesFromPDF(testEdition, progressBar);
+        editingService.extractImagesFromPDF(testEdition, jobContext);
         scorePageService.generatePageObjectIfNotExistent(testEdition);
         //__________________________________________________________
 
