@@ -3,6 +3,7 @@ package com.rs.detector.service.editing;
 import com.rs.detector.domain.Edition;
 import com.rs.detector.domain.Page;
 import com.rs.detector.domain.Project;
+import com.rs.detector.repository.EditionRepository;
 import com.rs.detector.repository.PageRepository;
 import com.rs.detector.service.EditionService;
 import com.rs.detector.service.ProjectService;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +32,9 @@ public class EditingService {
 
     @Autowired
     EditingFileManagementService editingFileManagementService;
+
+    @Autowired
+    EditionRepository editionRepository;
 
     @Autowired
     PageRepository pageRepository;
@@ -53,10 +58,15 @@ public class EditingService {
      * @param pdfFile A PDF file with the music sheet
      */
     public void uploadNewEdition(Edition e, PDDocument pdfFile) throws IOException {
-        editionService.save(e).block();
-
+        // Solution Job scheduler
+        if(e.getProject() == null) {
+            var p = projectService.findOne(e.getProjectId()).toProcessor().block();
+            e.setProject(p);
+            p.addEditions(e);
+            projectService.save(p).toProcessor().block();
+        }
+        editionService.save(e).toProcessor().block();
         editingFileManagementService.storePDFfile(e, pdfFile);
-
     }
 
     /**

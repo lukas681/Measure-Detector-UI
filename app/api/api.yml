@@ -25,7 +25,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ApiOrchEditionWithFile'
+              $ref: '#/components/schemas/ApiOrchEditionWithFileAsString'
       responses:
         "200":
           description: Expected response to a valid request
@@ -86,4 +86,25 @@ components:
           type: string
           format: binary
         projectId:
+          type: integer
+    ApiOrchEditionWithFileAsString:
+      type: object
+      properties:
+        id:
           type: number
+        title:
+          type: string
+        createdDate:
+          type: string
+        type:
+          type: string
+        description:
+          type: string
+        pDFFileName:
+          type: string
+        pdfFile:
+          type: string
+          format: string
+        projectId:
+          type: integer
+          format: int64
