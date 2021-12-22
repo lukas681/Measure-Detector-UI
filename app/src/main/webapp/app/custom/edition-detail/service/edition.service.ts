@@ -7,7 +7,8 @@ import * as dayjs from 'dayjs';
 import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
-import { IEdition, getEditionIdentifier } from '../edition-detail.model';
+import {IEdition, getEditionIdentifier, EditionWithFile} from '../edition-detail.model';
+import {ApiOrchEditionWithFile} from "../../../shared/model/openapi/model/apiOrchEditionWithFile";
 
 export type EntityResponseType = HttpResponse<IEdition>;
 export type EntityArrayResponseType = HttpResponse<IEdition[]>;
@@ -16,6 +17,7 @@ export type EntityArrayResponseType = HttpResponse<IEdition[]>;
 export class EditionService {
   protected resourceUrl = this.applicationConfigService.getEndpointFor('api/editions');
   protected resourceUrlEditionsByProject = this.applicationConfigService.getEndpointFor('api/editionsByProject');
+  protected resourceUrlAddEditionWithFile = this.applicationConfigService.getEndpointFor('api/edition/add');
 
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
@@ -24,8 +26,13 @@ export class EditionService {
 
     const copy = this.convertDateFromClient(edition);
     console.warn(edition)
+    // edition.pdfFile
+    // const z = new EditionWithFile(
+    //
+    // );
+
     return this.http
-      .post<IEdition>(this.resourceUrl, copy, { observe: 'response' })
+      .post<IEdition>(this.resourceUrlAddEditionWithFile, copy, { observe: 'response' })
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 

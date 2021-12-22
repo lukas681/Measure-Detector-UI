@@ -2,6 +2,7 @@ import * as dayjs from 'dayjs';
 import { IPage } from 'app/entities/page/page.model';
 import { IProject } from 'app/entities/project/project.model';
 import { EditionType } from 'app/entities/enumerations/edition-type.model';
+import {ApiOrchEditionWithFile} from "../../shared/model/openapi/model/apiOrchEditionWithFile";
 
 export interface IEdition {
   id?: number;
@@ -16,7 +17,7 @@ export interface IEdition {
   pdfFile?: File | null;
 }
 
-export class Edition implements IEdition {
+export class Edition implements IEdition{
   constructor(
     public id?: number,
     public title?: string,
@@ -30,6 +31,20 @@ export class Edition implements IEdition {
     public pdfFile?: File | null
 ) {}
 }
+
+export class EditionWithFile implements ApiOrchEditionWithFile {
+  constructor(
+     public  id?: number,
+     public  title?: string,
+     public  createdDate?: string,
+     public  type?: string,
+     public  description?: string,
+     public  pDFFileName?: string,
+     public  pdfFile?: Blob,
+     public  projectId?: number,
+) {}
+}
+
 
 export function getEditionIdentifier(edition: IEdition): number | undefined {
   return edition.id;

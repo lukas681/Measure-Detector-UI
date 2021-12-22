@@ -46,7 +46,6 @@ export class EditionUpdateComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-
     // If something arrives: Edit Mode
     this.activatedRoute.data.subscribe(({ edition }) => {
 

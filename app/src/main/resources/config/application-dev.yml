@@ -15,12 +15,14 @@
 
 logging:
   level:
-    ROOT: DEBUG
-    tech.jhipster: DEBUG
+    ROOT: INFO
+    tech.jhipster: INFO
     org.hibernate.SQL: DEBUG
-    com.rs.detector: DEBUG
+    com.rs.detector: INFO
 
 spring:
+  codec:
+    max-in-memory-size: 5GB
   devtools:
     restart:
       enabled: true

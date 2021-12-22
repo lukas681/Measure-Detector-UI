@@ -3,20 +3,29 @@ info:
   version: 1.0.0
   title: API Measure Detector UI
   description: Provides a bunch of useful REST Endpoints for the Measure Detector UI
+servers:
+  - url: http://localhost:8080/api
+    description: server
 paths:
-  /api/list:
+  /list:
     get:
       description: Returns a list of stuff
       responses:
         '200':
           description: Successful response
-  /api/addEdition:
+  /edition/add:
     post:
       summary: Adds a new edition + a corresponding
       operationId: addEdition
       tags:
         - edition
         - add
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiOrchEditionWithFile'
       responses:
         "200":
           description: Expected response to a valid request
@@ -58,3 +67,23 @@ components:
           type: string
         bottom:
           type: string
+    ApiOrchEditionWithFile:
+      type: object
+      properties:
+        id:
+          type: number
+        title:
+          type: string
+        createdDate:
+          type: string
+        type:
+          type: string
+        description:
+          type: string
+        pDFFileName:
+          type: string
+        pdfFile:
+          type: string
+          format: binary
+        projectId:
+          type: number

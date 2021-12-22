@@ -354,5 +354,32 @@ if (project.hasProperty("nodeInstall")) {
     }
 }
 
+openApiGenerate {
+    generatorName = "spring"
+    inputSpec = "$rootDir/api/api.yml".toString()
+    outputDir = "$buildDir/openapi".toString()
+    apiPackage = "com.rs.detector.web.api"
+    modelPackage = "com.rs.detector.web.api.model"
+    apiFilesConstrainedTo = [""]
+    modelFilesConstrainedTo = [""]
+//    supportingFilesConstrainedTo = ["ApiUtil.java"]
+    configOptions = [
+        delegatePattern: "true",
+        title: "measure-detector",
+        serializableModel: "True",
+        apisToGenerate: "",
+    ]
+    validateSpec = true
+//    importMappings = [Problem:"org.zalando.problem.Problem"]
+//    systemProperties = [
+//        apis: "false",
+//        generateSupportingFiles: "false",
+//        supportingFiles: "false"
+//    ]
+}
+//springdoc.packagesToScan=com.rs.detector.web
+
+
+
 compileJava.dependsOn processResources
 processResources.dependsOn bootBuildInfo
