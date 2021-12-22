@@ -5,6 +5,8 @@ import com.rs.detector.service.editing.ScorePageService;
 import com.rs.detector.service.editing.SimpleDataInitialization;
 import com.rs.detector.service.editing.exceptions.PagesMightNotHaveBeenGeneratedException;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.jobrunr.jobs.context.JobContext;
+import org.jobrunr.jobs.context.JobDashboardProgressBar;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +20,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class MeasureDetectorServiceTestIT extends SimpleDataInitialization {
+
+    JobContext jobContext= JobContext.Null;
+    JobDashboardProgressBar progressBar = jobContext.progressBar(100); // Let's say, we have 100% ...
 
     @Autowired
     MeasureDetectorService measureDetectorService;
@@ -44,7 +49,7 @@ class MeasureDetectorServiceTestIT extends SimpleDataInitialization {
         editingService.getEditingFileManagementService().setStartIndex(243);
 
         editingService.uploadNewEdition(testEdition, pdf);
-        editingService.extractImagesFromPDF(testEdition);
+        editingService.extractImagesFromPDF(testEdition, progressBar);
         scorePageService.generatePageObjectIfNotExistent(testEdition);
         //__________________________________________________________
 

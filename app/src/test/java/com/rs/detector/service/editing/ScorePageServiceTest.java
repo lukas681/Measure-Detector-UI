@@ -8,6 +8,8 @@ import com.rs.detector.service.editing.exceptions.PagesMightNotHaveBeenGenerated
 import com.rs.detector.service.measureDetection.MeasureDetectorService;
 import com.rs.detector.web.api.model.ApiMeasureDetectorResult;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.jobrunr.jobs.context.JobContext;
+import org.jobrunr.jobs.context.JobDashboardProgressBar;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,6 +34,9 @@ import static org.junit.jupiter.api.Assertions.*;
     "application.imageSplitDPI=400"
 })
 class ScorePageServiceTest extends SimpleDataInitialization {
+
+    JobContext jobContext= JobContext.Null;
+    JobDashboardProgressBar progressBar = jobContext.progressBar(100); // Let's say, we have 100% ...
 
     @Autowired
     ScorePageService scorePageService;
@@ -67,7 +72,7 @@ class ScorePageServiceTest extends SimpleDataInitialization {
 
         // This already handles the database storage
         editingService.uploadNewEdition(testEdition, pdf);
-        editingService.extractImagesFromPDF(testEdition);
+        editingService.extractImagesFromPDF(testEdition, progressBar);
 
         scorePageService.generatePageObjectIfNotExistent(testEdition);
 
@@ -115,7 +120,7 @@ class ScorePageServiceTest extends SimpleDataInitialization {
             );
         editingService.getEditingFileManagementService().setStartIndex(243);
         editingService.uploadNewEdition(testEdition, pdf);
-        editingService.extractImagesFromPDF(testEdition);
+        editingService.extractImagesFromPDF(testEdition, progressBar);
         scorePageService.generatePageObjectIfNotExistent(testEdition).blockLast();
 
         var res = scorePageService.findPageByEditionIdAndPageNr(testEdition, 244l);

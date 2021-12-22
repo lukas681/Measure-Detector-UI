@@ -4,6 +4,8 @@ import com.rs.detector.domain.Edition;
 import com.rs.detector.domain.enumeration.EditionType;
 import com.rs.detector.service.editing.exceptions.PagesMightNotHaveBeenGeneratedException;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.jobrunr.jobs.context.JobContext;
+import org.jobrunr.jobs.context.JobDashboardProgressBar;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ import static org.junit.jupiter.api.Assertions.*;
     "application.imageSplitDPI=400"
 })
 class EditingServiceTest extends SimpleDataInitialization {
+
+    JobContext jobContext= JobContext.Null;
+    JobDashboardProgressBar progressBar = jobContext.progressBar(100); // Let's say, we have 100% ...
 
     @Autowired
     ScorePageService scorePageService;
@@ -84,7 +89,7 @@ class EditingServiceTest extends SimpleDataInitialization {
         editingService.getEditingFileManagementService().setStartIndex(243);
 
         editingService.uploadNewEdition(testEdition, pdf);
-        editingService.extractImagesFromPDF(testEdition);
+        editingService.extractImagesFromPDF(testEdition, progressBar);
     }
 
     @Test
@@ -94,7 +99,7 @@ class EditingServiceTest extends SimpleDataInitialization {
         editingService.getEditingFileManagementService().setStartIndex(243);
 
         editingService.uploadNewEdition(testEdition, pdf);
-        editingService.extractImagesFromPDF(testEdition);
+        editingService.extractImagesFromPDF(testEdition, progressBar);
         scorePageService.generatePageObjectIfNotExistent(testEdition).blockLast();
         //__________________________________________________________
 
@@ -109,7 +114,7 @@ class EditingServiceTest extends SimpleDataInitialization {
         var pdf = PDDocument.load(new File("src/test/resources/scores/aegyptische-helena.pdf"));
         editingService.getEditingFileManagementService().setStartIndex(245);
         editingService.uploadNewEdition(testEdition, pdf);
-        editingService.extractImagesFromPDF(testEdition);
+        editingService.extractImagesFromPDF(testEdition, progressBar);
         scorePageService.generatePageObjectIfNotExistent(testEdition).blockLast();
 
         editingService.runFullMeasureDetectionOverEdition(testEdition);
