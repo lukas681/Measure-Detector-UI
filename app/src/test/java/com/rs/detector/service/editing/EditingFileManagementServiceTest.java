@@ -5,6 +5,8 @@ import com.rs.detector.domain.Edition;
 import com.rs.detector.domain.Project;
 import com.rs.detector.service.editing.exceptions.PagesMightNotHaveBeenGeneratedException;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.jobrunr.jobs.context.JobContext;
+import org.jobrunr.jobs.context.JobDashboardProgressBar;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,8 @@ class EditingFileManagementServiceTest extends SimpleDataInitialization {
 
     String sep = File.separator;
     String fileFormat = ".png"; // TODO Outsource in config
+    JobContext jobContext= JobContext.Null;
+    JobDashboardProgressBar progressBar = jobContext.progressBar(100); // Let's say, we have 100% ...
 
     @Autowired
     EditingFileManagementService editingFileManagementService;
@@ -93,7 +97,7 @@ class EditingFileManagementServiceTest extends SimpleDataInitialization {
 //        var parentProject = projectService.findOne(e.getProjectId()).block();
 
         editingFileManagementService.setStartIndex(245);
-        editingFileManagementService.extractPagesFromEdition(testEdition);
+        editingFileManagementService.extractPagesFromEdition(testEdition, progressBar);
         assert(Files.exists(fileLocation));
 
         pdf.close();
@@ -106,7 +110,7 @@ class EditingFileManagementServiceTest extends SimpleDataInitialization {
 
         editingFileManagementService.storePDFfile(testEdition, pdf);
         editingFileManagementService.setStartIndex(245);
-        editingFileManagementService.extractPagesFromEdition(testEdition);
+        editingFileManagementService.extractPagesFromEdition(testEdition, progressBar);
         assert(editingFileManagementService.isPageExistent(testEdition, 245)) ;
         pdf.close();
     }
@@ -129,7 +133,7 @@ class EditingFileManagementServiceTest extends SimpleDataInitialization {
 
         editingFileManagementService.storePDFfile(testEdition, pdf);
         editingFileManagementService.setStartIndex(245);
-        editingFileManagementService.extractPagesFromEdition(testEdition);
+        editingFileManagementService.extractPagesFromEdition(testEdition, progressBar);
 
         var res =
             editingFileManagementService.getAllGeneratedScorePageFiles(testEdition);
@@ -146,7 +150,7 @@ class EditingFileManagementServiceTest extends SimpleDataInitialization {
 
         editingFileManagementService.storePDFfile(testEdition, pdf);
         editingFileManagementService.setStartIndex(245);
-        editingFileManagementService.extractPagesFromEdition(testEdition);
+        editingFileManagementService.extractPagesFromEdition(testEdition, progressBar);
 
         var bufferedImage = editingFileManagementService.loadPage(testEdition, 245);
         assertNotNull(bufferedImage);

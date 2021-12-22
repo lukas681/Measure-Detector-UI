@@ -4,6 +4,8 @@ import com.rs.detector.config.ApplicationProperties;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
+import org.jobrunr.jobs.Job;
+import org.jobrunr.jobs.context.JobDashboardProgressBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -66,22 +68,27 @@ public class FileUtilService {
      * @param documentToConvert the document to convert
      * @param outputPath The location where the pngs should be stores
      * @param firstPage first page on which to start converting. Index Starting at zero.
+     * @param jobDashboardProgressBar
      * @throws IOException
      */
-    public void convertPdf2Img2(@NotNull PDDocument documentToConvert, @NotNull Path outputPath, int firstPage) throws IOException {
+    public void convertPdf2Img2(@NotNull PDDocument documentToConvert, @NotNull Path outputPath, int firstPage, JobDashboardProgressBar jobDashboardProgressBar) throws IOException {
         assert(documentToConvert != null);
 
         var pdfRenderer = new PDFRenderer(documentToConvert);
         String fileName = "";
 
-
+        // TODO Implement status update
         for (int pageNumber = firstPage; pageNumber < documentToConvert.getNumberOfPages(); ++pageNumber) {
             BufferedImage bim = pdfRenderer.renderImageWithDPI(pageNumber, imageSplitDPI, ImageType.RGB);
             var destDir = outputPath.toString() + File.separator + fileName + "_" + pageNumber + ".png";
             log.debug("Destination: " + destDir);
             ImageIO.write(bim, "png", new File(destDir));
+            updateProgress(jobDashboardProgressBar);
         }
         documentToConvert.close();
+    }
+
+    private void updateProgress(JobDashboardProgressBar jobDashboardProgressBar) {
     }
 
     /**
@@ -90,7 +97,8 @@ public class FileUtilService {
      * @param outputPath The location where the pngs should be stores
      * @throws IOException
      */
-    public void convertPdf2Img2(@NotNull PDDocument documentToConvert, @NotNull Path outputPath) throws IOException {
-        this.convertPdf2Img2(documentToConvert, outputPath, 0);
+    public void convertPdf2Img2(@NotNull PDDocument documentToConvert, @NotNull Path outputPath,
+                                JobDashboardProgressBar jobDashboardProgressBar) throws IOException {
+        this.convertPdf2Img2(documentToConvert, outputPath, 0, jobDashboardProgressBar);
     }
 }

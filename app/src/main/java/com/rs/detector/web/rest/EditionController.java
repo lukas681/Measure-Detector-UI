@@ -5,26 +5,18 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import com.rs.detector.domain.Edition;
 import com.rs.detector.domain.enumeration.EditionType;
 import com.rs.detector.service.editing.EditingService;
-import com.rs.detector.web.api.EditionApi;
 import com.rs.detector.web.api.EditionApiDelegate;
-import com.rs.detector.web.api.model.ApiOrchEditionWithFile;
 import com.rs.detector.web.api.model.ApiOrchEditionWithFileAsString;
-import io.swagger.annotations.ApiParam;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.jobrunr.jobs.context.JobContext;
+import org.jobrunr.jobs.context.JobDashboardProgressBar;
+import org.jobrunr.scheduling.BackgroundJob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
 
@@ -39,19 +31,27 @@ public class EditionController implements EditionApiDelegate {
     @Override
     // TODO need rework.  The problem is that Jackson can not decode resources OOTB.
     public ResponseEntity<Void> addEdition(ApiOrchEditionWithFileAsString apiOrchEditionWithFileAsString)  {
+        BackgroundJob.enqueue(() ->
+                process(apiOrchEditionWithFileAsString, JobContext.Null));
+        return EditionApiDelegate.super.addEdition(apiOrchEditionWithFileAsString);
+    }
+
+    public void process(ApiOrchEditionWithFileAsString apiOrchEditionWithFileAsString, JobContext jobContext) throws IOException {
         log.info("Object to be processed: " + apiOrchEditionWithFileAsString);
+
+        var progressBar = jobContext.progressBar(100); // Let's say, we have 100% ...
         log.info("The PDF File Encoded: " + apiOrchEditionWithFileAsString.getPdfFile());
         var transformedText = parseDataFromBase64Encoded(apiOrchEditionWithFileAsString.getPdfFile());
+        progressBar.setValue(10);
         var parsedEdition = parseEdition(apiOrchEditionWithFileAsString);
-
-        // TODO make a background task for that.
         try {
             editingService.uploadNewEdition(parsedEdition, PDDocument.load(transformedText));
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        return EditionApiDelegate.super.addEdition(apiOrchEditionWithFileAsString);
+        // TODO pass the progress!
+        editingService.extractImagesFromPDF(parsedEdition, progressBar);
+        progressBar.setValue(100); // Setting finished
     }
 
     private Edition parseEdition(ApiOrchEditionWithFileAsString apiOrchEditionWithFileAsString) {

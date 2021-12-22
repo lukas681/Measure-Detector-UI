@@ -164,3 +164,9 @@ application:
     host: http://localhost
     port: 8080
     endpoint: /upload
+org:
+  jobrunr:
+    background-job-server:
+      enabled: true
+    dashboard:
+      enabled: true

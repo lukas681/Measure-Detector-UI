@@ -10,6 +10,8 @@ import com.rs.detector.service.ProjectService;
 import com.rs.detector.service.measureDetection.MeasureDetectorService;
 import com.rs.detector.web.api.model.ApiMeasureDetectorResult;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.jobrunr.jobs.context.JobDashboardProgressBar;
+import org.jobrunr.scheduling.BackgroundJob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +60,7 @@ public class EditingService {
      * @param pdfFile A PDF file with the music sheet
      */
     public void uploadNewEdition(Edition e, PDDocument pdfFile) throws IOException {
+
         // Solution Job scheduler
         if(e.getProject() == null) {
             var p = projectService.findOne(e.getProjectId()).toProcessor().block();
@@ -73,8 +76,8 @@ public class EditingService {
      * Extracts  the pages as images from an Edition
      * @param e
      */
-    public void extractImagesFromPDF(Edition e) throws IOException {
-        editingFileManagementService.extractPagesFromEdition(e);
+    public void extractImagesFromPDF(Edition e, JobDashboardProgressBar jobDashboardProgressBar) throws IOException {
+        editingFileManagementService.extractPagesFromEdition(e, jobDashboardProgressBar);
     }
 
     // TODO Catch Exception
