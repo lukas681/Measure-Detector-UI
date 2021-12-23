@@ -82,7 +82,7 @@ public class FileUtilService {
         int pagesToProcess = documentToConvert.getNumberOfPages() - firstPage + 1;
 
         for (int pageNumber = firstPage; pageNumber < documentToConvert.getNumberOfPages(); ++pageNumber) {
-            jobContext.logger().info("Processing Page " + pageNumber + " out of " + documentToConvert.getNumberOfPages());
+            jobContext.logger().info("Processing Page " + pageNumber + 1 + " out of " + documentToConvert.getNumberOfPages());
 
             BufferedImage bim = pdfRenderer.renderImageWithDPI(pageNumber, imageSplitDPI, ImageType.RGB);
             var destDir = outputPath.toString() + File.separator + "_" + pageNumber + ".png";

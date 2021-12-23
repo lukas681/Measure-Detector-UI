@@ -2,7 +2,6 @@ package com.rs.detector.service.editing;
 
 import com.rs.detector.domain.Edition;
 import com.rs.detector.domain.Page;
-import com.rs.detector.domain.Project;
 import com.rs.detector.repository.EditionRepository;
 import com.rs.detector.repository.PageRepository;
 import com.rs.detector.service.EditionService;
@@ -11,14 +10,11 @@ import com.rs.detector.service.measureDetection.MeasureDetectorService;
 import com.rs.detector.web.api.model.ApiMeasureDetectorResult;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.jobrunr.jobs.context.JobContext;
-import org.jobrunr.jobs.context.JobDashboardProgressBar;
-import org.jobrunr.scheduling.BackgroundJob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.IOException;
@@ -103,11 +99,11 @@ public class EditingService {
     }
 
     private void runMeasureDetectionForSinglePage(Edition e, Long pageNr) throws IOException {
-        var measureDetectorResult = runMeasureDetectionOnPage(e, pageNr);
+        var measureDetectorResult = runMeasureDetectionOnEdition(e, pageNr);
         var p =
             searchPageInRepository(e, pageNr);
         if(p.isPresent()) {
-            scorePageService.updatePageMeasureBoxesWithMDResult(p.get(), measureDetectorResult).blockLast();
+            scorePageService.updatePageMeasureBoxesWithMDResult(p.get(), measureDetectorResult).collectList().toProcessor().block();
         } else {
             log.error("The desired page " + pageNr +" could not be found. Maybe it has not been created so far?!");
         }
@@ -115,13 +111,13 @@ public class EditingService {
 
     private Optional<Page> searchPageInRepository(Edition e, Long pageNr) {
         return pageRepository.findAllByEditionId(e.getId())
-            .collect(Collectors.toList()).block()
+            .collect(Collectors.toList()).toProcessor().block()
             .stream().filter(x -> x.getPageNr().equals(pageNr))
             .collect(Collectors.toList()).stream()
             .findFirst();
     }
 
-    public ApiMeasureDetectorResult runMeasureDetectionOnPage(@NotNull Edition e, long pageNr) throws IOException {
+    public ApiMeasureDetectorResult runMeasureDetectionOnEdition(@NotNull Edition e, long pageNr) throws IOException {
         File f = new File(
             editingFileManagementService.constructPagePath(e, (int) pageNr)
         );
@@ -130,5 +126,13 @@ public class EditingService {
 
     public EditingFileManagementService getEditingFileManagementService() {
         return this.editingFileManagementService;
+    }
+
+    public void runMeasureDetectionOnEdition(Integer id) throws IOException {
+        var e = editionService.findOne(Long.valueOf(id)).toProcessor().block();
+        if(e != null) {
+            // run the whole edition
+            runFullMeasureDetectionOverEdition(e);
+        }
     }
 }

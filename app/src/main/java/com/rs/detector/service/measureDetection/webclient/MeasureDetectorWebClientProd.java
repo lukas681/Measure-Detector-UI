@@ -50,7 +50,7 @@ public class MeasureDetectorWebClientProd implements MeasureDetectorWebClient {
         this.client = WebClient
             .builder()
             .filters(exchangeFilterFunctions -> {
-                if (log.isDebugEnabled()) {
+                if (log.isInfoEnabled()) {
                     exchangeFilterFunctions.add(logRequest());
                 }
             })
@@ -82,8 +82,10 @@ public class MeasureDetectorWebClientProd implements MeasureDetectorWebClient {
 //            })
             .exchange()
             // TODO This blocks the threat until we have a response. Maybe we should wait asynchonously
+            .toProcessor()
             .block()
             .bodyToMono(ApiMeasureDetectorResult.class)
+            .toProcessor()
             .block();
         return result;
     }
@@ -120,7 +122,7 @@ public class MeasureDetectorWebClientProd implements MeasureDetectorWebClient {
      */
     ExchangeFilterFunction logRequest() {
         return ExchangeFilterFunction.ofRequestProcessor(clientRequest -> {
-            if (log.isDebugEnabled()) {
+            if (log.isInfoEnabled()) {
                 StringBuilder sb = new StringBuilder("Request: \n");
                 clientRequest
                     .headers()

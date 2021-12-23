@@ -22,6 +22,15 @@ Contains a Front-End for the Measure Detector developed along an Interdisciplina
 
        curl --location --request POST 'localhost:8080/upload' --form 'image=@"path/to/example/image"'
 
+# Interfaces
+
+You have access to the following interfaces acompanying the application:
+
+* Swagger: Login -> Administration/Api
+* JobRunR (Tracks the background jobs) -> :8000
+* Main Application -> 
+
+
 # Software Stack
 
 The following frameworks are used for building this application. In general, **jhipster 7.4.0** was used to generate the backbone of the application

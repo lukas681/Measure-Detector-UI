@@ -181,8 +181,7 @@ public class EditingFileManagementService {
      */
     public List<String> getAllGeneratedScorePageFiles(Edition e) {
         return Arrays.stream(new File(
-            constructPathForSplittedPagesFromEdition(e)
-        )
+            constructPathForSplittedPagesFromEdition(e))
             .listFiles())
             .filter(File::isFile)
             .map(File::getName)

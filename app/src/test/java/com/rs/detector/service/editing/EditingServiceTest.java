@@ -5,7 +5,6 @@ import com.rs.detector.domain.enumeration.EditionType;
 import com.rs.detector.service.editing.exceptions.PagesMightNotHaveBeenGeneratedException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.jobrunr.jobs.context.JobContext;
-import org.jobrunr.jobs.context.JobDashboardProgressBar;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,7 +101,7 @@ class EditingServiceTest extends SimpleDataInitialization {
         scorePageService.generatePageObjectIfNotExistent(testEdition).blockLast();
         //__________________________________________________________
 
-        var res = editingService.runMeasureDetectionOnPage(testEdition, 243);
+        var res = editingService.runMeasureDetectionOnEdition(testEdition, 243);
         assertNotNull(res);
 
 

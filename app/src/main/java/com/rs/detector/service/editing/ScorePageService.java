@@ -55,9 +55,10 @@ public class ScorePageService {
             throw new PagesMightNotHaveBeenGeneratedException();
         }
         // Fetch, if there already have been some pages generated
+        // TODO Just remove all existing pages and replace the
         var pages = pageRepository
             .findAllByEditionId(e.getId())
-            .collect(Collectors.toList())
+            .collect(Collectors.toList()).share()
             .block();
 
         for (var p : allGeneratedPages) {
@@ -140,7 +141,7 @@ public class ScorePageService {
         // TODO Later: Replace this blocking behaviour. But I already tried with .flatMap(..) as a chain, but this did
         //  not really execute.
 
-        pageService.deleteAllMeasureBoxes(page.getId()).blockLast();
+        pageService.deleteAllMeasureBoxes(page.getId()).collectList().toProcessor().block();
 
         Set<com.rs.detector.domain.MeasureBox> measureBoxes = new HashSet<>();
         measureDetectorResult.getMeasures().forEach(measureBox ->

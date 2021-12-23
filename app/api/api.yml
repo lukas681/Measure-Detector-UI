@@ -13,6 +13,32 @@ paths:
       responses:
         '200':
           description: Successful response
+  /edition/runMeasureDetection/{id}:
+    post:
+      summary: runs the measure detection against an edition. Make sure that the measure detector is connected with the application
+      operationId: runFullMeasureDetectionByEditionId
+      parameters:
+        - name: id
+          schema:
+            type: integer
+          in: path
+          required: true
+          description: the ID of the edition to be measure-detected
+      tags:
+        - triggerMeasureDetection
+      responses:
+        "200":
+          description: Expected response to a valid request
+          content:
+            text/plain:
+              schema:
+                type: string
+        "500":
+          description: Internal Server Error
+          content:
+            text/plain:
+              schema:
+                type: string
   /edition/add:
     post:
       summary: Adds a new edition + a corresponding

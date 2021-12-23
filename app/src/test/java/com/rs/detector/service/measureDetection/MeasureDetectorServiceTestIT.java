@@ -6,8 +6,6 @@ import com.rs.detector.service.editing.SimpleDataInitialization;
 import com.rs.detector.service.editing.exceptions.PagesMightNotHaveBeenGeneratedException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.jobrunr.jobs.context.JobContext;
-import org.jobrunr.jobs.context.JobDashboardProgressBar;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +52,7 @@ class MeasureDetectorServiceTestIT extends SimpleDataInitialization {
         //__________________________________________________________
 
         // NOTE: This already works with the previously generated ong files!
-        var res = editingService.runMeasureDetectionOnPage(testEdition, 245);
+        var res = editingService.runMeasureDetectionOnEdition(testEdition, 245);
         assertNotNull(res);
         assert(res.getMeasures().size()==4);
     }
