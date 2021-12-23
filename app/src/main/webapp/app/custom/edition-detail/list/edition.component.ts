@@ -97,6 +97,15 @@ export class EditionComponent implements OnInit {
     });
   }
 
+  triggerDetection(id: number | undefined): void {
+    if(id){
+      this.editionService.triggerMeasureDetection(id)
+        .subscribe(x=> {
+          console.warn(x)
+        });
+    }
+  }
+
   protected sort(): string[] {
     const result = [this.predicate + ',' + (this.ascending ? ASC : DESC)];
     if (this.predicate !== 'id') {
@@ -120,4 +129,5 @@ export class EditionComponent implements OnInit {
       }
     }
   }
+
 }

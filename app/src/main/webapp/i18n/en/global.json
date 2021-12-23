@@ -103,7 +103,8 @@
       "open": "Open",
       "save": "Save",
       "view": "View",
-      "project-editions": "Proceed"
+      "project-editions": "Proceed",
+      "triggerDetection": "Start Detection"
     },
     "detail": {
       "field": "Field",
@@ -143,5 +144,5 @@
       "not.image": "File was expected to be an image but was found to be \"{{ fileType }}\""
     }
   },
-  "footer": "This is your footer"
+  "footer": "<small>&copy; Copyright 2021, Lukas Retschmeier</small>"
 }

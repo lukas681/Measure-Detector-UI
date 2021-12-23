@@ -18,6 +18,7 @@ export class EditionService {
   protected resourceUrl = this.applicationConfigService.getEndpointFor('api/editions');
   protected resourceUrlEditionsByProject = this.applicationConfigService.getEndpointFor('api/editionsByProject');
   protected resourceUrlAddEditionWithFile = this.applicationConfigService.getEndpointFor('api/edition/add');
+  protected resourceUrlTriggerDetection = this.applicationConfigService.getEndpointFor('api/edition/runMeasureDetection');
 
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
@@ -34,6 +35,11 @@ export class EditionService {
     return this.http
       .post<IEdition>(this.resourceUrlAddEditionWithFile, copy, { observe: 'response' })
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+  }
+
+  triggerMeasureDetection(id: number): Observable<string> {
+    console.warn("Firing Measure Detection");
+    return this.http.post<string>(`${this.resourceUrlTriggerDetection}/${id}`, null);
   }
 
   update(edition: IEdition): Observable<EntityResponseType> {

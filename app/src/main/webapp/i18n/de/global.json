@@ -104,7 +104,8 @@
       "open": "Öffnen",
       "save": "Speichern",
       "view": "Details",
-      "project-editions": "Fortfahren"
+      "project-editions": "Fortfahren",
+      "triggerDetection": "Starte Takterkennung"
     },
     "detail": {
       "field": "Feld",
