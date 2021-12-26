@@ -9,9 +9,11 @@ import { ASC, DESC, ITEMS_PER_PAGE } from 'app/config/pagination.constants';
 import { EditionService } from '../service/edition.service';
 import { ParseLinks } from 'app/core/util/parse-links.service';
 
-import '@recogito/annotorious/dist/annotorious.min.css';
+// import '@recogito/annotorious/dist/annotorious.min.css';
+import * as OpenSeadragon from 'openseadragon';
 
-import { Annotorious } from '@recogito/annotorious';
+import * as Annotorious from '@recogito/annotorious-openseadragon';
+// import { Annotorious } from '@recogito/annotorious';
 
 @Component({
   selector: 'jhi-edition',
@@ -26,9 +28,7 @@ export class EditingComponent implements OnInit {
   predicate: string;
   ascending: boolean;
 
-
   constructor(protected activatedRoute: ActivatedRoute, protected editionService: EditionService, protected modalService: NgbModal, protected parseLinks: ParseLinks) {
-
 
     this.itemsPerPage = ITEMS_PER_PAGE;
     this.page = 0;
@@ -43,18 +43,33 @@ export class EditingComponent implements OnInit {
   ngOnInit(): void {
     // const anno = new Annotorious({ image: 'test' }); // image element or ID
 
-    const anno = new Annotorious ({
-      image: document.getElementById('test')
+      const viewer = OpenSeadragon({
+      id: "test",
+      prefixUrl: "openseadragon/images/",
+      minZoomLevel: 	1,
+      maxZoomLevel: 	10,
+      // visibilityRatio: 0.1,
+      // constrainDuringPan: true,
+      tileSources: {
+        type: "image",
+        url: 'https://www.bsb-muenchen.de/fileadmin/bsb/sammlungen/musik/aktuelles/strauss_richard_metamorphosen_ausschnitt.jpg'
+      }
     });
+    const anno = Annotorious(viewer, {});
+    console.warn(anno)
+
+    // const anno = new Annotorious ({
+    //   image: document.getElementById('test')
+    // });
     // anno.loadAnnotations('annotations.w3c.json');
 
     // Attach listeners to handle annotation events
-    anno.on('createAnnotation', function(annotation: any):any {
-      const annotations = anno.getAnnotations();
-      console.warn(annotations);
-    });
+    // anno.on('createAnnotation', function(annotation: any):any {
+    //   const annotations = anno.getAnnotations();
+    //   console.warn(annotations);
+    // });
 
-    console.warn(anno)
+    // console.warn(anno)
     console.warn("NONEMPTY")
     // this.activatedRoute.data.subscribe(({ editions}) => {
     //   this.editions = editions;

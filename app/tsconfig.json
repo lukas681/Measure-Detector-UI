@@ -20,7 +20,9 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true,
-    "preserveWhitespaces": true
+    "preserveWhitespaces": true,
+//    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": [
     "src", "decs.d.ts"
