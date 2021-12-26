@@ -1,6 +1,5 @@
 package com.rs.detector.service.editing;
 
-import com.rs.detector.web.api.model.ApiOrchEditionWithFileApiOrchEditionWithFileAsString;
 import com.rs.detector.web.api.model.ApiOrchEditionWithFileAsString;
 import com.rs.detector.web.rest.EditionController;
 import io.micrometer.core.instrument.util.IOUtils;

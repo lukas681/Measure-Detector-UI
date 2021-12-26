@@ -21,5 +21,8 @@
     "strictInputAccessModifiers": true,
     "strictTemplates": true,
     "preserveWhitespaces": true
-  }
+  },
+  "include": [
+    "src", "decs.d.ts"
+  ],
 }

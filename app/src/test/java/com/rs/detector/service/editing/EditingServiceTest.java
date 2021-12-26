@@ -5,6 +5,7 @@ import com.rs.detector.domain.enumeration.EditionType;
 import com.rs.detector.service.editing.exceptions.PagesMightNotHaveBeenGeneratedException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.jobrunr.jobs.context.JobContext;
+import org.jobrunr.scheduling.BackgroundJob;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,4 +121,15 @@ class EditingServiceTest extends SimpleDataInitialization {
         var res = pageRepository.findAllByEditionId(testEdition.getId()).collectList().block();
 
     }
+
+    @Test
+    void bug() throws InterruptedException {
+        Integer id = 1;
+        BackgroundJob.enqueue(() -> methodToCall(id, JobContext.Null));
+            Thread.sleep(1000);
+    }
+    public void methodToCall(int id, JobContext jobContext) {
+        System.out.println("ERROR");
+    }
+
 }

@@ -12,6 +12,7 @@ import com.rs.detector.web.api.EditionApiDelegate;
 import com.rs.detector.web.api.model.ApiOrchEditionWithFileAsString;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.jobrunr.configuration.JobRunr;
+import org.jobrunr.jobs.Job;
 import org.jobrunr.jobs.context.JobContext;
 import org.jobrunr.scheduling.BackgroundJob;
 import org.slf4j.Logger;
@@ -51,17 +52,15 @@ public class EditionController implements EditionApiDelegate {
     @Override
     public ResponseEntity<String> runFullMeasureDetectionByEditionId(Integer id) {
         if(id != null) {
-            BackgroundJob.enqueue(() -> {
-               processFullDetection(id, JobContext.Null);
-            });
-            return ResponseEntity.ok("The Job was successfully scheduled and now being processed in the background.");
+            BackgroundJob.enqueue(() -> processFullDetection(id, JobContext.Null));
         }
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok("The Job was successfully scheduled and now being processed in the background.");
+//        return EditionApiDelegate.super.runFullMeasureDetectionByEditionId(id);
     }
 
-    public void processFullDetection(long id, JobContext jobContext) {
+    public void processFullDetection(Integer id, JobContext jobContext) {
             try {
-                var e = editionService.findOne(id).share().block();
+                var e = editionService.findOne(Long.valueOf(id)).share().block();
                 assert(e != null);
                 scorePageService.generatePageObjectIfNotExistent(e)
                     .collectList()
