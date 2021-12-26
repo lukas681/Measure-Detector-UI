@@ -12,7 +12,8 @@ import { ParseLinks } from 'app/core/util/parse-links.service';
 // import '@recogito/annotorious/dist/annotorious.min.css';
 import * as OpenSeadragon from 'openseadragon';
 
-import * as Annotorious from '@recogito/annotorious-openseadragon';
+import * as OSDAnnotorious from '@recogito/annotorious-openseadragon';
+import ShapeLabelsFormatter from '@recogito/annotorious-shape-labels';
 // import { Annotorious } from '@recogito/annotorious';
 
 @Component({
@@ -27,6 +28,8 @@ export class EditingComponent implements OnInit {
   page: number;
   predicate: string;
   ascending: boolean;
+  annotationsData = {};
+  currentMeasureNo = 1;
 
   constructor(protected activatedRoute: ActivatedRoute, protected editionService: EditionService, protected modalService: NgbModal, protected parseLinks: ParseLinks) {
 
@@ -55,8 +58,36 @@ export class EditingComponent implements OnInit {
         url: 'https://www.bsb-muenchen.de/fileadmin/bsb/sammlungen/musik/aktuelles/strauss_richard_metamorphosen_ausschnitt.jpg'
       }
     });
-    const anno = Annotorious(viewer, {});
-    console.warn(anno)
+      console.warn(ShapeLabelsFormatter);
+    const anno = OSDAnnotorious(viewer, {
+      formatter: ShapeLabelsFormatter(),
+      // disableEditor: true
+    });
+    // console.warn(anno)
+    this.annotationsData = anno.getAnnotations()
+
+    // TODO: Is there any option to enable two way bindings?
+    anno.on('createSelection', async (selection:any) => {
+      this.annotationsData = anno.getAnnotations();
+      selection.body = [{
+        type: 'TextualBody',
+        purpose: 'tagging',
+        value: this.currentMeasureNo++
+      }];
+
+      // console.warn(this.annotationsData);
+      await anno.updateSelected(selection);
+      anno.saveSelected();
+    });
+
+    anno.on('updateAnnotation', () => {
+      this.annotationsData = anno.getAnnotations();
+    });
+
+    anno.on('deleteAnnotation', () => {
+      this.annotationsData = anno.getAnnotations();
+      // this.currentMeasureNo--; // Maybe this makes sense, but deleting something in between might be unlogic
+    });
 
     // const anno = new Annotorious ({
     //   image: document.getElementById('test')
@@ -83,6 +114,5 @@ export class EditingComponent implements OnInit {
   trackId(index: number, item: IEdition): number {
     return item.id!;
   }
-
-
 }
+
