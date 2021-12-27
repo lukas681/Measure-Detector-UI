@@ -44,7 +44,13 @@ export class EditingComponent implements OnInit {
 
   ngOnInit(): void {
 
+    // TODO work on this
       this.viewer = OpenSeadragon({
+        ajaxWithCredentials:true,
+        loadTilesWithAjax: true,
+        ajaxHeaders: {
+          Authentication: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY0MDcyNjg4MX0.D4AxgHIB1Y4TFkqxGbHDCQIgHjki707JvECXZx7Z5m55hAiZkCrUBZjf8CeYgO-6egWOE18ShhWmm73oKieHSA"
+        },
       id: "viewer",
       prefixUrl: "openseadragon/images/",
       minZoomLevel: 	1,
@@ -53,7 +59,7 @@ export class EditingComponent implements OnInit {
       // constrainDuringPan: true,
       tileSources: {
         type: 'image',
-        url: 'https://www.bsb-muenchen.de/fileadmin/bsb/sammlungen/musik/aktuelles/strauss_richard_metamorphosen_ausschnitt.jpg'
+        url: 'http://localhost:12321/api/edition/24/getPage/2'
       }
     }
     );
@@ -94,7 +100,7 @@ export class EditingComponent implements OnInit {
     //B TODO implement this.
     this.viewer.open({
       type: 'image',
-      url: 'http://localhost:12321/api/edition/24/getPage/2'
+      url: 'https://www.bsb-muenchen.de/fileadmin/bsb/sammlungen/musik/aktuelles/strauss_richard_metamorphosen_ausschnitt.jpg'
     })
 
   }
