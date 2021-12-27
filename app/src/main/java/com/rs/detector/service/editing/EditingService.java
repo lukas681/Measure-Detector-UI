@@ -13,11 +13,14 @@ import org.jobrunr.jobs.context.JobContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -115,6 +118,16 @@ public class EditingService {
             .stream().filter(x -> x.getPageNr().equals(pageNr))
             .collect(Collectors.toList()).stream()
             .findFirst();
+    }
+
+    public Resource getPageResourceToEditionAndPageNr(Edition e, Long pageNr) throws FileNotFoundException, MalformedURLException {
+        return editingFileManagementService.getPage(e, Math.toIntExact(pageNr));
+    }
+
+    public Resource getPageResourceToEditionAndPageNr(long e, Long pageNr) throws FileNotFoundException, MalformedURLException {
+        var edition = editionService.findOne(e).toProcessor().block();
+
+        return editingFileManagementService.getPage(edition, Math.toIntExact(pageNr));
     }
 
     public ApiMeasureDetectorResult runMeasureDetectionOnEdition(@NotNull Edition e, long pageNr) throws IOException {

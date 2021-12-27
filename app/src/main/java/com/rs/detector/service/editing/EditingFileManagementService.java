@@ -12,13 +12,20 @@ import org.jobrunr.jobs.context.JobDashboardProgressBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -36,6 +43,9 @@ public class EditingFileManagementService {
     private final String SPLIT_DIR = "/split";
 
     private final Logger log = LoggerFactory.getLogger(EditingFileManagementService.class);
+
+    @Autowired
+    ResourceLoader resourceLoader;
 
     @Autowired
     FileUtilService fileUtilService;
@@ -98,16 +108,23 @@ public class EditingFileManagementService {
         return document;
     }
 
+    // Tag: split
     public void extractPagesFromEdition(Edition e, JobContext jobContext) throws IOException {
-        jobContext.logger().info("Starting to cut pages out of pdf!");
+        log("Starting to cut pages out of pdf!", jobContext);
         assert(e.getProjectId() != null);
         PDDocument loadedEditionPdf = this.loadPdfFile(e);
 
         Path imageStorageLocation = Path.of(constructPathFromEdition(e) + SPLIT_DIR);
-        jobContext.logger().info("Output location: " + basePathEditionPath.toAbsolutePath());
+            log("Output location: " + basePathEditionPath.toAbsolutePath(), jobContext);
         createOutputPathIfNotExistent(imageStorageLocation);
 
         fileUtilService.convertPdf2Img2(loadedEditionPdf, imageStorageLocation, startIndex, jobContext);
+    }
+
+    public void log(String s, JobContext jobContext) {
+        if(jobContext != null) {
+            jobContext.logger().info(s);
+        }
     }
 
     /**
@@ -126,6 +143,13 @@ public class EditingFileManagementService {
 
     public boolean isPageExistent(Edition testEdition, int i) {
         return isPageExistent(testEdition, i , DEFAULT_FILE_FORMAT);
+    }
+
+    public Resource getPage(Edition e, int pageNr) throws FileNotFoundException, MalformedURLException {
+       if(isPageExistent(e, pageNr)) {
+           return new UrlResource("file", constructPagePath(e, pageNr));
+       }
+       return null;
     }
 
     public BufferedImage loadPage(Edition e, int pageNr) throws PagesMightNotHaveBeenGeneratedException, IOException {

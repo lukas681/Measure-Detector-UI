@@ -94,7 +94,7 @@ export class EditingComponent implements OnInit {
     //B TODO implement this.
     this.viewer.open({
       type: 'image',
-      url: "https://live.staticflickr.com/4387/36231833334_14467de595_k_d.jpg"
+      url: 'http://localhost:12321/api/edition/24/getPage/2'
     })
 
   }

@@ -13,6 +13,31 @@ paths:
       responses:
         '200':
           description: Successful response
+  /edition/{editionID}/getPage/{pageNr}:
+    get:
+      summary: Returns the image file to the given page of the edition specified by the id
+      operationId: getPageByPageNrAndEditionID
+      parameters:
+        - name: editionID
+          schema:
+            type: integer
+          in: path
+          required: true
+          description: the editionID
+        - name: pageNr
+          schema:
+            type: integer
+          in: path
+          required: true
+          description: the Page NR
+      responses:
+        "200":
+          description: The page as a image file
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
   /edition/runMeasureDetection/{id}:
     post:
       summary: runs the measure detection against an edition. Make sure that the measure detector is connected with the application

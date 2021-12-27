@@ -7,8 +7,11 @@ import com.rs.detector.service.editing.exceptions.PagesMightNotHaveBeenGenerated
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.jobrunr.jobs.context.JobContext;
 import org.jobrunr.jobs.context.JobDashboardProgressBar;
+import org.jobrunr.scheduling.BackgroundJob;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
@@ -22,6 +25,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @TestPropertySource(properties = {"application.editionResourceBasePath=build/res"})
@@ -30,7 +35,8 @@ class EditingFileManagementServiceTest extends SimpleDataInitialization {
 
     String sep = File.separator;
     String fileFormat = ".png"; // TODO Outsource in config
-    JobContext jobContext= JobContext.Null;
+
+    JobContext jobContext = null;
 
     @Autowired
     EditingFileManagementService editingFileManagementService;
@@ -139,6 +145,20 @@ class EditingFileManagementServiceTest extends SimpleDataInitialization {
         System.out.println(res);
         assert(assertedPageNames.containsAll(res));
 
+    }
+
+    @Test
+    void loadPageResource() throws IOException, PagesMightNotHaveBeenGeneratedException {
+        var pdf = PDDocument.load(
+            new File("src/test/resources/scores/aegyptische-helena.pdf")
+        );
+
+        editingFileManagementService.storePDFfile(testEdition, pdf);
+        editingFileManagementService.setStartIndex(245);
+        editingFileManagementService.extractPagesFromEdition(testEdition, jobContext);
+
+        var resource = editingFileManagementService.getPage(testEdition, 245);
+        assertNotNull(resource);
     }
 
     @Test

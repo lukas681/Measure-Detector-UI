@@ -73,7 +73,10 @@ public class FileUtilService {
      */
     public void convertPdf2Img2(@NotNull PDDocument documentToConvert, @NotNull Path outputPath, int firstPage,
                                 JobContext jobContext) throws IOException {
-        var jobDashboardProgressBar = jobContext.progressBar(100);
+        JobDashboardProgressBar jobDashboardProgressBar = null;
+        if(jobContext != null) {
+            jobDashboardProgressBar = jobContext.progressBar(100);
+        }
 
         assert(documentToConvert != null);
         assert(firstPage >= 0 && firstPage <= documentToConvert.getNumberOfPages()); // Capture DIVBYZERO
@@ -82,7 +85,9 @@ public class FileUtilService {
         int pagesToProcess = documentToConvert.getNumberOfPages() - firstPage + 1;
 
         for (int pageNumber = firstPage; pageNumber < documentToConvert.getNumberOfPages(); ++pageNumber) {
-            jobContext.logger().info("Processing Page " + pageNumber + 1 + " out of " + documentToConvert.getNumberOfPages());
+            if(jobContext != null) {
+                jobContext.logger().info("Processing Page " + pageNumber + 1 + " out of " + documentToConvert.getNumberOfPages());
+            }
 
             BufferedImage bim = pdfRenderer.renderImageWithDPI(pageNumber, imageSplitDPI, ImageType.RGB);
             var destDir = outputPath.toString() + File.separator + "_" + pageNumber + ".png";
@@ -94,7 +99,9 @@ public class FileUtilService {
     }
 
     private void updateProgress(JobDashboardProgressBar jobDashboardProgressBar, int pagesToProcess, int pageNumber) {
-        jobDashboardProgressBar.setValue(((pageNumber/pagesToProcess)*100));
+        if(jobDashboardProgressBar!= null) {
+            jobDashboardProgressBar.setValue(((pageNumber / pagesToProcess) * 100));
+        }
     }
 
     /**

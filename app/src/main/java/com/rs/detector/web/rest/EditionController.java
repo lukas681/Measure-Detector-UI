@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import com.rs.detector.domain.Edition;
 import com.rs.detector.domain.enumeration.EditionType;
 import com.rs.detector.service.EditionService;
+import com.rs.detector.service.PageService;
 import com.rs.detector.service.editing.EditingService;
 import com.rs.detector.service.editing.ScorePageService;
 import com.rs.detector.service.editing.exceptions.PagesMightNotHaveBeenGeneratedException;
@@ -18,20 +19,43 @@ import org.jobrunr.scheduling.BackgroundJob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.time.Instant;
 
 @Service
 public class EditionController implements EditionApiDelegate {
 
-    private final Logger log = LoggerFactory.getLogger(EditionController.class);
 
     @Autowired
     EditingService editingService;
+
+    private final Logger log = LoggerFactory.getLogger(EditionController.class);
+
+    @Override
+    public ResponseEntity<Resource> getPageByPageNrAndEditionID(Integer editionID, Integer pageNr) {
+        try {
+            var headers = new HttpHeaders();
+            headers.add("Content-Type", "image/png");
+            var resource =  editingService.getPageResourceToEditionAndPageNr(editionID, Long.valueOf(pageNr));
+            System.out.println(resource);
+            return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return (ResponseEntity<Resource>) ResponseEntity.badRequest();
+    }
 
     @Autowired
     ScorePageService scorePageService;
