@@ -9,12 +9,11 @@ import { ASC, DESC, ITEMS_PER_PAGE } from 'app/config/pagination.constants';
 import { EditionService } from '../service/edition.service';
 import { ParseLinks } from 'app/core/util/parse-links.service';
 
-// import '@recogito/annotorious/dist/annotorious.min.css';
 import * as OpenSeadragon from 'openseadragon';
-
 import * as OSDAnnotorious from '@recogito/annotorious-openseadragon';
 import ShapeLabelsFormatter from '@recogito/annotorious-shape-labels';
-// import { Annotorious } from '@recogito/annotorious';
+import {TileSource} from "openseadragon";
+import {StorageService} from "../../edition-detail/service/edition-storage.service";
 
 @Component({
   selector: 'jhi-edition',
@@ -28,11 +27,12 @@ export class EditingComponent implements OnInit {
   page: number;
   predicate: string;
   ascending: boolean;
-  annotationsData = {};
+  annotationsData = [];
   currentMeasureNo = 1;
+  viewer: any;
+  anno: any;
 
-  constructor(protected activatedRoute: ActivatedRoute, protected editionService: EditionService, protected modalService: NgbModal, protected parseLinks: ParseLinks) {
-
+  constructor(protected storageService: StorageService,protected activatedRoute: ActivatedRoute, protected editionService: EditionService, protected modalService: NgbModal, protected parseLinks: ParseLinks) {
     this.itemsPerPage = ITEMS_PER_PAGE;
     this.page = 0;
     this.links = {
@@ -42,77 +42,76 @@ export class EditingComponent implements OnInit {
     this.ascending = true;
   }
 
-
   ngOnInit(): void {
-    // const anno = new Annotorious({ image: 'test' }); // image element or ID
 
-      const viewer = OpenSeadragon({
-      id: "test",
+      this.viewer = OpenSeadragon({
+      id: "viewer",
       prefixUrl: "openseadragon/images/",
       minZoomLevel: 	1,
-      maxZoomLevel: 	10,
-      // visibilityRatio: 0.1,
+      maxZoomLevel: 	13,
+          // visibilityRatio: 0.1,
       // constrainDuringPan: true,
       tileSources: {
-        type: "image",
+        type: 'image',
         url: 'https://www.bsb-muenchen.de/fileadmin/bsb/sammlungen/musik/aktuelles/strauss_richard_metamorphosen_ausschnitt.jpg'
       }
-    });
+    }
+    );
       console.warn(ShapeLabelsFormatter);
-    const anno = OSDAnnotorious(viewer, {
+    this.anno = OSDAnnotorious(this.viewer, {
       formatter: ShapeLabelsFormatter(),
       // disableEditor: true
     });
-    // console.warn(anno)
-    this.annotationsData = anno.getAnnotations()
+    this.annotationsData = this.anno.getAnnotations()
 
-    // TODO: Is there any option to enable two way bindings?
-    anno.on('createSelection', async (selection:any) => {
-      this.annotationsData = anno.getAnnotations();
+    this.anno.on('createSelection', async (selection:any) => {
+      this.annotationsData = this.anno.getAnnotations();
       selection.body = [{
         type: 'TextualBody',
         purpose: 'tagging',
         value: this.currentMeasureNo++
       }];
 
-      // console.warn(this.annotationsData);
-      await anno.updateSelected(selection);
-      anno.saveSelected();
+      console.warn(this.annotationsData);
+      await this.anno.updateSelected(selection);
+      this.anno.saveSelected();
     });
 
-    anno.on('updateAnnotation', () => {
-      this.annotationsData = anno.getAnnotations();
+    this.anno.on('updateAnnotation', () => {
+      this.annotationsData = this.anno.getAnnotations();
     });
 
-    anno.on('deleteAnnotation', () => {
-      this.annotationsData = anno.getAnnotations();
+    this.anno.on('deleteAnnotation', () => {
+      this.annotationsData = this.anno.getAnnotations();
       // this.currentMeasureNo--; // Maybe this makes sense, but deleting something in between might be unlogic
     });
+  }
 
-    // const anno = new Annotorious ({
-    //   image: document.getElementById('test')
-    // });
-    // anno.loadAnnotations('annotations.w3c.json');
+  nextPage(): void
+  {
+    // resets all
+    this.anno.clearAnnotations();
+    //B TODO implement this.
+    this.viewer.open({
+      type: 'image',
+      url: "https://live.staticflickr.com/4387/36231833334_14467de595_k_d.jpg"
+    })
 
-    // Attach listeners to handle annotation events
-    // anno.on('createAnnotation', function(annotation: any):any {
-    //   const annotations = anno.getAnnotations();
-    //   console.warn(annotations);
-    // });
-
-    // console.warn(anno)
-    console.warn("NONEMPTY")
-    // this.activatedRoute.data.subscribe(({ editions}) => {
-    //   this.editions = editions;
-    //   // eslint-disable-next-line no-console
-    //   console.log(this.editions)
-    // });
-
-    // this.loadAll();
   }
 
   trackId(index: number, item: IEdition): number {
     return item.id!;
   }
+
+  /**
+   * Takes a Measure Numebr and decreases all following ones by one. Used for deleting and filling the open space
+   * @param n
+   */
+  // decreaseAllFollowedFromN(n: number): void {
+  //     this.annotationsData.filter((annotation)=> {
+  //       if(annotation.hasOwnProperty("target"))
+  //         return true;
+  //     });
+  // }
 }
 
