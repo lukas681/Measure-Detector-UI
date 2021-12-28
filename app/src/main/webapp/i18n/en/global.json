@@ -104,7 +104,8 @@
       "save": "Save",
       "view": "View",
       "project-editions": "Proceed",
-      "triggerDetection": "Start Detection"
+      "triggerDetection": "Start Detection",
+      "openEditMode": "Open Editor"
     },
     "detail": {
       "field": "Field",

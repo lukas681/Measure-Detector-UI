@@ -21,4 +21,8 @@ export class EditionDeleteDialogComponent {
       this.activeModal.close('deleted');
     });
   }
+
+  previousState(): void {
+    window.history.back();
+  }
 }

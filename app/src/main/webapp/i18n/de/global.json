@@ -105,7 +105,8 @@
       "save": "Speichern",
       "view": "Details",
       "project-editions": "Fortfahren",
-      "triggerDetection": "Starte Takterkennung"
+      "triggerDetection": "Starte Takterkennung",
+      "openEditMode": "Öffne Editor"
     },
     "detail": {
       "field": "Feld",

@@ -71,14 +71,23 @@
             <div class="btn-group">
               <button
                 type="submit"
+                [routerLink]="['/editing-detail', edition.id, '']"
+                class="btn btn-success btn-sm"
+                data-cy="entityDetailsButton">
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.openEditMode">triggered</span>
+              </button>
+            </div>
+            <div class="btn-group">
+              <button
+                type="submit"
                 (click)="triggerDetection(edition.id)"
                 class="btn btn-success btn-sm"
                 data-cy="entityDetailsButton">
                 <fa-icon icon="eye"></fa-icon>
-                <span class="d-none d-md-inline" jhiTranslate="entity.action.triggerDetection">triggered</span>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.triggerDetection">EditMode</span>
               </button>
             </div>
-
               <div class="btn-group">
               <button
                 type="submit"

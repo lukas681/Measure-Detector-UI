@@ -7,7 +7,7 @@ import { EditingRoutingResolveService } from './editing-routing-resolve.service'
 
 const editingRoute: Routes = [
   {
-    path: '',
+    path: ':id/',
     component: EditingComponent,
     resolve: {
       edition: EditingRoutingResolveService,

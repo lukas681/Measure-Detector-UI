@@ -23,6 +23,7 @@ import {StorageService} from "../../edition-detail/service/edition-storage.servi
 export class EditingComponent implements OnInit {
 
   BASEURL = "/api/";
+  // TODO do not allow out of boundary calls
   currentPage = 0;
   isLoading = false;
   itemsPerPage: number;
@@ -69,7 +70,7 @@ export class EditingComponent implements OnInit {
       tileSources:
         {
           type: 'image',
-          url: 'http://localhost:12321/api/edition/24/getPage/2'
+          url: this.generateUrl(this.storageService.getActiveEditionId(), ++this.currentPage)
         },
 
       // tileSources: 'https://www.bsb-muenchen.de/fileadmin/bsb/sammlungen/musik/aktuelles/strauss_richard_metamorphosen_ausschnitt.jpg'
@@ -141,7 +142,7 @@ export class EditingComponent implements OnInit {
       //   'Authentication': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY0MDcyNjg4MX0.D4AxgHIB1Y4TFkqxGbHDCQIgHjki707JvECXZx7Z5m55hAiZkCrUBZjf8CeYgO-6egWOE18ShhWmm73oKieHSA'
       // },
       // url: this.generateUrl(this.storageService.getActiveEditionId(), this.currentPage)
-      url: this.generateUrl(23, ++this.currentPage)
+      url: this.generateUrl(this.storageService.getActiveEditionId(), ++this.currentPage)
     })
 
   }
@@ -156,7 +157,7 @@ export class EditingComponent implements OnInit {
       //   'Authentication': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY0MDcyNjg4MX0.D4AxgHIB1Y4TFkqxGbHDCQIgHjki707JvECXZx7Z5m55hAiZkCrUBZjf8CeYgO-6egWOE18ShhWmm73oKieHSA'
       // },
       // url: this.generateUrl(this.storageService.getActiveEditionId(), this.currentPage)
-      url: this.generateUrl(23, --this.currentPage)
+      url: this.generateUrl(this.storageService.getActiveEditionId(), --this.currentPage)
     })
 
   }
@@ -166,6 +167,10 @@ export class EditingComponent implements OnInit {
 
   trackId(index: number, item: IEdition): number {
     return item.id!;
+  }
+
+  previousState(): void {
+    window.history.back();
   }
 
 

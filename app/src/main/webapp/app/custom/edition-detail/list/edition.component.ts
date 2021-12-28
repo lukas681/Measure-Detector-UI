@@ -106,6 +106,10 @@ export class EditionComponent implements OnInit {
     }
   }
 
+  previousState(): void {
+    window.history.back();
+  }
+
   protected sort(): string[] {
     const result = [this.predicate + ',' + (this.ascending ? ASC : DESC)];
     if (this.predicate !== 'id') {
