@@ -4,7 +4,7 @@ import {IEdition} from "../edition-detail.model";
 @Injectable({ providedIn: 'root' })
 export class StorageService {
 
-  public activeEdition: IEdition | undefined;
+  public activeEditionId: number | boolean = false;
   public activeProjectId: number | boolean = false;
 
   public getActiveProjectId(): number | boolean {
@@ -14,10 +14,10 @@ export class StorageService {
   public setActiveProjectID(projectId: number): void {
     this.activeProjectId = projectId;
   }
-  public getActiveEdition() :IEdition | undefined {
-      return this.activeEdition;
+  public getActiveEditionId() :number | boolean | undefined {
+      return this.activeEditionId;
   }
-  public setActiveEdition(e: IEdition): void {
-     this.activeEdition = e;
+  public setActiveEditionId(e: number | boolean): void {
+     this.activeEditionId = e;
   }
 }

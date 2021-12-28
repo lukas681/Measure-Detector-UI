@@ -21,6 +21,9 @@ import {StorageService} from "../../edition-detail/service/edition-storage.servi
   // styleUrls: ['@recogito/annotorious/dist/annotorious.min.css']
 })
 export class EditingComponent implements OnInit {
+
+  BASEURL = "/api/";
+  currentPage = 0;
   isLoading = false;
   itemsPerPage: number;
   links: { [key: string]: number };
@@ -44,25 +47,57 @@ export class EditingComponent implements OnInit {
 
   ngOnInit(): void {
 
-    // TODO work on this
       this.viewer = OpenSeadragon({
-        ajaxWithCredentials:true,
+        // ajaxWithCredentials:true,
         loadTilesWithAjax: true,
+        // ajaxWithCredentials: true,
         ajaxHeaders: {
-          Authentication: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY0MDcyNjg4MX0.D4AxgHIB1Y4TFkqxGbHDCQIgHjki707JvECXZx7Z5m55hAiZkCrUBZjf8CeYgO-6egWOE18ShhWmm73oKieHSA"
+          'Accept': 'image/avif,image/webp,image/png,image/svg+xml,image/*,*/*;q=0.8',
+          'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY0MDgwNTU0NH0.GP6vgrAwLzx1KtGJblptm-iY_0_wUmZk8KQmY2CD4cCsJA77o5ypeXIV29E6hXJc3W-YOen1iU-fdtd3KS3_Yw',
+         'Accept-Encoding': 'gzip, deflate, br',
+          'Accept-Language': 'en-US,en;q=0.9',
+          'Connection': 'keep-alive'
+          // 'Sec-Fetch-Mode': 'no-cors',
+          // 'Sec-Fetch-Size': 'same-site',
+          // 'Sec-Fetch-Dest': 'image',
+    // 'Authentication': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY0MDcyNjg4MX0.D4AxgHIB1Y4TFkqxGbHDCQIgHjki707JvECXZx7Z5m55hAiZkCrUBZjf8CeYgO-6egWOE18ShhWmm73oKieHSA'
         },
       id: "viewer",
       prefixUrl: "openseadragon/images/",
       minZoomLevel: 	1,
       maxZoomLevel: 	13,
+      tileSources:
+        {
+          type: 'image',
+          url: 'http://localhost:12321/api/edition/24/getPage/2'
+        },
+
+      // tileSources: 'https://www.bsb-muenchen.de/fileadmin/bsb/sammlungen/musik/aktuelles/strauss_richard_metamorphosen_ausschnitt.jpg'
+      // tileSources: {
+      //     type: 'image',
+      //   ajaxWithCredentials: true,
+      //   ajaxHeaders: {
+      //     'Accept': 'image/avif,image/webp,image/png,image/svg+xml,image/*,*/*;q=0.8',
+      //     'tset': 'test'
+      //   },
+      //   url: 'https://banner2.cleanpng.com/20180419/hkw/kisspng-ssc-mts-exam-test-computer-icons-educational-entra-test-paper-5ad919071997b8.5830873915241771591048.jpg'
+      // }
+          // url: 'https://www.pngall.com/wp-content/uploads/4/World-Wide-Web-PNG-Free-Image.png'
+        // url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Test-Logo.svg/783px-Test-Logo.svg.png'
+        //  url:
+      // }
           // visibilityRatio: 0.1,
       // constrainDuringPan: true,
-      tileSources: {
-        type: 'image',
-        url: 'http://localhost:12321/api/edition/24/getPage/2'
-      }
+      // tileSources: {
+      //   type: 'image',
+      //   url: 'http://localhost:12321/api/edition/24/getPage/2'
+      // }
     }
     );
+      // this.viewer.ajaxHeaders = {
+      //   "asd":"asdf"
+      // }
+
       console.warn(ShapeLabelsFormatter);
     this.anno = OSDAnnotorious(this.viewer, {
       formatter: ShapeLabelsFormatter(),
@@ -96,28 +131,43 @@ export class EditingComponent implements OnInit {
   nextPage(): void
   {
     // resets all
+    // console.warn(this.generateUrl( this.storageService.getActiveEditionId(), this.currentPage));
     this.anno.clearAnnotations();
-    //B TODO implement this.
     this.viewer.open({
       type: 'image',
-      url: 'https://www.bsb-muenchen.de/fileadmin/bsb/sammlungen/musik/aktuelles/strauss_richard_metamorphosen_ausschnitt.jpg'
+      // ajaxWithCredentials: true,
+      // loadTilesWithAjax: true,
+      // ajaxHeaders: {
+      //   'Authentication': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY0MDcyNjg4MX0.D4AxgHIB1Y4TFkqxGbHDCQIgHjki707JvECXZx7Z5m55hAiZkCrUBZjf8CeYgO-6egWOE18ShhWmm73oKieHSA'
+      // },
+      // url: this.generateUrl(this.storageService.getActiveEditionId(), this.currentPage)
+      url: this.generateUrl(23, ++this.currentPage)
     })
 
+  }
+  previousPage(): void
+  {
+    this.anno.clearAnnotations();
+    this.viewer.open({
+      type: 'image',
+      // ajaxWithCredentials: true,
+      // loadTilesWithAjax: true,
+      // ajaxHeaders: {
+      //   'Authentication': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY0MDcyNjg4MX0.D4AxgHIB1Y4TFkqxGbHDCQIgHjki707JvECXZx7Z5m55hAiZkCrUBZjf8CeYgO-6egWOE18ShhWmm73oKieHSA'
+      // },
+      // url: this.generateUrl(this.storageService.getActiveEditionId(), this.currentPage)
+      url: this.generateUrl(23, --this.currentPage)
+    })
+
+  }
+  generateUrl(edition: number | boolean | undefined, page: number): string {
+      return this.BASEURL + 'edition/' +String(edition)+ "/getPage/" + String(page);
   }
 
   trackId(index: number, item: IEdition): number {
     return item.id!;
   }
 
-  /**
-   * Takes a Measure Numebr and decreases all following ones by one. Used for deleting and filling the open space
-   * @param n
-   */
-  // decreaseAllFollowedFromN(n: number): void {
-  //     this.annotationsData.filter((annotation)=> {
-  //       if(annotation.hasOwnProperty("target"))
-  //         return true;
-  //     });
-  // }
+
 }
 

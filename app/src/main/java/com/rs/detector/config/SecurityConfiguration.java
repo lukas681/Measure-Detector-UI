@@ -100,6 +100,7 @@ public class SecurityConfiguration {
             .pathMatchers("/api/account/reset-password/finish").permitAll()
             .pathMatchers("/api/auth-info").permitAll()
             .pathMatchers("/api/admin/**").hasAuthority(AuthoritiesConstants.ADMIN)
+            .pathMatchers("/api/edition/*/getPage/*").permitAll()
             .pathMatchers("/api/**").authenticated()
             .pathMatchers("/services/**").authenticated()
             .pathMatchers("/management/health").permitAll()
