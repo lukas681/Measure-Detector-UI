@@ -252,6 +252,7 @@ dependencies {
         exclude group: "org.springframework", module: "spring-webmvc"
     }
     implementation "javax.annotation:javax.annotation-api"
+    implementation "javax.servlet:javax.servlet-api"
     implementation "io.dropwizard.metrics:metrics-core"
     implementation "io.micrometer:micrometer-registry-prometheus"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-hppc"
