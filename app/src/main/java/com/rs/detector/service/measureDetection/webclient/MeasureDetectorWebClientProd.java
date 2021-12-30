@@ -43,14 +43,14 @@ public class MeasureDetectorWebClientProd implements MeasureDetectorWebClient {
         HttpClient httpClient =
             HttpClient.create()
                 .wiretap(this.getClass().getCanonicalName(),
-                    LogLevel.INFO, AdvancedByteBufFormat.TEXTUAL)
+                    LogLevel.TRACE, AdvancedByteBufFormat.TEXTUAL) // TODO: Maybe adjust the loglevel a bit ...
             .compress(true);
         ReactorClientHttpConnector conn = new ReactorClientHttpConnector(httpClient.compress(true));
 
         this.client = WebClient
             .builder()
             .filters(exchangeFilterFunctions -> {
-                if (log.isInfoEnabled()) {
+                if (log.isTraceEnabled()) {
                     exchangeFilterFunctions.add(logRequest());
                 }
             })

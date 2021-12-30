@@ -14,7 +14,8 @@ import * as OSDAnnotorious from '@recogito/annotorious-openseadragon';
 import ShapeLabelsFormatter from '@recogito/annotorious-shape-labels';
 import {TileSource} from "openseadragon";
 import {StorageService} from "../../edition-detail/service/edition-storage.service";
-
+import {IMeasureBox} from "../../../entities/measure-box/measure-box.model";
+import {ApiOrchMeasureBox} from "../../../shared/model/openapi/model/apiOrchMeasureBox";
 @Component({
   selector: 'jhi-edition',
   templateUrl: './editing.component.html',
@@ -31,7 +32,7 @@ export class EditingComponent implements OnInit {
   page: number;
   predicate: string;
   ascending: boolean;
-  annotationsData = [];
+  annotationsData:any[] = [];
   currentMeasureNo = 1;
   viewer: any;
   anno: any;
@@ -47,6 +48,9 @@ export class EditingComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+      this.editionService.fetchMeasureBoxes(this.storageService.getActiveEditionId(), this.currentPage)
+        .subscribe(x => console.warn(x));
 
       this.viewer = OpenSeadragon({
         // ajaxWithCredentials:true,
@@ -98,24 +102,47 @@ export class EditingComponent implements OnInit {
       // this.viewer.ajaxHeaders = {
       //   "asd":"asdf"
       // }
-
       console.warn(ShapeLabelsFormatter);
+  }
+
+  nextPage(): void
+  {
+    this.viewer.open({
+      type: 'image',
+      // ajaxWithCredentials: true,
+      // loadTilesWithAjax: true,
+      // ajaxHeaders: {
+      //   'Authentication': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY0MDcyNjg4MX0.D4AxgHIB1Y4TFkqxGbHDCQIgHjki707JvECXZx7Z5m55hAiZkCrUBZjf8CeYgO-6egWOE18ShhWmm73oKieHSA'
+      // },
+      // url: this.generateUrl(this.storageService.getActiveEditionId(), this.currentPage)
+      url: this.generateUrl(this.storageService.getActiveEditionId(), ++this.currentPage)
+    })
+    this.setAnnotationsWithServerData();
+
+  }
+
+  initializeAnnotorious(): void {
+
+    // Note: Although methods like clearAnnotations() and setAnnotations() exist, we have to recreate the Annotorious Instance
+    // to prevent internal conflicts with the Annotations
+    if(this.anno){
+      this.anno.destroy()
+    }
     this.anno = OSDAnnotorious(this.viewer, {
       formatter: ShapeLabelsFormatter(),
       // disableEditor: true
     });
-    this.anno.setAnnotations(this.getExampleAnnotation());
-    this.annotationsData = this.anno.getAnnotations()
+    this.anno.setAnnotations(this.annotationsData);
+    // this.anno.setAnnotations(this.getExampleAnnotation());
 
     this.anno.on('createSelection', async (selection:any) => {
       this.annotationsData = this.anno.getAnnotations();
-      selection.body = [{
-        type: 'TextualBody',
-        purpose: 'tagging',
-        value: this.currentMeasureNo++
-      }];
+        selection.body = [{
+          type: 'TextualBody',
+          purpose: 'tagging',
+          value: this.currentMeasureNo++
+        }];
 
-      console.warn(this.annotationsData);
       await this.anno.updateSelected(selection);
       this.anno.saveSelected();
     });
@@ -130,26 +157,8 @@ export class EditingComponent implements OnInit {
     });
   }
 
-  nextPage(): void
-  {
-    // resets all
-    // console.warn(this.generateUrl( this.storageService.getActiveEditionId(), this.currentPage));
-    this.anno.clearAnnotations();
-    this.viewer.open({
-      type: 'image',
-      // ajaxWithCredentials: true,
-      // loadTilesWithAjax: true,
-      // ajaxHeaders: {
-      //   'Authentication': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY0MDcyNjg4MX0.D4AxgHIB1Y4TFkqxGbHDCQIgHjki707JvECXZx7Z5m55hAiZkCrUBZjf8CeYgO-6egWOE18ShhWmm73oKieHSA'
-      // },
-      // url: this.generateUrl(this.storageService.getActiveEditionId(), this.currentPage)
-      url: this.generateUrl(this.storageService.getActiveEditionId(), ++this.currentPage)
-    })
-
-  }
   previousPage(): void
   {
-    this.anno.clearAnnotations();
     this.viewer.open({
       type: 'image',
       // ajaxWithCredentials: true,
@@ -160,7 +169,7 @@ export class EditingComponent implements OnInit {
       // url: this.generateUrl(this.storageService.getActiveEditionId(), this.currentPage)
       url: this.generateUrl(this.storageService.getActiveEditionId(), --this.currentPage)
     })
-
+    this.setAnnotationsWithServerData();
   }
   generateUrl(edition: number | boolean | undefined, page: number): string {
       return this.BASEURL + 'edition/' +String(edition)+ "/getPage/" + String(page);
@@ -174,28 +183,57 @@ export class EditingComponent implements OnInit {
     window.history.back();
   }
 
-  getExampleAnnotation(): any {
-    return [
-      {
-        "id": "#a88b22d0-6106-4872-9435-c78b5e89fede",
-        "type": "Annotation",
-        "body": [{
-          "type": "TextualBody",
-          "value": "It's Hallstatt in Upper Austria"
-        }, {
-          "type": "TextualBody",
+  setAnnotationsWithServerData(): void {
+    this.editionService.fetchMeasureBoxes(this.storageService.getActiveEditionId(), this.currentPage)
+        .subscribe(response => {
+          if(response.body) {
+            console.warn(this.annotationsData)
+            this.annotationsData = this.makeW3CConform(response.body)
+            this.initializeAnnotorious()
+            //   this.anno.setAnnotations(this.annotationsData);
+          }
+        });
+  }
+
+  private makeW3CConform(boxes:ApiOrchMeasureBox[]): any[] {
+    const w3cJson = []
+    for (const val of boxes) {
+      w3cJson.push(this.createAnnotationForJson(val))
+    }
+    return w3cJson;
+  }
+
+  private calcRectangleValues(mb: ApiOrchMeasureBox): string {
+    let w = 0;
+    let h = 0;
+    if(mb.lrx && mb.ulx && mb.uly && mb.lry) {
+      w = mb.lrx - mb.ulx;
+      h = mb.lry - mb.uly;
+    }
+    return "xywh=pixel:" + String(mb.ulx) + "," + String(mb.uly) + "," + String(w) + "," + String(h);
+  }
+
+
+  private createAnnotationForJson(mb: ApiOrchMeasureBox): any {
+    return {
+      "@context": "http:/www.w3.org/ns/anno.jsonId",
+      "id": String(mb.id),
+      "type": "Annotation",
+      "body":  [{
+         "type": "textualBody",
           "purpose": "tagging",
-          "value": "Hallstatt"
+          "value": mb.measureCount
         }],
-        "target": {
-          "selector": [{
-            "type": "FragmentSelector",
-            "conformsTo": "http://www.w3.org/TR/media-frags/",
-            "value": "xywh=pixel:273,171,123,94"
-          }]
+      "target": {
+        "selector": {
+          "type": "FragmentSelector",
+          "conformsTo": "http://www.w3.org/TR/media-frags/",
+          "value": this.calcRectangleValues(mb)
         }
       }
-      ]
+      // TODO Support for more comments later on!
+
+    }
   }
 
 

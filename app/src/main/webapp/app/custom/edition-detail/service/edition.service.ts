@@ -23,14 +23,9 @@ export class EditionService {
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
   create(edition: IEdition): Observable<EntityResponseType> {
-   // TODO switch the endpoint to actually allow data uploads!
 
     const copy = this.convertDateFromClient(edition);
     console.warn(edition)
-    // edition.pdfFile
-    // const z = new EditionWithFile(
-    //
-    // );
 
     return this.http
       .post<IEdition>(this.resourceUrlAddEditionWithFile, copy, { observe: 'response' })

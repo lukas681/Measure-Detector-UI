@@ -60,7 +60,6 @@ public class EditionController implements EditionApiDelegate {
             var headers = new HttpHeaders();
             headers.add("Content-Type", "image/png");
             var resource =  editingService.getPageResourceToEditionAndPageNr(editionID, Long.valueOf(pageNr));
-            System.out.println(resource);
             return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
