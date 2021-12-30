@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -47,7 +48,10 @@ public class EditionController implements EditionApiDelegate {
     @Override
     public ResponseEntity<List<ApiOrchMeasureBox>> getMeasureBoxesByEditionIdAndPageNr(Integer editionID, Integer pageNr) {
         var res =  editingService.getMeasureBoxesbyEditionIDandPageNr(editionID, Long.valueOf(pageNr));
-        return ResponseEntity.ok(res);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .contentType(MediaType.APPLICATION_JSON)
+                    .body(res);
     }
 
     @Override
