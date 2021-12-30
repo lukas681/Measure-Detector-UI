@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -21,6 +21,9 @@ import {StorageService} from '../service/edition-storage.service'
   templateUrl: './edition-update.component.html',
 })
 export class EditionUpdateComponent implements OnInit {
+
+  @ViewChild('field_pDFFileName', {}) pdfName!: ElementRef;
+
   isSaving = false;
   editionTypeValues = Object.keys(EditionType);
 
@@ -32,7 +35,7 @@ export class EditionUpdateComponent implements OnInit {
     createdDate: [],
     type: [],
     description: [],
-    pDFFileName: [],
+    pDFFileName:[],
     projectId: [],
     pdfFile: []
   });
@@ -42,7 +45,7 @@ export class EditionUpdateComponent implements OnInit {
     protected editionService: EditionService,
     protected projectService: ProjectService,
     protected activatedRoute: ActivatedRoute,
-    protected fb: FormBuilder
+    protected fb: FormBuilder,
   ) {}
 
   ngOnInit(): void {
@@ -81,17 +84,17 @@ export class EditionUpdateComponent implements OnInit {
   selectFile(event: any): void {
     const reader = new FileReader();
 
-    // console.warn(event.target.files[0])
-
     if(event.target.files) {
       const [file] = event.target.files
+      this.editForm.patchValue({ // Buggy while trying to to it synchroniously with the reader.onLoad()...
+        pDFFileName: file.name,
+      })
+
       reader.readAsDataURL(file)
       reader.onload = () =>{
         this.editForm.patchValue({
           pdfFile: reader.result,
-          pDFFilename: file.filename
         })
-
       }
       // this.cd.markForCheck
     }
@@ -129,7 +132,6 @@ export class EditionUpdateComponent implements OnInit {
       pDFFileName: edition.pDFFileName,
       // project: this.storageService.getActiveProjectId(),
       projectId: edition.projectId,
-     // TODO Maybe send the PDF file back?
     });
     this.projectsSharedCollection = this.projectService.addProjectToCollectionIfMissing(this.projectsSharedCollection, edition.project);
   }
