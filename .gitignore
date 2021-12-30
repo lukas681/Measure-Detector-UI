@@ -157,3 +157,9 @@ Desktop.ini
 ######################
 /coverage/
 /.nyc_output/
+
+######################
+# Runtime Files
+######################
+app/res/**
+res/**
