@@ -13,6 +13,32 @@ paths:
       responses:
         '200':
           description: Successful response
+
+  /edition/{editionID}/getMeasureBoxes/{pageNr}:
+    get:
+      summary: returns an array of of the measureBoxes on a specific page on an edition
+      operationId: getMeasureBoxesByEditionIdAndPageNr
+      parameters:
+        - name: editionID
+          schema:
+            type: integer
+          in: path
+          required: true
+          description: the editionID
+        - name: pageNr
+          schema:
+            type: integer
+          in: path
+          required: true
+          description: the Page NR
+      responses:
+        "200":
+          description: The page as a image file
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ApiOrchMeasureBoxList'
+
   /edition/{editionID}/getPage/{pageNr}:
     get:
       summary: Returns the image file to the given page of the edition specified by the id
@@ -159,3 +185,30 @@ components:
         projectId:
           type: integer
           format: int64
+    ApiOrchMeasureBoxList:
+      type: array
+      items:
+        $ref: '#/components/schemas/ApiOrchMeasureBox'
+    ApiOrchMeasureBox:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        ulx:
+          type: integer
+          format: int64
+        lrx:
+          type: integer
+          format: int64
+        lry:
+          type: integer
+          format: int64
+        uly:
+          type: integer
+          format: int64
+        measureCount:
+          type: integer
+          format: int64
+        comment:
+            type: string

@@ -45,6 +45,8 @@ apply from: "gradle/sonar.gradle"
 apply from: "gradle/swagger.gradle"
 //jhipster-needle-gradle-apply-from - JHipster will add additional gradle scripts to be applied here
 
+
+
 if (project.hasProperty("prod") || project.hasProperty("gae")) {
     apply from: "gradle/profile_prod.gradle"
 } else {
@@ -127,6 +129,10 @@ test {
 modernizer {
     failOnViolations = true
     includeTestClasses = true
+}
+
+bootRun {
+    systemProperties = System.properties
 }
 
 task integrationTest(type: Test) {
@@ -357,6 +363,8 @@ if (project.hasProperty("nodeInstall")) {
 }
 
 openApiGenerate {
+
+    globalProperties = [ supportingFiles: "ApiUtil.java" ]
     generatorName = "spring"
     inputSpec = "$rootDir/api/api.yml".toString()
     outputDir = "$buildDir/openapi".toString()
@@ -364,19 +372,22 @@ openApiGenerate {
     modelPackage = "com.rs.detector.web.api.model"
     apiFilesConstrainedTo = [""]
     modelFilesConstrainedTo = [""]
+//    generateSupportingFiles = true
 //    supportingFilesConstrainedTo = ["ApiUtil.java"]
     configOptions = [
         delegatePattern: "true",
         title: "measure-detector",
         serializableModel: "True",
         apisToGenerate: "",
+        generateSupportingFiles: "true",
+        supportingFiles: "ApiUtil.java"
     ]
     validateSpec = true
 //    importMappings = [Problem:"org.zalando.problem.Problem"]
 //    systemProperties = [
 //        apis: "false",
-//        generateSupportingFiles: "false",
-//        supportingFiles: "false"
+//        generateSupportingFiles: "true",
+//        supportingFiles: "ApiUtil.java"
 //    ]
 }
 //springdoc.packagesToScan=com.rs.detector.web

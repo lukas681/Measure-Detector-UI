@@ -3,6 +3,7 @@ package com.rs.detector.web.rest;
 import com.fasterxml.jackson.core.Base64Variants;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.rs.detector.domain.Edition;
+import com.rs.detector.domain.MeasureBox;
 import com.rs.detector.domain.enumeration.EditionType;
 import com.rs.detector.service.EditionService;
 import com.rs.detector.service.PageService;
@@ -11,6 +12,8 @@ import com.rs.detector.service.editing.ScorePageService;
 import com.rs.detector.service.editing.exceptions.PagesMightNotHaveBeenGeneratedException;
 import com.rs.detector.web.api.EditionApiDelegate;
 import com.rs.detector.web.api.model.ApiOrchEditionWithFileAsString;
+import com.rs.detector.web.api.model.ApiOrchMeasureBox;
+import io.swagger.models.Response;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.jobrunr.configuration.JobRunr;
 import org.jobrunr.jobs.Job;
@@ -29,6 +32,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.time.Instant;
+import java.util.List;
 
 @Service
 public class EditionController implements EditionApiDelegate {
@@ -38,6 +42,13 @@ public class EditionController implements EditionApiDelegate {
     EditingService editingService;
 
     private final Logger log = LoggerFactory.getLogger(EditionController.class);
+
+
+    @Override
+    public ResponseEntity<List<ApiOrchMeasureBox>> getMeasureBoxesByEditionIdAndPageNr(Integer editionID, Integer pageNr) {
+        var res =  editingService.getMeasureBoxesbyEditionIDandPageNr(editionID, Long.valueOf(pageNr));
+        return ResponseEntity.ok(res);
+    }
 
     @Override
     public ResponseEntity<Resource> getPageByPageNrAndEditionID(Integer editionID, Integer pageNr) {

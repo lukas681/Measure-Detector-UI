@@ -150,4 +150,5 @@ public class ScorePageService {
         log.debug("Replacing the old Measure Boxes");
         return measureBoxService.saveAll(new ArrayList<>(measureBoxes));
     }
+
 }

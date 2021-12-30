@@ -65,7 +65,7 @@ export class EditingComponent implements OnInit {
         },
       id: "viewer",
       prefixUrl: "openseadragon/images/",
-      minZoomLevel: 	1,
+      minZoomLevel: 	0.1,
       maxZoomLevel: 	13,
       tileSources:
         {
@@ -104,6 +104,7 @@ export class EditingComponent implements OnInit {
       formatter: ShapeLabelsFormatter(),
       // disableEditor: true
     });
+    this.anno.setAnnotations(this.getExampleAnnotation());
     this.annotationsData = this.anno.getAnnotations()
 
     this.anno.on('createSelection', async (selection:any) => {
@@ -171,6 +172,30 @@ export class EditingComponent implements OnInit {
 
   previousState(): void {
     window.history.back();
+  }
+
+  getExampleAnnotation(): any {
+    return [
+      {
+        "id": "#a88b22d0-6106-4872-9435-c78b5e89fede",
+        "type": "Annotation",
+        "body": [{
+          "type": "TextualBody",
+          "value": "It's Hallstatt in Upper Austria"
+        }, {
+          "type": "TextualBody",
+          "purpose": "tagging",
+          "value": "Hallstatt"
+        }],
+        "target": {
+          "selector": [{
+            "type": "FragmentSelector",
+            "conformsTo": "http://www.w3.org/TR/media-frags/",
+            "value": "xywh=pixel:273,171,123,94"
+          }]
+        }
+      }
+      ]
   }
 
 

@@ -1,13 +1,16 @@
 package com.rs.detector.service.editing;
 
 import com.rs.detector.domain.Edition;
+import com.rs.detector.domain.MeasureBox;
 import com.rs.detector.domain.Page;
 import com.rs.detector.repository.EditionRepository;
 import com.rs.detector.repository.PageRepository;
 import com.rs.detector.service.EditionService;
+import com.rs.detector.service.MeasureBoxService;
 import com.rs.detector.service.ProjectService;
 import com.rs.detector.service.measureDetection.MeasureDetectorService;
 import com.rs.detector.web.api.model.ApiMeasureDetectorResult;
+import com.rs.detector.web.api.model.ApiOrchMeasureBox;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.jobrunr.jobs.context.JobContext;
 import org.slf4j.Logger;
@@ -22,6 +25,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -40,6 +44,10 @@ public class EditingService {
 
     @Autowired
     PageRepository pageRepository;
+
+
+    @Autowired
+    MeasureBoxService measureBoxService;
 
     @Autowired
     MeasureDetectorService measureDetectorService;
@@ -147,5 +155,38 @@ public class EditingService {
             // run the whole edition
             runFullMeasureDetectionOverEdition(e);
         }
+    }
+
+    public List<ApiOrchMeasureBox> getMeasureBoxesbyEditionIDandPageNr(Integer editionID, Long valueOf) {
+        List<ApiOrchMeasureBox> result = new ArrayList<>();
+        assert(editionID != null);
+        var e = editionService
+            .findOne(Long.valueOf(editionID))
+            .toProcessor()
+            .block();
+        assert e != null;
+        var page = searchPageInRepository(e, valueOf);
+
+        if(page.isPresent()) {
+             result = measureBoxService.findAllByPageId(page.get().getId())
+                .collectList()
+                .toProcessor()
+                .block()
+                 .stream().map(this::MeasureBoxToApiOrch)
+                 .collect(Collectors.toList());
+        }
+        return result;
+    }
+
+    private ApiOrchMeasureBox MeasureBoxToApiOrch(MeasureBox measureBox) {
+        assert(measureBox != null);
+        return new ApiOrchMeasureBox()
+            .comment(measureBox.getComment())
+            .id(measureBox.getId())
+            .measureCount(measureBox.getMeasureCount())
+            .lrx(measureBox.getLrx())
+            .lry(measureBox.getLry())
+            .ulx(measureBox.getUlx())
+            .uly(measureBox.getUly());
     }
 }
