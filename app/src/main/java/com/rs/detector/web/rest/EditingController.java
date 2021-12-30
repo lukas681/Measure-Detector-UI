@@ -3,20 +3,15 @@ package com.rs.detector.web.rest;
 import com.fasterxml.jackson.core.Base64Variants;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.rs.detector.domain.Edition;
-import com.rs.detector.domain.MeasureBox;
 import com.rs.detector.domain.enumeration.EditionType;
 import com.rs.detector.service.EditionService;
-import com.rs.detector.service.PageService;
 import com.rs.detector.service.editing.EditingService;
 import com.rs.detector.service.editing.ScorePageService;
 import com.rs.detector.service.editing.exceptions.PagesMightNotHaveBeenGeneratedException;
 import com.rs.detector.web.api.EditionApiDelegate;
 import com.rs.detector.web.api.model.ApiOrchEditionWithFileAsString;
 import com.rs.detector.web.api.model.ApiOrchMeasureBox;
-import io.swagger.models.Response;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.jobrunr.configuration.JobRunr;
-import org.jobrunr.jobs.Job;
 import org.jobrunr.jobs.context.JobContext;
 import org.jobrunr.scheduling.BackgroundJob;
 import org.slf4j.Logger;
@@ -36,13 +31,13 @@ import java.time.Instant;
 import java.util.List;
 
 @Service
-public class EditionController implements EditionApiDelegate {
+public class EditingController implements EditionApiDelegate {
 
 
     @Autowired
     EditingService editingService;
 
-    private final Logger log = LoggerFactory.getLogger(EditionController.class);
+    private final Logger log = LoggerFactory.getLogger(EditingController.class);
 
 
     @Override

@@ -1,7 +1,7 @@
 package com.rs.detector.service.editing;
 
 import com.rs.detector.web.api.model.ApiOrchEditionWithFileAsString;
-import com.rs.detector.web.rest.EditionController;
+import com.rs.detector.web.rest.EditingController;
 import io.micrometer.core.instrument.util.IOUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +12,10 @@ import java.io.*;
 
 
 @SpringBootTest
-public class EditionControllerTest {
+public class EditingControllerTest {
 
     @Autowired
-    EditionController editionController;
+    EditingController editingController;
 
     @Test
     // TODO Might give problems with large filesizes
@@ -29,7 +29,7 @@ public class EditionControllerTest {
             .pdfFile("")
             .type("SCORE")
             .pDFFileName(stringTooLong);
-        var res = editionController.parseDataFromBase64Encoded(stringTooLong);
+        var res = editingController.parseDataFromBase64Encoded(stringTooLong);
 
         FileUtils.writeByteArrayToFile(new File("build/res/out.pdf"), res);
     }
