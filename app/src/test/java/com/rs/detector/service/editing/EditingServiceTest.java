@@ -2,6 +2,7 @@ package com.rs.detector.service.editing;
 
 import com.rs.detector.domain.Edition;
 import com.rs.detector.domain.enumeration.EditionType;
+import com.rs.detector.service.EditionService;
 import com.rs.detector.service.editing.exceptions.PagesMightNotHaveBeenGeneratedException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.jobrunr.jobs.context.JobContext;
@@ -16,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.HashSet;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -121,7 +123,25 @@ class EditingServiceTest extends SimpleDataInitialization {
         var res = pageRepository.findAllByEditionId(testEdition.getId()).collectList().block();
 
     }
+    @Test
+    void testGetCorrectMeasureBoxesForPageNrAndEdition() throws IOException, PagesMightNotHaveBeenGeneratedException {
+        var comp =
+            measureBoxRepository.findByPageId(testPage.getId())
+                .collectList()
+                .toProcessor().block()
+                .stream().map(EditingService::MeasureBoxToApiOrch)
+                .collect(Collectors.toList());
+        // Asuming this default method is correct.
 
+        assert (measureBoxRepository.findByPageId(testPage.getId()).collectList().toProcessor().block().size() == 3);
+
+        var res =
+            editingService.getMeasureBoxesbyEditionIDandPageNr(Math.toIntExact(testEdition.getId()), 245l);
+        assert(res.size() == 3);
+        assert(res.containsAll(comp));
+
+
+        }
     @Test
     void bug() throws InterruptedException {
         Integer id = 1;

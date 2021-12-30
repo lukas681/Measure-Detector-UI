@@ -172,13 +172,13 @@ public class EditingService {
                 .collectList()
                 .toProcessor()
                 .block()
-                 .stream().map(this::MeasureBoxToApiOrch)
+                 .stream().map(EditingService::MeasureBoxToApiOrch)
                  .collect(Collectors.toList());
         }
         return result;
     }
 
-    private ApiOrchMeasureBox MeasureBoxToApiOrch(MeasureBox measureBox) {
+    public static ApiOrchMeasureBox MeasureBoxToApiOrch(MeasureBox measureBox) {
         assert(measureBox != null);
         return new ApiOrchMeasureBox()
             .comment(measureBox.getComment())

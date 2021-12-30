@@ -1,6 +1,7 @@
 package com.rs.detector.service.editing;
 
 import com.rs.detector.domain.Edition;
+import com.rs.detector.domain.MeasureBox;
 import com.rs.detector.domain.Page;
 import com.rs.detector.domain.Project;
 import com.rs.detector.repository.EditionRepository;
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.*;
 
 @Service
 public class SimpleDataInitialization {
@@ -33,6 +35,7 @@ public class SimpleDataInitialization {
     public Edition testEdition;
     public Project testProject;
     public Page testPage;
+    public List<MeasureBox> testBoxes;
 
     public void setup() {
         log.debug("Starting initialization");
@@ -63,9 +66,36 @@ public class SimpleDataInitialization {
             .edition(testEdition)
             .pageNr(245l);
 
+        testBoxes = new ArrayList<>() {
+            {
+                add(new MeasureBox()
+                    .page(testPage)
+                    .lrx(123l)
+                    .lry(123l)
+                    .ulx(23l)
+                    .uly(123l)
+                );
+                add(new MeasureBox()
+                    .page(testPage)
+                    .lrx(223l)
+                    .lry(324l)
+                    .ulx(146l)
+                    .uly(176l)
+                );
+                add(new MeasureBox()
+                    .page(testPage)
+                    .lrx(246l)
+                    .lry(246l)
+                    .ulx(146l)
+                    .uly(4354l)
+                );
+            }
+        };
+
         projectRepository.insert(testProject).block();
         editionRepository.insert(testEdition).block();
         pageRepository.insert(testPage).block();
+        testBoxes.forEach(x-> measureBoxRepository.insert(x).block());
         System.out.println("Populated Database with Testobjects");
     }
 }
