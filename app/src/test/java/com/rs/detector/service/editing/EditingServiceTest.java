@@ -118,7 +118,7 @@ class EditingServiceTest extends SimpleDataInitialization {
         editingService.extractImagesFromPDF(testEdition, jobContext);
         scorePageService.generatePageObjectIfNotExistent(testEdition).blockLast();
 
-        editingService.runFullMeasureDetectionOverEdition(testEdition);
+        editingService.runFullMeasureDetectionOverEdition(testEdition, null);
 
         var res = pageRepository.findAllByEditionId(testEdition.getId()).collectList().block();
 

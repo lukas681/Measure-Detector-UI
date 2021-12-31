@@ -99,7 +99,7 @@ public class EditingController implements EditionApiDelegate {
                     .collectList()
                     .toProcessor()
                     .block();
-                editingService.runFullMeasureDetectionOverEdition(e);
+                editingService.runFullMeasureDetectionOverEdition(e, jobContext);
             } catch (IOException e) {
                 log("The following error has occured: " + e, jobContext);
                 log(e.fillInStackTrace().getMessage(), jobContext );

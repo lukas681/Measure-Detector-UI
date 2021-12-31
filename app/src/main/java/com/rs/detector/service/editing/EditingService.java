@@ -100,12 +100,16 @@ public class EditingService {
      * scorePageService.generatePageObjectIfNotExistent(testEdition);
      *
      * @param e the complete edition to be processed
+     * @param jobContext
      * @throws IOException
      */
-    public void runFullMeasureDetectionOverEdition(@NotNull Edition e) throws IOException {
+    public void runFullMeasureDetectionOverEdition(@NotNull Edition e, JobContext jobContext) throws IOException {
         var allGeneratedAvailableScorePages = editingFileManagementService.getAllGeneratedScorePageFilesAsPageNr(e);
-        for(var pageNr: allGeneratedAvailableScorePages) {
-            runMeasureDetectionForSinglePage(e, pageNr);
+
+        for(int i = 0; i < allGeneratedAvailableScorePages.size(); i++) {
+            logInfo("Working on Page " + i + " out of " + allGeneratedAvailableScorePages.size(), jobContext);
+            logInfo("Name of the current Page: " + allGeneratedAvailableScorePages.get(i).toString(), jobContext);
+            runMeasureDetectionForSinglePage(e, allGeneratedAvailableScorePages.get(i));
         }
     }
 
@@ -149,13 +153,13 @@ public class EditingService {
         return this.editingFileManagementService;
     }
 
-    public void runMeasureDetectionOnEdition(Integer id) throws IOException {
-        var e = editionService.findOne(Long.valueOf(id)).toProcessor().block();
-        if(e != null) {
-            // run the whole edition
-            runFullMeasureDetectionOverEdition(e);
-        }
-    }
+//    public void runMeasureDetectionOnEdition(Integer id) throws IOException {
+//        var e = editionService.findOne(Long.valueOf(id)).toProcessor().block();
+//        if(e != null) {
+//            // run the whole edition
+//            runFullMeasureDetectionOverEdition(e, );
+//        }
+//    }
 
     public List<ApiOrchMeasureBox> getMeasureBoxesbyEditionIDandPageNr(Integer editionID, Long valueOf) {
         List<ApiOrchMeasureBox> result = new ArrayList<>();
@@ -188,5 +192,11 @@ public class EditingService {
             .lry(measureBox.getLry())
             .ulx(measureBox.getUlx())
             .uly(measureBox.getUly());
+    }
+    private void logInfo(String s, JobContext jobContext) {
+        if(jobContext != null) {
+            jobContext.logger().info(s);
+            log.info(s);
+        }
     }
 }
