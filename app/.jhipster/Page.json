@@ -11,6 +11,10 @@
       "fieldType": "String"
     },
     {
+      "fieldName": "measureNumberOffset",
+      "fieldType": "Long"
+    },
+    {
       "fieldName": "nextPage",
       "fieldType": "Long"
     }

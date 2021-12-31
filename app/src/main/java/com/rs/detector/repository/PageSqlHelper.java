@@ -13,6 +13,7 @@ public class PageSqlHelper {
         columns.add(Column.aliased("id", table, columnPrefix + "_id"));
         columns.add(Column.aliased("page_nr", table, columnPrefix + "_page_nr"));
         columns.add(Column.aliased("img_file_reference", table, columnPrefix + "_img_file_reference"));
+        columns.add(Column.aliased("measure_number_offset", table, columnPrefix + "_measure_number_offset"));
         columns.add(Column.aliased("next_page", table, columnPrefix + "_next_page"));
 
         columns.add(Column.aliased("edition_id", table, columnPrefix + "_edition_id"));

@@ -38,6 +38,9 @@ class PageResourceIT {
     private static final String DEFAULT_IMG_FILE_REFERENCE = "AAAAAAAAAA";
     private static final String UPDATED_IMG_FILE_REFERENCE = "BBBBBBBBBB";
 
+    private static final Long DEFAULT_MEASURE_NUMBER_OFFSET = 1L;
+    private static final Long UPDATED_MEASURE_NUMBER_OFFSET = 2L;
+
     private static final Long DEFAULT_NEXT_PAGE = 1L;
     private static final Long UPDATED_NEXT_PAGE = 2L;
 
@@ -65,7 +68,11 @@ class PageResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Page createEntity(EntityManager em) {
-        Page page = new Page().pageNr(DEFAULT_PAGE_NR).imgFileReference(DEFAULT_IMG_FILE_REFERENCE).nextPage(DEFAULT_NEXT_PAGE);
+        Page page = new Page()
+            .pageNr(DEFAULT_PAGE_NR)
+            .imgFileReference(DEFAULT_IMG_FILE_REFERENCE)
+            .measureNumberOffset(DEFAULT_MEASURE_NUMBER_OFFSET)
+            .nextPage(DEFAULT_NEXT_PAGE);
         return page;
     }
 
@@ -76,7 +83,11 @@ class PageResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Page createUpdatedEntity(EntityManager em) {
-        Page page = new Page().pageNr(UPDATED_PAGE_NR).imgFileReference(UPDATED_IMG_FILE_REFERENCE).nextPage(UPDATED_NEXT_PAGE);
+        Page page = new Page()
+            .pageNr(UPDATED_PAGE_NR)
+            .imgFileReference(UPDATED_IMG_FILE_REFERENCE)
+            .measureNumberOffset(UPDATED_MEASURE_NUMBER_OFFSET)
+            .nextPage(UPDATED_NEXT_PAGE);
         return page;
     }
 
@@ -118,6 +129,7 @@ class PageResourceIT {
         Page testPage = pageList.get(pageList.size() - 1);
         assertThat(testPage.getPageNr()).isEqualTo(DEFAULT_PAGE_NR);
         assertThat(testPage.getImgFileReference()).isEqualTo(DEFAULT_IMG_FILE_REFERENCE);
+        assertThat(testPage.getMeasureNumberOffset()).isEqualTo(DEFAULT_MEASURE_NUMBER_OFFSET);
         assertThat(testPage.getNextPage()).isEqualTo(DEFAULT_NEXT_PAGE);
     }
 
@@ -186,6 +198,8 @@ class PageResourceIT {
             .value(hasItem(DEFAULT_PAGE_NR.intValue()))
             .jsonPath("$.[*].imgFileReference")
             .value(hasItem(DEFAULT_IMG_FILE_REFERENCE))
+            .jsonPath("$.[*].measureNumberOffset")
+            .value(hasItem(DEFAULT_MEASURE_NUMBER_OFFSET.intValue()))
             .jsonPath("$.[*].nextPage")
             .value(hasItem(DEFAULT_NEXT_PAGE.intValue()));
     }
@@ -212,6 +226,8 @@ class PageResourceIT {
             .value(is(DEFAULT_PAGE_NR.intValue()))
             .jsonPath("$.imgFileReference")
             .value(is(DEFAULT_IMG_FILE_REFERENCE))
+            .jsonPath("$.measureNumberOffset")
+            .value(is(DEFAULT_MEASURE_NUMBER_OFFSET.intValue()))
             .jsonPath("$.nextPage")
             .value(is(DEFAULT_NEXT_PAGE.intValue()));
     }
@@ -237,7 +253,11 @@ class PageResourceIT {
 
         // Update the page
         Page updatedPage = pageRepository.findById(page.getId()).block();
-        updatedPage.pageNr(UPDATED_PAGE_NR).imgFileReference(UPDATED_IMG_FILE_REFERENCE).nextPage(UPDATED_NEXT_PAGE);
+        updatedPage
+            .pageNr(UPDATED_PAGE_NR)
+            .imgFileReference(UPDATED_IMG_FILE_REFERENCE)
+            .measureNumberOffset(UPDATED_MEASURE_NUMBER_OFFSET)
+            .nextPage(UPDATED_NEXT_PAGE);
 
         webTestClient
             .put()
@@ -254,6 +274,7 @@ class PageResourceIT {
         Page testPage = pageList.get(pageList.size() - 1);
         assertThat(testPage.getPageNr()).isEqualTo(UPDATED_PAGE_NR);
         assertThat(testPage.getImgFileReference()).isEqualTo(UPDATED_IMG_FILE_REFERENCE);
+        assertThat(testPage.getMeasureNumberOffset()).isEqualTo(UPDATED_MEASURE_NUMBER_OFFSET);
         assertThat(testPage.getNextPage()).isEqualTo(UPDATED_NEXT_PAGE);
     }
 
@@ -328,7 +349,7 @@ class PageResourceIT {
         Page partialUpdatedPage = new Page();
         partialUpdatedPage.setId(page.getId());
 
-        partialUpdatedPage.imgFileReference(UPDATED_IMG_FILE_REFERENCE).nextPage(UPDATED_NEXT_PAGE);
+        partialUpdatedPage.imgFileReference(UPDATED_IMG_FILE_REFERENCE).measureNumberOffset(UPDATED_MEASURE_NUMBER_OFFSET);
 
         webTestClient
             .patch()
@@ -345,7 +366,8 @@ class PageResourceIT {
         Page testPage = pageList.get(pageList.size() - 1);
         assertThat(testPage.getPageNr()).isEqualTo(DEFAULT_PAGE_NR);
         assertThat(testPage.getImgFileReference()).isEqualTo(UPDATED_IMG_FILE_REFERENCE);
-        assertThat(testPage.getNextPage()).isEqualTo(UPDATED_NEXT_PAGE);
+        assertThat(testPage.getMeasureNumberOffset()).isEqualTo(UPDATED_MEASURE_NUMBER_OFFSET);
+        assertThat(testPage.getNextPage()).isEqualTo(DEFAULT_NEXT_PAGE);
     }
 
     @Test
@@ -359,7 +381,11 @@ class PageResourceIT {
         Page partialUpdatedPage = new Page();
         partialUpdatedPage.setId(page.getId());
 
-        partialUpdatedPage.pageNr(UPDATED_PAGE_NR).imgFileReference(UPDATED_IMG_FILE_REFERENCE).nextPage(UPDATED_NEXT_PAGE);
+        partialUpdatedPage
+            .pageNr(UPDATED_PAGE_NR)
+            .imgFileReference(UPDATED_IMG_FILE_REFERENCE)
+            .measureNumberOffset(UPDATED_MEASURE_NUMBER_OFFSET)
+            .nextPage(UPDATED_NEXT_PAGE);
 
         webTestClient
             .patch()
@@ -376,6 +402,7 @@ class PageResourceIT {
         Page testPage = pageList.get(pageList.size() - 1);
         assertThat(testPage.getPageNr()).isEqualTo(UPDATED_PAGE_NR);
         assertThat(testPage.getImgFileReference()).isEqualTo(UPDATED_IMG_FILE_REFERENCE);
+        assertThat(testPage.getMeasureNumberOffset()).isEqualTo(UPDATED_MEASURE_NUMBER_OFFSET);
         assertThat(testPage.getNextPage()).isEqualTo(UPDATED_NEXT_PAGE);
     }
 

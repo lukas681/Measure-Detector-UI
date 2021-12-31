@@ -28,6 +28,7 @@ public class PageRowMapper implements BiFunction<Row, String, Page> {
         entity.setId(converter.fromRow(row, prefix + "_id", Long.class));
         entity.setPageNr(converter.fromRow(row, prefix + "_page_nr", Long.class));
         entity.setImgFileReference(converter.fromRow(row, prefix + "_img_file_reference", String.class));
+        entity.setMeasureNumberOffset(converter.fromRow(row, prefix + "_measure_number_offset", Long.class));
         entity.setNextPage(converter.fromRow(row, prefix + "_next_page", Long.class));
         entity.setEditionId(converter.fromRow(row, prefix + "_edition_id", Long.class));
         return entity;

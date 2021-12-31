@@ -39,6 +39,9 @@
           <th scope="col" jhiSortBy="imgFileReference">
             <span jhiTranslate="measureDetectorApp.page.imgFileReference">Img File Reference</span> <fa-icon icon="sort"></fa-icon>
           </th>
+          <th scope="col" jhiSortBy="measureNumberOffset">
+            <span jhiTranslate="measureDetectorApp.page.measureNumberOffset">Measure Number Offset</span> <fa-icon icon="sort"></fa-icon>
+          </th>
           <th scope="col" jhiSortBy="nextPage">
             <span jhiTranslate="measureDetectorApp.page.nextPage">Next Page</span> <fa-icon icon="sort"></fa-icon>
           </th>
@@ -55,6 +58,7 @@
           </td>
           <td>{{ page.pageNr }}</td>
           <td>{{ page.imgFileReference }}</td>
+          <td>{{ page.measureNumberOffset }}</td>
           <td>{{ page.nextPage }}</td>
           <td>
             <div *ngIf="page.edition">

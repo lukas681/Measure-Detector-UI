@@ -23,6 +23,7 @@ export class PageUpdateComponent implements OnInit {
     id: [],
     pageNr: [null, [Validators.required]],
     imgFileReference: [],
+    measureNumberOffset: [],
     nextPage: [],
     edition: [],
   });
@@ -84,6 +85,7 @@ export class PageUpdateComponent implements OnInit {
       id: page.id,
       pageNr: page.pageNr,
       imgFileReference: page.imgFileReference,
+      measureNumberOffset: page.measureNumberOffset,
       nextPage: page.nextPage,
       edition: page.edition,
     });
@@ -107,6 +109,7 @@ export class PageUpdateComponent implements OnInit {
       id: this.editForm.get(['id'])!.value,
       pageNr: this.editForm.get(['pageNr'])!.value,
       imgFileReference: this.editForm.get(['imgFileReference'])!.value,
+      measureNumberOffset: this.editForm.get(['measureNumberOffset'])!.value,
       nextPage: this.editForm.get(['nextPage'])!.value,
       edition: this.editForm.get(['edition'])!.value,
     };

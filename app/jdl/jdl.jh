@@ -27,6 +27,7 @@ entity Edition {
 entity Page {
   pageNr Long required,
   imgFileReference String,
+  measureNumberOffset Long,
   nextPage Long
 }
 

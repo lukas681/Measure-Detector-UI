@@ -61,6 +61,9 @@ public class PageService {
                 if (page.getImgFileReference() != null) {
                     existingPage.setImgFileReference(page.getImgFileReference());
                 }
+                if (page.getMeasureNumberOffset() != null) {
+                    existingPage.setMeasureNumberOffset(page.getMeasureNumberOffset());
+                }
                 if (page.getNextPage() != null) {
                     existingPage.setNextPage(page.getNextPage());
                 }
