@@ -34,6 +34,9 @@ public class Page implements Serializable {
     @Column("img_file_reference")
     private String imgFileReference;
 
+    @Column("measure_number_offset")
+    private Long measureNumberOffset;
+
     @Column("next_page")
     private Long nextPage;
 
@@ -88,6 +91,19 @@ public class Page implements Serializable {
 
     public void setImgFileReference(String imgFileReference) {
         this.imgFileReference = imgFileReference;
+    }
+
+    public Long getMeasureNumberOffset() {
+        return this.measureNumberOffset;
+    }
+
+    public Page measureNumberOffset(Long measureNumberOffset) {
+        this.setMeasureNumberOffset(measureNumberOffset);
+        return this;
+    }
+
+    public void setMeasureNumberOffset(Long measureNumberOffset) {
+        this.measureNumberOffset = measureNumberOffset;
     }
 
     public Long getNextPage() {
@@ -182,6 +198,7 @@ public class Page implements Serializable {
             "id=" + getId() +
             ", pageNr=" + getPageNr() +
             ", imgFileReference='" + getImgFileReference() + "'" +
+            ", measureNumberOffset=" + getMeasureNumberOffset() +
             ", nextPage=" + getNextPage() +
             "}";
     }

@@ -137,8 +137,6 @@ class EditionRepositoryInternalImpl implements EditionRepositoryInternal {
     @Override
     public Mono<Integer> update(Edition entity) {
         //fixme is this the proper way?
-        // TODO no. Its not.
-
         return r2dbcEntityTemplate.update(entity).thenReturn(1);
     }
 }

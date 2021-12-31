@@ -5,6 +5,7 @@ export interface IPage {
   id?: number;
   pageNr?: number;
   imgFileReference?: string | null;
+  measureNumberOffset?: number | null;
   nextPage?: number | null;
   measureBoxes?: IMeasureBox[] | null;
   edition?: IEdition | null;
@@ -15,6 +16,7 @@ export class Page implements IPage {
     public id?: number,
     public pageNr?: number,
     public imgFileReference?: string | null,
+    public measureNumberOffset?: number | null,
     public nextPage?: number | null,
     public measureBoxes?: IMeasureBox[] | null,
     public edition?: IEdition | null

@@ -23,6 +23,7 @@ describe('Page Service', () => {
       id: 0,
       pageNr: 0,
       imgFileReference: 'AAAAAAA',
+      measureNumberOffset: 0,
       nextPage: 0,
     };
   });
@@ -61,6 +62,7 @@ describe('Page Service', () => {
           id: 1,
           pageNr: 1,
           imgFileReference: 'BBBBBB',
+          measureNumberOffset: 1,
           nextPage: 1,
         },
         elemDefault
@@ -101,6 +103,7 @@ describe('Page Service', () => {
           id: 1,
           pageNr: 1,
           imgFileReference: 'BBBBBB',
+          measureNumberOffset: 1,
           nextPage: 1,
         },
         elemDefault
@@ -153,7 +156,7 @@ describe('Page Service', () => {
       });
 
       it('should add only unique Page to an array', () => {
-        const pageArray: IPage[] = [{ id: 123 }, { id: 456 }, { id: 2794 }];
+        const pageArray: IPage[] = [{ id: 123 }, { id: 456 }, { id: 62224 }];
         const pageCollection: IPage[] = [{ id: 123 }];
         expectedResult = service.addPageToCollectionIfMissing(pageCollection, ...pageArray);
         expect(expectedResult).toHaveLength(3);
