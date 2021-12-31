@@ -26,6 +26,7 @@ export class EditingComponent implements OnInit {
   BASEURL = "/api/";
   // TODO do not allow out of boundary calls
   currentPage = 0;
+  offset = 0;
   isLoading = false;
   itemsPerPage: number;
   links: { [key: string]: number };
@@ -48,7 +49,6 @@ export class EditingComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
       this.editionService.fetchMeasureBoxes(this.storageService.getActiveEditionId(), this.currentPage)
         .subscribe(x => console.warn(x));
 
@@ -186,11 +186,18 @@ export class EditingComponent implements OnInit {
   setAnnotationsWithServerData(): void {
     this.editionService.fetchMeasureBoxes(this.storageService.getActiveEditionId(), this.currentPage)
         .subscribe(response => {
+
           if(response.body) {
-            console.warn(this.annotationsData)
-            this.annotationsData = this.makeW3CConform(response.body)
-            this.initializeAnnotorious()
-            //   this.anno.setAnnotations(this.annotationsData);
+            this.editionService.fetchBoxOffset(this.storageService.getActiveEditionId(), this.currentPage)
+              .subscribe((res) => {
+                  if(response.body) {
+                    if(typeof(res) === "number") {
+                      this.offset = res;
+                    }
+                    this.annotationsData = this.makeW3CConform(response.body)
+                    this.initializeAnnotorious()
+                  }
+              });
           }
         });
   }
@@ -215,6 +222,10 @@ export class EditingComponent implements OnInit {
 
 
   private createAnnotationForJson(mb: ApiOrchMeasureBox): any {
+    let measureCount = 0;
+    if(typeof (mb.measureCount) === "number") {
+      measureCount = mb.measureCount + this.offset;
+    }
     return {
       "@context": "http:/www.w3.org/ns/anno.jsonId",
       "id": String(mb.id),
@@ -222,7 +233,7 @@ export class EditingComponent implements OnInit {
       "body":  [{
          "type": "textualBody",
           "purpose": "tagging",
-          "value": mb.measureCount
+          "value": measureCount
         }],
       "target": {
         "selector": {
@@ -232,7 +243,6 @@ export class EditingComponent implements OnInit {
         }
       }
       // TODO Support for more comments later on!
-
     }
   }
 

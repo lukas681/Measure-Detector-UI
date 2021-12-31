@@ -7,6 +7,7 @@ import com.rs.detector.repository.EditionRepository;
 import com.rs.detector.repository.PageRepository;
 import com.rs.detector.service.EditionService;
 import com.rs.detector.service.MeasureBoxService;
+import com.rs.detector.service.PageService;
 import com.rs.detector.service.ProjectService;
 import com.rs.detector.service.measureDetection.MeasureDetectorService;
 import com.rs.detector.web.api.model.ApiMeasureDetectorResult;
@@ -17,6 +18,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
@@ -35,6 +39,7 @@ import java.util.stream.Collectors;
 public class EditingService {
 
     private final Logger log = LoggerFactory.getLogger(EditingService.class);
+    private final long DEFAULT_OFFSET = 0;
 
     @Autowired
     EditingFileManagementService editingFileManagementService;
@@ -45,6 +50,8 @@ public class EditingService {
     @Autowired
     PageRepository pageRepository;
 
+    @Autowired
+    PageService pageService;
 
     @Autowired
     MeasureBoxService measureBoxService;
@@ -68,8 +75,6 @@ public class EditingService {
      * @param pdfFile A PDF file with the music sheet
      */
     public void uploadNewEdition(Edition e, PDDocument pdfFile) throws IOException {
-
-        // Solution Job scheduler
         if(e.getProject() == null) {
             var p = projectService.findOne(e.getProjectId()).toProcessor().block();
             e.setProject(p);
@@ -111,6 +116,7 @@ public class EditingService {
             logInfo("Name of the current Page: " + allGeneratedAvailableScorePages.get(i).toString(), jobContext);
             runMeasureDetectionForSinglePage(e, allGeneratedAvailableScorePages.get(i));
         }
+        this.recalculatePageOffsets(e);
     }
 
     private void runMeasureDetectionForSinglePage(Edition e, Long pageNr) throws IOException {
@@ -163,11 +169,7 @@ public class EditingService {
 
     public List<ApiOrchMeasureBox> getMeasureBoxesbyEditionIDandPageNr(Integer editionID, Long valueOf) {
         List<ApiOrchMeasureBox> result = new ArrayList<>();
-        assert(editionID != null);
-        var e = editionService
-            .findOne(Long.valueOf(editionID))
-            .toProcessor()
-            .block();
+        Edition e = getEdition(editionID, editionService);
         assert e != null;
         var page = searchPageInRepository(e, valueOf);
 
@@ -198,5 +200,61 @@ public class EditingService {
             jobContext.logger().info(s);
             log.info(s);
         }
+    }
+
+    /**
+     * Takes an edition and fetches all pages. Calling this method only makes sense, if MeasureBoxes have already
+     * been generated.
+     * Although this method makes a lot of database calls: Iterating over all pages
+     *
+     * Note: I decided against using the nextPage property, because errorious data might easly lead to endles
+     * recursions if not caught. So it might be easier just to fetch all pages and sort them by page nr
+     */
+    public void recalculatePageOffsets(Edition e) {
+        var pages = pageRepository
+            .findAllByEditionId(e.getId())
+            .collectList()
+            .toProcessor()
+            .block();
+        assert(pages != null);
+        pages.sort(Comparator.comparing(Page::getPageNr));
+        updatePagesWithMeasureBoxCounts(pages);
+    }
+
+    private void updatePagesWithMeasureBoxCounts(List<Page> pages) {
+        long idx = 0;
+        for(var page: pages) {
+            var boxes = measureBoxService.findAllByPageId(page.getId())
+                .collectList()
+                .toProcessor()
+                .block();
+            page.setMeasureNumberOffset(idx);
+            pageRepository.update(page)
+                .toProcessor()
+                .block();
+            if(boxes != null) {
+                idx+=boxes.size();
+            }
+        }
+    }
+
+    public Long getMeasureBoxesOffsetbyEditionIDandPageNr(Integer editionID, Long pageNr) {
+        Edition e = getEdition(editionID, editionService);
+        assert e != null;
+        var page = searchPageInRepository(e, pageNr);
+        if(page.isPresent()) {
+            return page.get().getMeasureNumberOffset();
+        }
+        return DEFAULT_OFFSET;
+
+    }
+
+    private Edition getEdition(Integer editionID, EditionService editionService) {
+        assert(editionID != null);
+        var e = editionService
+            .findOne(Long.valueOf(editionID))
+            .toProcessor()
+            .block();
+        return e;
     }
 }

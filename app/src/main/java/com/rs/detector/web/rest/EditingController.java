@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.time.Instant;
 import java.util.List;
@@ -111,7 +112,6 @@ public class EditingController implements EditionApiDelegate {
 
     public void process(ApiOrchEditionWithFileAsString apiOrchEditionWithFileAsString, JobContext jobContext) throws IOException {
         log("Starting. objects to be processed " + apiOrchEditionWithFileAsString.getTitle(), jobContext);
-
         var progressBar = jobContext.progressBar(100); // Let's say, we have 100% ...
         var transformedText = parseDataFromBase64Encoded(apiOrchEditionWithFileAsString.getPdfFile());
         log("Successfully Parsed incoming PDF file!", jobContext);
@@ -123,7 +123,6 @@ public class EditingController implements EditionApiDelegate {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // TODO pass the progress!
         editingService.extractImagesFromPDF(parsedEdition, jobContext);
         progressBar.setValue(100); // Setting finished
         log("Finished Job", jobContext);
@@ -155,5 +154,15 @@ public class EditingController implements EditionApiDelegate {
             e.printStackTrace();
         }
         return data;
+    }
+
+    @Override
+    public ResponseEntity<Long> getMeasureBoxesOffsetByEditionIdAndPageNr(Integer editionID, Integer pageNr) {
+        var offset = editingService.getMeasureBoxesOffsetbyEditionIDandPageNr(editionID, Long.valueOf(pageNr));
+        log.debug("The Calculated Offset fot the Page " + pageNr + " and edition "+ editionID + " is " + offset);
+
+        return ResponseEntity.status(HttpStatus.OK)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(offset);
     }
 }

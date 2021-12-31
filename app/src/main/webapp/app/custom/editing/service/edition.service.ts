@@ -15,6 +15,7 @@ import {IProject} from "../../myprojects/project.model";
 // export type EntityArrayResponseType = HttpResponse<IEdition[]>;
 
 export type EntityArrayResponseType = HttpResponse<ApiOrchMeasureBox[]>;
+export type simpleLongReturn = HttpResponse<number>;
 
 @Injectable({ providedIn: 'root' })
 export class EditionService {
@@ -29,7 +30,8 @@ export class EditionService {
     const url = '/api/edition/' + String(editionId) + "/getMeasureBoxes/" + String(pageNr);
     return this.http.get<ApiOrchMeasureBox[]>(url, { observe: 'response' });
   }
-
-  // triggerMeasureDetection(id: number): Observable<string> {
-  // }
+  fetchBoxOffset(editionId: number | boolean| undefined, pageNr: number): Observable<simpleLongReturn> {
+    const url = '/api/edition/' + String(editionId) + "/getMeasureBoxesOffset/" + String(pageNr);
+    return this.http.get<simpleLongReturn>(url);
+  }
 }

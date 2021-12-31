@@ -38,6 +38,31 @@ paths:
             text/plain:
               schema:
                 $ref: '#/components/schemas/ApiOrchMeasureBoxList'
+  /edition/{editionID}/getMeasureBoxesOffset/{pageNr}:
+    get:
+      summary: Return the offset on which the current measure adds up
+      operationId: getMeasureBoxesOffsetByEditionIdAndPageNr
+      parameters:
+        - name: editionID
+          schema:
+            type: integer
+          in: path
+          required: true
+          description: the editionID
+        - name: pageNr
+          schema:
+            type: integer
+          in: path
+          required: true
+          description: the Page Nr
+      responses:
+        "200":
+          description: The Offset Number to the page
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
 
   /edition/{editionID}/getPage/{pageNr}:
     get:
