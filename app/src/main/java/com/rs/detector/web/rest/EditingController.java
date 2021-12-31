@@ -80,7 +80,7 @@ public class EditingController implements EditionApiDelegate {
         }
         BackgroundJob.enqueue(() ->
                 process(apiOrchEditionWithFileAsString, JobContext.Null));
-        return EditionApiDelegate.super.addEdition(apiOrchEditionWithFileAsString);
+        return ResponseEntity.ok().build();
     }
 
     @Override
