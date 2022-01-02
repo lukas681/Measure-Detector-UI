@@ -176,6 +176,27 @@ paths:
 #            application/json:
 #              schema:
 #                $ref: '#/components/schemas/ApiOrchError'
+
+  /edition/{editionID}/getNumberPages:
+    get:
+      summary: Returns the number of pages to this edition. Can also be used to check whether the measure detection has already run (Currently)
+      operationId: getNumberOfPagesToEdition
+      parameters:
+        - name: editionID
+          schema:
+            type: integer
+            format: int64
+          in: path
+          required: true
+          description: the ID of the edition where we want to get the number of pages
+      responses:
+        "200":
+          description: Expected response to a valid request
+          content:
+            text/plain:
+              schema:
+                type: integer
+                format: int64
 components:
   schemas:
     ApiMeasureDetectorResult:

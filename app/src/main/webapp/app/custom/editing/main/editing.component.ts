@@ -49,6 +49,15 @@ export class EditingComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    this.editionService.fetchTotalPageCount(this.storageService.getActiveEditionId())
+      .subscribe(pageCount=> {
+          if(typeof(pageCount) === "number") {
+            this.lastPage = pageCount;
+          }
+        }
+      )
+
     this.editionService.fetchMeasureBoxes(this.storageService.getActiveEditionId(), this.currentPage)
       .subscribe(x => console.warn(x));
 
@@ -102,23 +111,26 @@ export class EditingComponent implements OnInit {
     // this.viewer.ajaxHeaders = {
     //   "asd":"asdf"
     // }
-    console.warn(ShapeLabelsFormatter);
+    this.setAnnotationsWithServerData();
   }
 
   nextPage(): void
   {
-    this.viewer.open({
-      type: 'image',
-      // ajaxWithCredentials: true,
-      // loadTilesWithAjax: true,
-      // ajaxHeaders: {
-      //   'Authentication': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY0MDcyNjg4MX0.D4AxgHIB1Y4TFkqxGbHDCQIgHjki707JvECXZx7Z5m55hAiZkCrUBZjf8CeYgO-6egWOE18ShhWmm73oKieHSA'
-      // },
-      // url: this.generateUrl(this.storageService.getActiveEditionId(), this.currentPage)
-      url: this.generateUrl(this.storageService.getActiveEditionId(), ++this.currentPage)
-    })
-    this.setAnnotationsWithServerData();
+    if(this.currentPage < this.lastPage ) {
+      this.viewer.open({
+        type: 'image',
+        // ajaxWithCredentials: true,
+        // loadTilesWithAjax: true,
+        // ajaxHeaders: {
+        //   'Authentication': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY0MDcyNjg4MX0.D4AxgHIB1Y4TFkqxGbHDCQIgHjki707JvECXZx7Z5m55hAiZkCrUBZjf8CeYgO-6egWOE18ShhWmm73oKieHSA'
+        // },
+        // url: this.generateUrl(this.storageService.getActiveEditionId(), this.currentPage)
+        url: this.generateUrl(this.storageService.getActiveEditionId(), ++this.currentPage)
+      })
+      this.setAnnotationsWithServerData();
+    }
   }
+
 
   initializeAnnotorious(): void {
     // Note: Although methods like clearAnnotations() and setAnnotations() exist, we have to recreate the Annotorious Instance
@@ -159,17 +171,19 @@ export class EditingComponent implements OnInit {
 
   previousPage(): void
   {
-    this.viewer.open({
-      type: 'image',
-      // ajaxWithCredentials: true,
-      // loadTilesWithAjax: true,
-      // ajaxHeaders: {
-      //   'Authentication': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY0MDcyNjg4MX0.D4AxgHIB1Y4TFkqxGbHDCQIgHjki707JvECXZx7Z5m55hAiZkCrUBZjf8CeYgO-6egWOE18ShhWmm73oKieHSA'
-      // },
-      // url: this.generateUrl(this.storageService.getActiveEditionId(), this.currentPage)
-      url: this.generateUrl(this.storageService.getActiveEditionId(), --this.currentPage)
-    })
-    this.setAnnotationsWithServerData();
+    if(this.currentPage > 1) {
+      this.viewer.open({
+        type: 'image',
+        // ajaxWithCredentials: true,
+        // loadTilesWithAjax: true,
+        // ajaxHeaders: {
+        //   'Authentication': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY0MDcyNjg4MX0.D4AxgHIB1Y4TFkqxGbHDCQIgHjki707JvECXZx7Z5m55hAiZkCrUBZjf8CeYgO-6egWOE18ShhWmm73oKieHSA'
+        // },
+        // url: this.generateUrl(this.storageService.getActiveEditionId(), this.currentPage)
+        url: this.generateUrl(this.storageService.getActiveEditionId(), --this.currentPage)
+      })
+      this.setAnnotationsWithServerData();
+    }
   }
   generateUrl(edition: number | boolean | undefined, page: number): string {
     return this.BASEURL + 'edition/' +String(edition)+ "/getPage/" + String(page);
@@ -186,7 +200,6 @@ export class EditingComponent implements OnInit {
   setAnnotationsWithServerData(): void {
     this.editionService.fetchMeasureBoxes(this.storageService.getActiveEditionId(), this.currentPage)
       .subscribe(response => {
-        if(response.body) {
           this.editionService.fetchBoxOffset(this.storageService.getActiveEditionId(), this.currentPage)
             .subscribe((res) => {
               if(response.body) {
@@ -198,7 +211,6 @@ export class EditingComponent implements OnInit {
                 this.initializeAnnotorious()
               }
             });
-        }
       });
   }
   save(): void {

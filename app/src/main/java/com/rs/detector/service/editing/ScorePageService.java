@@ -148,4 +148,11 @@ public class ScorePageService {
         return measureBoxService.saveAll(new ArrayList<>(measureBoxes));
     }
 
+    public long getNumberOfPages(Long editionID) {
+        return pageRepository.findAllByEditionId(editionID)
+            .collectList()
+            .toProcessor()
+            .block()
+            .size();
+    }
 }

@@ -23,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import tech.jhipster.config.JHipsterDefaults;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -173,5 +174,14 @@ public class EditingController implements EditionApiDelegate {
         editingService.recalculatePageOffsets(editionID);
         return ResponseEntity.ok().build();
         // TODO Catch errors.
+    }
+
+
+    @Override
+    public ResponseEntity<Long> getNumberOfPagesToEdition(Long editionID) {
+        var numberOfPages = scorePageService.getNumberOfPages(editionID);
+        return ResponseEntity.status(HttpStatus.OK)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(numberOfPages);
     }
 }

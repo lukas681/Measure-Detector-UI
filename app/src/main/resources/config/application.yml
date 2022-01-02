@@ -159,7 +159,7 @@ application:
   editionResourceBasePath: "res/editions"
   # PDFBox's default value is 72. Currently, a value of 300-340 shows very good results traded off with performance.
   # Higher number can decrease performance, but increase the Measure Detection accuracy. TODO: Experiments with the best values.
-  imageSplitDPI: 150
+  imageSplitDPI: 500
   measure-detector:
     host: http://localhost
     port: 8080

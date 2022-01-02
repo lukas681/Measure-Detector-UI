@@ -34,6 +34,10 @@ export class EditionService {
     const url = '/api/edition/' + String(editionId) + "/getMeasureBoxesOffset/" + String(pageNr);
     return this.http.get<simpleLongReturn>(url);
   }
+  fetchTotalPageCount(editionId: number | boolean| undefined): Observable<simpleLongReturn> {
+    const url = '/api/edition/' + String(editionId) + "/getNumberPages";
+    return this.http.get<simpleLongReturn>(url);
+  }
   save(editionId: number | boolean| undefined, pageNr: number, boxes: ApiOrchMeasureBox[]): Observable<string> {
     const url = '/api/edition/' + String(editionId) + "/saveMeasureBoxes/" + String(pageNr);
     return this.http.post<string>(url, boxes);
