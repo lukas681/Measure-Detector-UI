@@ -14,6 +14,35 @@ paths:
         '200':
           description: Successful response
 
+
+  /edition/{editionID}/saveMeasureBoxes/{pageNr}:
+    post:
+      summary: Saves a sdet of possibly modified Measure Boxes back to the server. The reverse operation of [GET] getMeasureBoxes
+      operationId: saveMeasureBoxesByEditionIdAndPageNr
+      parameters:
+      - name: editionID
+        schema:
+          type: integer
+        in: path
+        required: true
+        description: the editionID
+      - name: pageNr
+        schema:
+          type: integer
+        in: path
+        required: true
+        description: the Page NR
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiOrchMeasureBoxList'
+      responses:
+        200:
+          description: Everything worked fine
+          # Todo maybe we have also errors to catch?
+
   /edition/{editionID}/getMeasureBoxes/{pageNr}:
     get:
       summary: returns an array of of the measureBoxes on a specific page on an edition

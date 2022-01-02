@@ -164,5 +164,14 @@ public class EditingController implements EditionApiDelegate {
         return ResponseEntity.status(HttpStatus.OK)
             .contentType(MediaType.APPLICATION_JSON)
             .body(offset);
+        }
+
+    @Override
+    public ResponseEntity<Void> saveMeasureBoxesByEditionIdAndPageNr(Integer editionID, Integer pageNr, List<ApiOrchMeasureBox> apiOrchMeasureBox) {
+        editingService.saveMeasureBoxesbyEditionIdAndPageNr(editionID, pageNr, apiOrchMeasureBox);
+        editingService.recalculatePageOffsets(editionID);
+
+        return ResponseEntity.ok().build();
+        // TODO Catch errors.
     }
 }

@@ -257,4 +257,45 @@ public class EditingService {
             .block();
         return e;
     }
+
+    public void saveMeasureBoxesbyEditionIdAndPageNr(Integer editionID, Integer pageNr, List<ApiOrchMeasureBox> apiOrchMeasureBox) {
+        assert(pageNr != null);
+        var edition = getEdition(editionID, editionService);
+
+        var page =
+            searchPageInRepository(edition, Long.valueOf(pageNr));
+        if(page.isPresent()){
+            pageService.deleteAllMeasureBoxes(page.get().getId())
+                .collectList()
+                .toProcessor()
+                .block();
+
+            System.out.println(apiOrchMeasureBox);
+            var measureBoxes =
+                apiOrchMeasureBox
+                    .stream()
+                    .map(x-> convertMeasureBoxApiOrch(page.get(), x))
+                    .collect(Collectors.toList());
+
+            measureBoxService.saveAll(measureBoxes)
+                .collectList()
+                .toProcessor()
+                .block();
+        }
+    }
+
+    private MeasureBox convertMeasureBoxApiOrch(Page p, ApiOrchMeasureBox mb) {
+        return new MeasureBox()
+            .comment(mb.getComment())
+            .measureCount(mb.getMeasureCount())
+            .page(p)
+            .lrx(mb.getLrx())
+            .lry(mb.getLry())
+            .ulx(mb.getUlx())
+            .uly(mb.getUly());
+    }
+
+    public void recalculatePageOffsets(Integer editionID) {
+        recalculatePageOffsets((getEdition(editionID,editionService)));
+    }
 }

@@ -137,9 +137,6 @@ public class ScorePageService {
      */
     public Flux<com.rs.detector.domain.MeasureBox> updatePageMeasureBoxesWithMDResult(Page page, ApiMeasureDetectorResult measureDetectorResult) {
         assert (page.getId() != null);
-        // TODO Later: Replace this blocking behaviour. But I already tried with .flatMap(..) as a chain, but this did
-        //  not really execute.
-
         pageService.deleteAllMeasureBoxes(page.getId()).collectList().toProcessor().block();
 
         var measureBoxes = new HashSet<com.rs.detector.domain.MeasureBox >();

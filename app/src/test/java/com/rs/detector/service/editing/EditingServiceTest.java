@@ -1,9 +1,12 @@
 package com.rs.detector.service.editing;
 
 import com.rs.detector.domain.Edition;
+import com.rs.detector.domain.MeasureBox;
+import com.rs.detector.domain.Page;
 import com.rs.detector.domain.enumeration.EditionType;
 import com.rs.detector.service.EditionService;
 import com.rs.detector.service.editing.exceptions.PagesMightNotHaveBeenGeneratedException;
+import com.rs.detector.web.api.model.ApiOrchMeasureBox;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.jobrunr.jobs.context.JobContext;
 import org.jobrunr.scheduling.BackgroundJob;
@@ -16,8 +19,10 @@ import org.springframework.test.context.TestPropertySource;
 import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.stream.Collectors;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -152,4 +157,76 @@ class EditingServiceTest extends SimpleDataInitialization {
         System.out.println("ERROR");
     }
 
+    @Test
+    void saveMeasureBoxesbyEditionIdAndPageNr() {
+
+        // PRE STATE WITH INIT DATA
+        assert (measureBoxRepository.findByPageId(testPage.getId())
+            .collectList()
+            .toProcessor()
+            .block().size() == 3);
+        List<ApiOrchMeasureBox> measureBoxes = new ArrayList<>();
+
+        editingService.saveMeasureBoxesbyEditionIdAndPageNr(
+            Math.toIntExact(testEdition.getId()),
+            Math.toIntExact(testPage.getPageNr()),
+            measureBoxes
+        );
+        // Should have been removed. This behavour might change int he future
+        assert (measureBoxRepository.findByPageId(testPage.getId())
+            .collectList()
+            .toProcessor()
+            .block().size() == 0);
+
+        measureBoxes = new ArrayList<ApiOrchMeasureBox>() {
+            {
+                add(new ApiOrchMeasureBox());
+                add(new ApiOrchMeasureBox());
+        }
+        };
+
+        editingService.saveMeasureBoxesbyEditionIdAndPageNr(
+            Math.toIntExact(testEdition.getId()),
+            Math.toIntExact(testPage.getPageNr()),
+            measureBoxes
+        );
+
+        assert (measureBoxRepository.findByPageId(testPage.getId())
+            .collectList()
+            .toProcessor()
+            .block().size() == 2);
+    }
+
+    @Test
+    public void testOffsetRecalculation () {
+
+        assert (measureBoxRepository.findByPageId(testPage.getId())
+            .collectList()
+            .toProcessor()
+            .block().size() == 3);
+        var measureBoxes = new ArrayList<ApiOrchMeasureBox>() {
+            {
+                add(new ApiOrchMeasureBox());
+                add(new ApiOrchMeasureBox());
+            }
+        };
+        editingService.saveMeasureBoxesbyEditionIdAndPageNr(
+            Math.toIntExact(testEdition.getId()),
+            Math.toIntExact(testPage.getPageNr()),
+            measureBoxes
+        );
+
+        // We do not set MeasureBoxes as they are not required for the offset
+        Page p2 = new Page()
+            .edition(testEdition)
+            .pageNr(246L);
+        pageRepository.save(p2).toProcessor().block();
+        editingService.recalculatePageOffsets(testEdition);
+        var newpage =
+            pageRepository.findAllByEditionIdAndPageNr(testEdition.getId(), 246L).collectList().toProcessor().block();
+        assert(newpage.get(0).getMeasureNumberOffset() == 2);
+
+        // Should have been removed. This behavour might change int he future
+
+    }
 }
