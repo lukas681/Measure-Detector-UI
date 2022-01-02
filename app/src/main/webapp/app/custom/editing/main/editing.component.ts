@@ -144,7 +144,8 @@ export class EditingComponent implements OnInit {
         }];
 
       await this.anno.updateSelected(selection);
-      this.anno.saveSelected();
+      await this.anno.saveSelected();
+      this.annotationsData = this.anno.getAnnotations();
     });
 
     this.anno.on('updateAnnotation', () => {

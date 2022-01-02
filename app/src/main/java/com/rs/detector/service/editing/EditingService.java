@@ -270,18 +270,21 @@ public class EditingService {
                 .toProcessor()
                 .block();
 
-            System.out.println(apiOrchMeasureBox);
             var measureBoxes =
                 apiOrchMeasureBox
                     .stream()
                     .map(x-> convertMeasureBoxApiOrch(page.get(), x))
                     .collect(Collectors.toList());
 
-            measureBoxService.saveAll(measureBoxes)
-                .collectList()
-                .toProcessor()
-                .block();
+            saveAllMeasureBoxesUnblocked(measureBoxes);
         }
+    }
+
+    private void saveAllMeasureBoxesUnblocked(List<MeasureBox> measureBoxes) {
+        measureBoxService.saveAll(measureBoxes)
+            .collectList()
+            .toProcessor()
+            .block();
     }
 
     private MeasureBox convertMeasureBoxApiOrch(Page p, ApiOrchMeasureBox mb) {
