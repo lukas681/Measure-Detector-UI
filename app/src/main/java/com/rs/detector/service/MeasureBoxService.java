@@ -31,6 +31,7 @@ public class MeasureBoxService {
      * Save a measureBox.
      *
      * @param measureBox the entity to save.
+     *
      * @return the persisted entity.
      */
     public Mono<MeasureBox> save(MeasureBox measureBox) {

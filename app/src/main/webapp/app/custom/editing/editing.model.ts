@@ -3,6 +3,7 @@ import { IPage } from 'app/entities/page/page.model';
 import { IProject } from 'app/entities/project/project.model';
 import { EditionType } from 'app/entities/enumerations/edition-type.model';
 import {ApiOrchEditionWithFile} from "../../shared/model/openapi/model/apiOrchEditionWithFile";
+import {ApiOrchMeasureBox} from "../../shared/model/openapi/model/apiOrchMeasureBox";
 
 export interface IEdition {
   id?: number;
@@ -30,6 +31,18 @@ export class Edition implements IEdition{
     public projectId?: number | null,
     public pdfFile?: File | null
 ) {}
+}
+
+export class ApiOrchMeasureBoxImpl implements ApiOrchMeasureBox {
+  constructor(
+    public id?: number,
+    public ulx?: number,
+    public lrx?: number,
+    public lry?: number,
+    public uly?: number,
+    public measureCount?: number,
+    public comment?: string
+  ) {}
 }
 
 export class EditionWithFile implements ApiOrchEditionWithFile {

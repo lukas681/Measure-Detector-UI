@@ -109,6 +109,7 @@ public class EditingService {
      * @throws IOException
      */
     public void runFullMeasureDetectionOverEdition(@NotNull Edition e, JobContext jobContext) throws IOException {
+        // TODO Delete Everything if measure Detection has been run
         var allGeneratedAvailableScorePages = editingFileManagementService.getAllGeneratedScorePageFilesAsPageNr(e);
 
         for(int i = 0; i < allGeneratedAvailableScorePages.size(); i++) {
@@ -264,11 +265,15 @@ public class EditingService {
 
         var page =
             searchPageInRepository(edition, Long.valueOf(pageNr));
+        System.out.println(page.isPresent());
         if(page.isPresent()){
+            log.debug("Page Found. Now Deleting existing Measure Boxes");
             pageService.deleteAllMeasureBoxes(page.get().getId())
                 .collectList()
                 .toProcessor()
                 .block();
+            System.out.println("HIER");
+            log.debug("Success now converting the new boxes");
 
             var measureBoxes =
                 apiOrchMeasureBox
@@ -277,10 +282,14 @@ public class EditingService {
                     .collect(Collectors.toList());
 
             saveAllMeasureBoxesUnblocked(measureBoxes);
+            log.debug("Saved the new Measure Boxes!");
+        } else {
+            log.debug("The required page could not be found!");
         }
     }
 
     private void saveAllMeasureBoxesUnblocked(List<MeasureBox> measureBoxes) {
+        log.debug("Saving new Measure Boxes");
         measureBoxService.saveAll(measureBoxes)
             .collectList()
             .toProcessor()

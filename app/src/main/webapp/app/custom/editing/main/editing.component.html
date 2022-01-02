@@ -11,6 +11,17 @@
 <!--    </div>-->
 <!--  </h4>-->
 
+  <nav class="navbar navbar-primary">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <p>{{this.currentPage}}/{{this.lastPage}}</p>
+      </div>
+      <div class="navbar-header">
+        <p>Status: {{this.status}}</p>
+      </div>
+    </div>
+  </nav>
+
   <div id="content" style="height: 78vh; padding: 0;margin-bottom: 11px">
     <div id="viewer" style="width:100%; height:100%;" #viewer></div>
   </div>
@@ -24,7 +35,7 @@
         </div>
       <div class="col-sm-4">
         <div class="align-self-center mx-auto text-center">
-        <button type="button" class="btn btn-info">Save</button>
+        <button type="button" (click)="save()" class="btn btn-info">Save</button>
         </div>
       </div>
       <div class="col-sm-4">
