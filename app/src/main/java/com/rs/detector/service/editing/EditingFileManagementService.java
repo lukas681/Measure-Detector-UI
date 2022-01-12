@@ -215,7 +215,9 @@ public class EditingFileManagementService {
     public List<Long> getAllGeneratedScorePageFilesAsPageNr(Edition e) {
        return getAllGeneratedScorePageFiles(e).stream()
            .map(EditingFileManagementService::convertFileNameToPageNumber)
+           .sorted()
            .collect(Collectors.toList());
+
     }
 
     public int getStartIndex() {
