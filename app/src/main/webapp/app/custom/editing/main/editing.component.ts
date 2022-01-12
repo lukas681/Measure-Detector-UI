@@ -83,7 +83,7 @@ export class EditingComponent implements OnInit {
         tileSources:
           {
             type: 'image',
-            url: this.generateUrl(this.storageService.getActiveEditionId(), ++this.currentPage)
+            url: this.generateUrl(this.storageService.getActiveEditionId(), this.currentPage)
           },
 
         // tileSources: 'https://www.bsb-muenchen.de/fileadmin/bsb/sammlungen/musik/aktuelles/strauss_richard_metamorphosen_ausschnitt.jpg'
