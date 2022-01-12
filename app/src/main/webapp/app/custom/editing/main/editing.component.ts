@@ -279,7 +279,7 @@ export class EditingComponent implements OnInit {
   private createAnnotationForJson(mb: ApiOrchMeasureBox): any {
     let measureCount = 0;
     if(typeof (mb.measureCount) === "number") {
-      measureCount = mb.measureCount + this.offset;
+      measureCount = mb.measureCount + 1 + this.offset;
     }
     return {
       "@context": "http:/www.w3.org/ns/anno.jsonId",
