@@ -116,7 +116,7 @@ export class EditingComponent implements OnInit {
 
   nextPage(): void
   {
-    if(this.currentPage < this.lastPage ) {
+    // if(this.currentPage < this.lastPage ) {
       this.viewer.open({
         type: 'image',
         // ajaxWithCredentials: true,
@@ -128,7 +128,7 @@ export class EditingComponent implements OnInit {
         url: this.generateUrl(this.storageService.getActiveEditionId(), ++this.currentPage)
       })
       this.setAnnotationsWithServerData();
-    }
+    // }
   }
 
 
@@ -171,7 +171,7 @@ export class EditingComponent implements OnInit {
 
   previousPage(): void
   {
-    if(this.currentPage > 1) {
+    if(this.currentPage > 0) {
       this.viewer.open({
         type: 'image',
         // ajaxWithCredentials: true,
