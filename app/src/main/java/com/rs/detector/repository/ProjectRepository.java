@@ -34,7 +34,7 @@ interface ProjectRepositoryInternal {
     Mono<Integer> update(Project entity);
 
     Flux<Project> findAll();
-    Mono<Project> findById(Long id);
+   // Mono<Project> findById(Long id);
     Flux<Project> findAllBy(Pageable pageable);
     Flux<Project> findAllBy(Pageable pageable, Criteria criteria);
 }

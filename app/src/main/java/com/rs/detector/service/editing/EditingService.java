@@ -76,7 +76,8 @@ public class EditingService {
      */
     public void uploadNewEdition(Edition e, PDDocument pdfFile) throws IOException {
         if(e.getProject() == null) {
-            var p = projectService.findOne(e.getProjectId()).toProcessor().block();
+            var p = projectService.findOne(e.getProjectId())
+                .toProcessor().block();
             e.setProject(p);
             p.addEditions(e);
             projectService.save(p).toProcessor().block();

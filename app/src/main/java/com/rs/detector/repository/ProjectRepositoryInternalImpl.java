@@ -86,10 +86,10 @@ class ProjectRepositoryInternalImpl implements ProjectRepositoryInternal {
         return findAllBy(null, null);
     }
 
-    @Override
-    public Mono<Project> findById(Long id) {
-        return createQuery(null, where("id").is(id)).one();
-    }
+    //@Override
+    //public Mono<Project> findById(Long id) {
+     //   return createQuery(null, where("id").is(id)).one();
+    //}
 
     private Project process(Row row, RowMetadata metadata) {
         Project entity = projectMapper.apply(row, "e");
