@@ -318,7 +318,9 @@ dependencies {
     testImplementation "com.tngtech.archunit:archunit-junit5-api:${archunitJunit5Version}"
     testRuntimeOnly "com.tngtech.archunit:archunit-junit5-engine:${archunitJunit5Version}"
     testImplementation "com.h2database:h2-mvstore:2.1.210"
-    testImplementation "io.r2dbc:r2dbc-h2:0.9.1.RELEASE"
+   //  liquibaseRuntime "com.h2database:h2-mvstore:1.4.200"
+
+    //testImplementation "io.r2dbc:r2dbc-h2:0.9.1.RELEASE"
     implementation "io.r2dbc:r2dbc-h2:0.9.1.RELEASE"
     developmentOnly "org.springframework.boot:spring-boot-devtools:${springBootVersion}"
     implementation "org.tensorflow:libtensorflow:1.13.1"
