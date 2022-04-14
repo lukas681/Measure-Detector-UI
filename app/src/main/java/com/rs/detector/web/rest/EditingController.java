@@ -12,6 +12,7 @@ import com.rs.detector.web.api.EditionApiDelegate;
 import com.rs.detector.web.api.model.ApiOrchEditionWithFileAsString;
 import com.rs.detector.web.api.model.ApiOrchMeasureBox;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.jobrunr.jobs.annotations.Job;
 import org.jobrunr.jobs.context.JobContext;
 import org.jobrunr.scheduling.BackgroundJob;
 import org.slf4j.Logger;
@@ -31,6 +32,7 @@ import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class EditingController implements EditionApiDelegate {
@@ -79,7 +81,7 @@ public class EditingController implements EditionApiDelegate {
         if(apiOrchEditionWithFileAsString.getPdfFile() == null) {
             return ResponseEntity.badRequest().build();
         }
-        BackgroundJob.enqueue(() ->
+        BackgroundJob.enqueue(UUID.randomUUID(), () ->
                 process(apiOrchEditionWithFileAsString, JobContext.Null));
         return ResponseEntity.ok().build();
     }
@@ -87,7 +89,7 @@ public class EditingController implements EditionApiDelegate {
     @Override
     public ResponseEntity<String> runFullMeasureDetectionByEditionId(Integer id) {
         if(id != null) {
-            BackgroundJob.enqueue(() -> processFullDetection(id, JobContext.Null));
+            BackgroundJob.enqueue(UUID.randomUUID(), () -> processFullDetection(id, JobContext.Null));
         }
         return ResponseEntity.ok("The Job was successfully scheduled and now being processed in the background.");
 //        return EditionApiDelegate.super.runFullMeasureDetectionByEditionId(id);
@@ -111,10 +113,18 @@ public class EditingController implements EditionApiDelegate {
             }
     }
 
+    /**
+     * TODO We are currently limited to the string size.
+     * @param apiOrchEditionWithFileAsString
+     * @param jobContext
+     * @throws IOException
+     */
+    @Job(name = "Uploading a new Edition.")
     public void process(ApiOrchEditionWithFileAsString apiOrchEditionWithFileAsString, JobContext jobContext) throws IOException {
-        log("Starting. objects to be processed " + apiOrchEditionWithFileAsString.getTitle(), jobContext);
+        log("Starting. objects to be processed", jobContext);
         var progressBar = jobContext.progressBar(100); // Let's say, we have 100% ...
-        var transformedText = parseDataFromBase64Encoded(apiOrchEditionWithFileAsString.getPdfFile());
+        var transformedText = parseDataFromBase64Encoded(apiOrchEditionWithFileAsString.getPdfFile()); // TODO switch
+        // that away from a base64 encoded string. Kills java heap memory.
         log("Successfully Parsed incoming PDF file!", jobContext);
         progressBar.setValue(10);
         var parsedEdition = parseEdition(apiOrchEditionWithFileAsString);
