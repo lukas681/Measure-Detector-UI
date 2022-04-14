@@ -1,0 +1,3 @@
+[submodule "MeasureDetector"]
+	path = MeasureDetector
+	url = https://github.com/OMR-Research/MeasureDetector
