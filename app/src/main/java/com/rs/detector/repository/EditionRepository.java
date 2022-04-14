@@ -40,7 +40,7 @@ interface EditionRepositoryInternal {
     Mono<Integer> update(Edition entity);
 
     Flux<Edition> findAll();
-    Mono<Edition> findById(Long id);
+    // Mono<Edition> findById(Long id);
     Flux<Edition> findAllBy(Pageable pageable);
     Flux<Edition> findAllBy(Pageable pageable, Criteria criteria);
 }

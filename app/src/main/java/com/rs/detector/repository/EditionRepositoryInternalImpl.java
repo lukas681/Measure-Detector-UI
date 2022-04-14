@@ -103,10 +103,10 @@ class EditionRepositoryInternalImpl implements EditionRepositoryInternal {
         return findAllBy(null, null);
     }
 
-    @Override
-    public Mono<Edition> findById(Long id) {
-        return createQuery(null, where("id").is(id)).one();
-    }
+    //@Override
+    //public Mono<Edition> findById(Long id) {
+      //  return createQuery(null, where("id").is(id)).one();
+   // }
 
     private Edition process(Row row, RowMetadata metadata) {
         Edition entity = editionMapper.apply(row, "e");

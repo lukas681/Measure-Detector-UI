@@ -216,7 +216,6 @@ export class EditingComponent implements OnInit {
   save(): void {
     if(this.status === "UNSAVED") {
       const measureBoxListConvertedBack = this.convertBack();
-      console.warn(measureBoxListConvertedBack)
       this.editionService.save(this.storageService.getActiveEditionId(), this.currentPage, measureBoxListConvertedBack)
         .subscribe(x=>{
           this.status = "SAVED"
@@ -228,7 +227,6 @@ export class EditingComponent implements OnInit {
     const measureBoxes = []
     for (const annotation of this.annotationsData)  {
       const restoredValues = this.restoreValues(annotation);
-      console.warn(restoredValues)
       measureBoxes.push(
         new ApiOrchMeasureBoxImpl(
           undefined,
@@ -279,7 +277,7 @@ export class EditingComponent implements OnInit {
   private createAnnotationForJson(mb: ApiOrchMeasureBox): any {
     let measureCount = 0;
     if(typeof (mb.measureCount) === "number") {
-      measureCount = mb.measureCount + 1 + this.offset;
+      measureCount = mb.measureCount + this.offset;
     }
     return {
       "@context": "http:/www.w3.org/ns/anno.jsonId",
