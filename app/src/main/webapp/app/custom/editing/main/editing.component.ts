@@ -234,7 +234,7 @@ export class EditingComponent implements OnInit {
           restoredValues[2] + restoredValues[0], // lry
           restoredValues[3] + restoredValues[1], //lrx
           restoredValues[1], //uly
-          annotation.body[0].value - this.offset,
+          annotation.body[0].value - this.offset - 1,
           "Edited"
         )
       );
@@ -277,7 +277,7 @@ export class EditingComponent implements OnInit {
   private createAnnotationForJson(mb: ApiOrchMeasureBox): any {
     let measureCount = 0;
     if(typeof (mb.measureCount) === "number") {
-      measureCount = mb.measureCount + this.offset;
+      measureCount = mb.measureCount + this.offset + 1;
     }
     return {
       "@context": "http:/www.w3.org/ns/anno.jsonId",
