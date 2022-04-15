@@ -14,10 +14,15 @@
   <nav class="navbar navbar-primary">
     <div class="container-fluid">
       <div class="navbar-header">
-        <p>{{this.currentPage}}/{{this.lastPage}}</p>
+        <div class="d-flex flex-row">
+        <h4 style="margin-right:15px; margin-top:5px">{{this.currentPage}}/{{this.lastPage}}</h4>
+        <input [(ngModel)]="requestedPage" type="number" style="width:100px" type="email" class="form-control" id="goToPageInput" placeholder="Go to Page"/>
+          <button class="btn btn-secondary float-left" type="button" (click)="changePage()">Go!</button>
+        </div>
+
       </div>
       <div class="navbar-header">
-        <p>Status: {{this.status}}</p>
+        <h4>Status: {{this.status}}</h4>
       </div>
     </div>
   </nav>

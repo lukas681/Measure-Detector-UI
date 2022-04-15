@@ -31,7 +31,7 @@ export class EditingComponent implements OnInit {
 
   BASEURL = "/api/";
   // TODO do not allow out of boundary calls
-  currentPage = 0;
+  currentPage = 1;
   lastPage = -1;
   status = Status.SAVED
   offset = 0;
@@ -44,6 +44,7 @@ export class EditingComponent implements OnInit {
   currentMeasureNo = 1;
   viewer: any;
   anno: any;
+  requestedPage: number | undefined;
 
   constructor(protected storageService: StorageService,protected activatedRoute: ActivatedRoute, protected editionService: EditionService, protected modalService: NgbModal, protected parseLinks: ParseLinks) {
     this.itemsPerPage = ITEMS_PER_PAGE;
@@ -64,7 +65,7 @@ export class EditingComponent implements OnInit {
         }
       )
 
-    this.editionService.fetchMeasureBoxes(this.storageService.getActiveEditionId(), this.currentPage)
+    this.editionService.fetchMeasureBoxes(this.storageService.getActiveEditionId(), this.currentPage - 1)
         .subscribe(); // Should we do something?
 
     this.viewer = OpenSeadragon({
@@ -88,18 +89,17 @@ export class EditingComponent implements OnInit {
         tileSources:
           {
             type: 'image',
-            url: this.generateUrl(this.storageService.getActiveEditionId(), this.currentPage)
+            url: this.generateUrl(this.storageService.getActiveEditionId(), this.currentPage - 1)
           },
       }
     );
     this.setAnnotationsWithServerData();
   }
 
-  nextPage(): void
-  {
+  nextPage(): void {
       this.viewer.open({
         type: 'image',
-        url: this.generateUrl(this.storageService.getActiveEditionId(), ++this.currentPage)
+        url: this.generateUrl(this.storageService.getActiveEditionId(), ++this.currentPage - 1)
       })
       this.setAnnotationsWithServerData();
   }
@@ -195,7 +195,7 @@ export class EditingComponent implements OnInit {
     if(this.currentPage > 0) {
       this.viewer.open({
         type: 'image',
-        url: this.generateUrl(this.storageService.getActiveEditionId(), --this.currentPage)
+        url: this.generateUrl(this.storageService.getActiveEditionId(), --this.currentPage -1)
       })
       this.setAnnotationsWithServerData();
     }
@@ -213,9 +213,9 @@ export class EditingComponent implements OnInit {
   }
 
   setAnnotationsWithServerData(): void {
-    this.editionService.fetchMeasureBoxes(this.storageService.getActiveEditionId(), this.currentPage)
+    this.editionService.fetchMeasureBoxes(this.storageService.getActiveEditionId(), this.currentPage - 1)
       .subscribe(response => {
-          this.editionService.fetchBoxOffset(this.storageService.getActiveEditionId(), this.currentPage)
+          this.editionService.fetchBoxOffset(this.storageService.getActiveEditionId(), this.currentPage - 1)
             .subscribe((res) => {
               if(response.body) {
                 if(typeof(res) === "number") {
@@ -231,11 +231,30 @@ export class EditingComponent implements OnInit {
   save(): void {
     if(this.status === Status.MODIFIED) {
       const measureBoxListConvertedBack = this.convertBack();
-      this.editionService.save(this.storageService.getActiveEditionId(), this.currentPage, measureBoxListConvertedBack)
+      this.editionService.save(this.storageService.getActiveEditionId(), this.currentPage - 1, measureBoxListConvertedBack)
         .subscribe(x=>{
           this.status = Status.SAVED
         });
     }
+  }
+
+  changePage(): void {
+    if(this.requestedPage !== undefined) {
+      this.currentPage = this.requestedPage;
+      this.viewer.open({
+        type: 'image',
+        url: this.generateUrl(this.storageService.getActiveEditionId(), this.currentPage - 1)
+      })
+      this.setAnnotationsWithServerData();
+    }
+  }
+  numberOnly(event:any): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      return false;
+    }
+    return true;
+
   }
 
   private convertBack(): ApiOrchMeasureBox[] {
@@ -311,6 +330,6 @@ export class EditingComponent implements OnInit {
       }
     }
   }
-
 }
+
 
