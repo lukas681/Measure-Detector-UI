@@ -130,10 +130,16 @@ export class EditingComponent implements OnInit {
       this.status = Status.MODIFIED;
     });
 
-    this.anno.on('updateAnnotation', (selection:any) => {
-      // TODO set cursor to this tag enabling in
-      if(selection.body[0].value !== undefined) {
-       this.currentMeasureNo = Number(selection.body[0].value)+ 1;
+    this.anno.on('updateAnnotation', (updated:any, prev:any) => {
+      this.annotationsData = this.anno.getAnnotations();
+      const hasTagChanged = prev.body[0].value !== updated.body[0].value;
+      // If the measure Number was changed, we have to do a few steps:
+      if(updated.body[0].value !== undefined) {
+       this.currentMeasureNo = Number(updated.body[0].value)+ 1;
+      }
+      if(hasTagChanged) { //Has changed
+        this.updateInInterval(updated.body[0].value, prev.body[0].value, updated)
+        this.anno.setAnnotations(this.annotationsData)
       }
       this.annotationsData = this.anno.getAnnotations();
       this.status = Status.MODIFIED;
@@ -145,13 +151,30 @@ export class EditingComponent implements OnInit {
       this.annotationsData = this.anno.getAnnotations();
       // this.currentMeasureNo--; // Maybe this makes sense, but deleting something in between might be unlogical
       // TODO decrease all annotations that come after this
-      this.decrementFollowingMeasures(deletedMeasureNumber)
+      this.updateFollowingMeasures(deletedMeasureNumber, -1)
       this.anno.setAnnotations(this.annotationsData);
       this.status = Status.MODIFIED;
     });
   }
 
-  decrementFollowingMeasures(deletedMeasureNr:number): void {
+  updateInInterval(newMeasureNo: number, oldMeasureNo: number, updated:any): void {
+    this.annotationsData.filter(
+      (el, idx, arr) => {
+        if (el.body[0].value !== undefined) {
+          console.warn(el === updated)
+          return el.body[0].value >= newMeasureNo && el.body[0].value < oldMeasureNo && (el.id !== updated.id);
+        }
+        return false;
+      }
+    ).map((e):any=> {
+      if(e.body[0].value !== undefined) {
+        e.body[0].value = Number(e.body[0].value) + 1;
+      }
+      return e;
+    })
+  }
+
+  updateFollowingMeasures(deletedMeasureNr:number, delta:number): void {
     this.annotationsData.filter(
       (el, idx, arr) => {
         if (el.body[0].value !== undefined) {
@@ -161,12 +184,10 @@ export class EditingComponent implements OnInit {
       }
     ).map((e):any=> {
       if(e.body[0] !== undefined) {
-        e.body[0].value = e.body[0].value - 1;
+        e.body[0].value = Number(e.body[0].value) + delta;
       }
       return e;
     })
-    console.warn("CHANGED VALUES");
-    console.warn(this.annotationsData);
   }
 
   previousPage(): void
@@ -174,12 +195,6 @@ export class EditingComponent implements OnInit {
     if(this.currentPage > 0) {
       this.viewer.open({
         type: 'image',
-        // ajaxWithCredentials: true,
-        // loadTilesWithAjax: true,
-        // ajaxHeaders: {
-        //   'Authentication': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY0MDcyNjg4MX0.D4AxgHIB1Y4TFkqxGbHDCQIgHjki707JvECXZx7Z5m55hAiZkCrUBZjf8CeYgO-6egWOE18ShhWmm73oKieHSA'
-        // },
-        // url: this.generateUrl(this.storageService.getActiveEditionId(), this.currentPage)
         url: this.generateUrl(this.storageService.getActiveEditionId(), --this.currentPage)
       })
       this.setAnnotationsWithServerData();
@@ -254,7 +269,6 @@ export class EditingComponent implements OnInit {
     ]
   }
 
-
   private makeW3CConform(boxes:ApiOrchMeasureBox[]): any[] {
     const w3cJson = []
     for (const val of boxes) {
@@ -295,7 +309,6 @@ export class EditingComponent implements OnInit {
           "value": this.calcRectangleValues(mb)
         }
       }
-      // TODO Support for more comments later on!
     }
   }
 
