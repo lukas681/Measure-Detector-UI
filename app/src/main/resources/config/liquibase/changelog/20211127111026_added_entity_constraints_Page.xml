@@ -12,6 +12,7 @@
                                  baseTableName="page"
                                  constraintName="fk_page__edition_id"
                                  referencedColumnNames="id"
+                                 onDelete="CASCADE"
                                  referencedTableName="edition"/>
     </changeSet>
 </databaseChangeLog>

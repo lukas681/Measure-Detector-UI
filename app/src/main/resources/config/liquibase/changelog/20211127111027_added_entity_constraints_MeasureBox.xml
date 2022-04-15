@@ -12,6 +12,7 @@
                                  baseTableName="measure_box"
                                  constraintName="fk_measure_box__page_id"
                                  referencedColumnNames="id"
+                                 onDelete="CASCADE"
                                  referencedTableName="page"/>
     </changeSet>
 </databaseChangeLog>
