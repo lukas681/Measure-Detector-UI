@@ -3,30 +3,27 @@ package com.rs.detector.web.rest;
 import com.rs.detector.domain.Edition;
 import com.rs.detector.repository.EditionRepository;
 import com.rs.detector.service.EditionService;
+import com.rs.detector.service.editing.EditingFileManagementService;
 import com.rs.detector.web.rest.errors.BadRequestAlertException;
+
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
@@ -50,9 +47,12 @@ public class EditionResource {
 
     private final EditionRepository editionRepository;
 
-    public EditionResource(EditionService editionService, EditionRepository editionRepository) {
+    private final EditingFileManagementService editingFileManagementService;
+
+    public EditionResource(EditionService editionService, EditionRepository editionRepository, EditingFileManagementService editingFileManagementService) {
         this.editionService = editionService;
         this.editionRepository = editionRepository;
+        this.editingFileManagementService = editingFileManagementService;
     }
 
     /**
@@ -63,7 +63,7 @@ public class EditionResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/editions")
-    public Mono<ResponseEntity<Edition>> createEdition(@Valid @RequestBody Edition edition) throws URISyntaxException {
+    public Mono<ResponseEntity<Edition>> createEdition(@Valid @RequestBody Edition edition) throws URISyntaxException, IOException {
         log.debug("REST request to save Edition : {}", edition);
         if (edition.getId() != null) {
             throw new BadRequestAlertException("A new edition cannot already have an ID", ENTITY_NAME, "idexists");
@@ -230,8 +230,13 @@ public class EditionResource {
      */
     @DeleteMapping("/editions/{id}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    public Mono<ResponseEntity<Void>> deleteEdition(@PathVariable Long id) {
+    public Mono<ResponseEntity<Void>> deleteEdition(@PathVariable Long id) throws IOException {
         log.debug("REST request to delete Edition : {}", id);
+
+        Edition e = editionService.findOne(id).toProcessor().block();
+        assert(e != null);
+        editingFileManagementService.deleteEditionFiles(e);
+
         return editionService
             .delete(id)
             .map(result ->

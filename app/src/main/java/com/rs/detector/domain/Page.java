@@ -42,7 +42,7 @@ public class Page implements Serializable {
 
     @Transient
     @JsonIgnoreProperties(value = { "page" }, allowSetters = true)
-    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "page_id", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MeasureBox> measureBoxes = new HashSet<>();
 
     @Transient

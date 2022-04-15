@@ -6,6 +6,8 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.CascadeType;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
@@ -43,6 +45,7 @@ public class Edition implements Serializable {
 
     @Transient
     @JsonIgnoreProperties(value = { "measureBoxes", "edition" }, allowSetters = true)
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "edition_id" )
     private Set<Page> pages = new HashSet<>();
 
     @Transient

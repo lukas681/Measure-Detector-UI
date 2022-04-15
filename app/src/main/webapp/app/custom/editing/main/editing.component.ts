@@ -16,6 +16,11 @@ import {TileSource} from "openseadragon";
 import {StorageService} from "../../edition-detail/service/edition-storage.service";
 import {IMeasureBox} from "../../../entities/measure-box/measure-box.model";
 import {ApiOrchMeasureBox} from "../../../shared/model/openapi/model/apiOrchMeasureBox";
+enum Status {
+  SAVED = "Saved",
+  MODIFIED = "Modified"
+}
+
 @Component({
   selector: 'jhi-edition',
   templateUrl: './editing.component.html',
@@ -27,7 +32,7 @@ export class EditingComponent implements OnInit {
   // TODO do not allow out of boundary calls
   currentPage = 0;
   lastPage = -1;
-  status = "SAVED"
+  status = Status.SAVED
   offset = 0;
   isLoading = false;
   itemsPerPage: number;
@@ -59,12 +64,11 @@ export class EditingComponent implements OnInit {
       )
 
     this.editionService.fetchMeasureBoxes(this.storageService.getActiveEditionId(), this.currentPage)
-      .subscribe(x => console.warn(x));
+        .subscribe(); // Should we do something?
 
     this.viewer = OpenSeadragon({
         // ajaxWithCredentials:true,
         loadTilesWithAjax: true,
-        // ajaxWithCredentials: true,
         ajaxHeaders: {
           'Accept': 'image/avif,image/webp,image/png,image/svg+xml,image/*,*/*;q=0.8',
           'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY0MDgwNTU0NH0.GP6vgrAwLzx1KtGJblptm-iY_0_wUmZk8KQmY2CD4cCsJA77o5ypeXIV29E6hXJc3W-YOen1iU-fdtd3KS3_Yw',
@@ -85,50 +89,18 @@ export class EditingComponent implements OnInit {
             type: 'image',
             url: this.generateUrl(this.storageService.getActiveEditionId(), this.currentPage)
           },
-
-        // tileSources: 'https://www.bsb-muenchen.de/fileadmin/bsb/sammlungen/musik/aktuelles/strauss_richard_metamorphosen_ausschnitt.jpg'
-        // tileSources: {
-        //     type: 'image',
-        //   ajaxWithCredentials: true,
-        //   ajaxHeaders: {
-        //     'Accept': 'image/avif,image/webp,image/png,image/svg+xml,image/*,*/*;q=0.8',
-        //     'tset': 'test'
-        //   },
-        //   url: 'https://banner2.cleanpng.com/20180419/hkw/kisspng-ssc-mts-exam-test-computer-icons-educational-entra-test-paper-5ad919071997b8.5830873915241771591048.jpg'
-        // }
-        // url: 'https://www.pngall.com/wp-content/uploads/4/World-Wide-Web-PNG-Free-Image.png'
-        // url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Test-Logo.svg/783px-Test-Logo.svg.png'
-        //  url:
-        // }
-        // visibilityRatio: 0.1,
-        // constrainDuringPan: true,
-        // tileSources: {
-        //   type: 'image',
-        //   url: 'http://localhost:12321/api/edition/24/getPage/2'
-        // }
       }
     );
-    // this.viewer.ajaxHeaders = {
-    //   "asd":"asdf"
-    // }
     this.setAnnotationsWithServerData();
   }
 
   nextPage(): void
   {
-    // if(this.currentPage < this.lastPage ) {
       this.viewer.open({
         type: 'image',
-        // ajaxWithCredentials: true,
-        // loadTilesWithAjax: true,
-        // ajaxHeaders: {
-        //   'Authentication': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY0MDcyNjg4MX0.D4AxgHIB1Y4TFkqxGbHDCQIgHjki707JvECXZx7Z5m55hAiZkCrUBZjf8CeYgO-6egWOE18ShhWmm73oKieHSA'
-        // },
-        // url: this.generateUrl(this.storageService.getActiveEditionId(), this.currentPage)
         url: this.generateUrl(this.storageService.getActiveEditionId(), ++this.currentPage)
       })
       this.setAnnotationsWithServerData();
-    // }
   }
 
 
@@ -154,18 +126,22 @@ export class EditingComponent implements OnInit {
       await this.anno.updateSelected(selection);
       await this.anno.saveSelected();
       this.annotationsData = this.anno.getAnnotations();
-      this.status = "UNSAVED";
+      this.status = Status.MODIFIED;
     });
 
     this.anno.on('updateAnnotation', () => {
       this.annotationsData = this.anno.getAnnotations();
-      this.status = "UNSAVED";
+      this.status = Status.MODIFIED;
     });
 
     this.anno.on('deleteAnnotation', () => {
       this.annotationsData = this.anno.getAnnotations();
-      // this.currentMeasureNo--; // Maybe this makes sense, but deleting something in between might be unlogic
-      this.status = "UNSAVED";
+      this.annotationsData = []
+      // this.currentMeasureNo--; // Maybe this makes sense, but deleting something in between might be unlogical
+      // TODO decrease all annotations that come after this
+
+      this.anno.setAnnotations(this.annotationsData);
+      this.status = Status.MODIFIED;
     });
   }
 
@@ -214,11 +190,11 @@ export class EditingComponent implements OnInit {
       });
   }
   save(): void {
-    if(this.status === "UNSAVED") {
+    if(this.status === Status.MODIFIED) {
       const measureBoxListConvertedBack = this.convertBack();
       this.editionService.save(this.storageService.getActiveEditionId(), this.currentPage, measureBoxListConvertedBack)
         .subscribe(x=>{
-          this.status = "SAVED"
+          this.status = Status.SAVED
         });
     }
   }

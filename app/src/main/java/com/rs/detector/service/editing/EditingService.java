@@ -114,7 +114,7 @@ public class EditingService {
         var allGeneratedAvailableScorePages = editingFileManagementService.getAllGeneratedScorePageFilesAsPageNr(e);
 
         for(int i = 0; i < allGeneratedAvailableScorePages.size(); i++) {
-            logInfo("Working on Page " + i + " out of " + allGeneratedAvailableScorePages.size(), jobContext);
+            logInfo("Working on Page " + (i+1) + " out of " + allGeneratedAvailableScorePages.size(), jobContext);
             logInfo("Name of the current Page: " + allGeneratedAvailableScorePages.get(i).toString(), jobContext);
             runMeasureDetectionForSinglePage(e, allGeneratedAvailableScorePages.get(i));
         }
