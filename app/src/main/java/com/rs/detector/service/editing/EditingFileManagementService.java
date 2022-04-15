@@ -2,6 +2,7 @@ package com.rs.detector.service.editing;
 
 import com.rs.detector.config.ApplicationProperties;
 import com.rs.detector.domain.Edition;
+import com.rs.detector.domain.Project;
 import com.rs.detector.service.ProjectService;
 import com.rs.detector.service.editing.exceptions.PagesMightNotHaveBeenGeneratedException;
 import com.rs.detector.service.util.FileUtilService;
@@ -54,6 +55,7 @@ public class EditingFileManagementService {
     private ProjectService projectService;
 
     private final ApplicationProperties applicationProperties;
+
 
     private Path basePathEditionPath;
 
@@ -168,6 +170,40 @@ public class EditingFileManagementService {
     }
 
     /**
+     * Delete all generated files for this edition.
+     * @param e
+     */
+    public void deleteEditionFiles(Edition e) throws IOException {
+        Path basePathEdition = Path.of(constructPathFromEdition(e));
+        log.debug("Deleting all generated files for this edition: " + e.getTitle() + "on the base path " + basePathEdition.toString());
+        traverseDelete(basePathEdition);
+    }
+
+    /**
+     * rm -rf project
+     * @param p
+     * @throws IOException
+     */
+    public void deleteProjectFiles(Project p) throws IOException {
+        Path basePathEdition = Path.of(getBasePathEdition() + File.separator + p.getId());
+        log.debug("Deleting all generated files for this project: " + p);
+        traverseDelete(basePathEdition);
+    }
+
+    /**
+     * Corresponds to rm -rf edition
+     * @param p
+     */
+    private void traverseDelete(Path p) throws IOException {
+        if(Files.exists(p)) {
+            Files.walk(p)
+                .sorted(Comparator.reverseOrder())
+                .map(Path::toFile)
+                .forEach(File::delete);
+        }
+    }
+
+    /**
      * Checks, whether the PDF file provided is encrypted
       * @param pdf
      * @return
@@ -217,7 +253,6 @@ public class EditingFileManagementService {
            .map(EditingFileManagementService::convertFileNameToPageNumber)
            .sorted()
            .collect(Collectors.toList());
-
     }
 
     public int getStartIndex() {
@@ -233,6 +268,10 @@ public class EditingFileManagementService {
         return Long.parseLong(
             p.replace("_","")
         );
+    }
+
+    public Path getBasePathEditionPath() {
+        return basePathEditionPath;
     }
 
 }

@@ -174,4 +174,24 @@ class EditingFileManagementServiceTest extends SimpleDataInitialization {
         var bufferedImage = editingFileManagementService.loadPage(testEdition, 245);
         assertNotNull(bufferedImage);
     }
+
+    @Test
+    void deleteEditionFiles() throws IOException, PagesMightNotHaveBeenGeneratedException {
+       // Create a new edition
+        var pdf = PDDocument.load(
+            new File("src/test/resources/scores/aegyptische-helena.pdf")
+        );
+        editingFileManagementService.storePDFfile(testEdition, pdf);
+        editingFileManagementService.setStartIndex(245);
+        editingFileManagementService.extractPagesFromEdition(testEdition, jobContext);
+
+        Path p = Path.of(editingFileManagementService.constructPathFromEdition(testEdition));
+        System.out.println(p);
+        System.out.println(Files.isDirectory(p));
+        assert(Files.exists(p)
+        );
+        editingFileManagementService.deleteEditionFiles(testEdition);
+
+        assert(!Files.exists(p));
+    }
 }

@@ -20,6 +20,7 @@ enum Status {
   SAVED = "Saved",
   MODIFIED = "Modified"
 }
+// TODO Improvement: Add array with all used numbers and jump to unused ones.
 
 @Component({
   selector: 'jhi-edition',
@@ -129,20 +130,43 @@ export class EditingComponent implements OnInit {
       this.status = Status.MODIFIED;
     });
 
-    this.anno.on('updateAnnotation', () => {
+    this.anno.on('updateAnnotation', (selection:any) => {
+      // TODO set cursor to this tag enabling in
+      if(selection.body[0].value !== undefined) {
+       this.currentMeasureNo = Number(selection.body[0].value)+ 1;
+      }
       this.annotationsData = this.anno.getAnnotations();
       this.status = Status.MODIFIED;
     });
 
-    this.anno.on('deleteAnnotation', () => {
+    // TODOS: set curser to tag + 1
+   this.anno.on('deleteAnnotation', (selection:any) => {
+      const deletedMeasureNumber:number = selection.body[0].value;
       this.annotationsData = this.anno.getAnnotations();
-      this.annotationsData = []
       // this.currentMeasureNo--; // Maybe this makes sense, but deleting something in between might be unlogical
       // TODO decrease all annotations that come after this
-
+      this.decrementFollowingMeasures(deletedMeasureNumber)
       this.anno.setAnnotations(this.annotationsData);
       this.status = Status.MODIFIED;
     });
+  }
+
+  decrementFollowingMeasures(deletedMeasureNr:number): void {
+    this.annotationsData.filter(
+      (el, idx, arr) => {
+        if (el.body[0].value !== undefined) {
+          return el.body[0].value > deletedMeasureNr;
+        }
+        return false;
+      }
+    ).map((e):any=> {
+      if(e.body[0] !== undefined) {
+        e.body[0].value = e.body[0].value - 1;
+      }
+      return e;
+    })
+    console.warn("CHANGED VALUES");
+    console.warn(this.annotationsData);
   }
 
   previousPage(): void
@@ -260,7 +284,7 @@ export class EditingComponent implements OnInit {
       "id": String(mb.id),
       "type": "Annotation",
       "body":  [{
-        "type": "textualBody",
+        "type": "TextualBody",
         "purpose": "tagging",
         "value": measureCount
       }],
