@@ -18,8 +18,9 @@
         <h4 style="margin-right:15px; margin-top:5px">{{this.currentPage}}/{{this.lastPage}}</h4>
         <input [(ngModel)]="requestedPage" type="number" style="width:100px" type="email" class="form-control" id="goToPageInput" placeholder="Go to Page"/>
           <button class="btn btn-secondary float-left" type="button" (click)="changePage()">Go!</button>
+          <h4 style="margin-right:15px; margin-top:5px">Measure Number: </h4>
+          <input [(ngModel)]="newMeasureValue" style="width:100px" class="form-control"  (change)="changeMeasureNo()" id="measureNumber" placeholder="Change Measure Pointer"/>
         </div>
-
       </div>
       <div class="navbar-header">
         <h4>Status: {{this.status}}</h4>

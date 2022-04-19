@@ -45,6 +45,7 @@ export class EditingComponent implements OnInit {
   viewer: any;
   anno: any;
   requestedPage: number | undefined;
+  newMeasureValue: any;
 
   constructor(protected storageService: StorageService,protected activatedRoute: ActivatedRoute, protected editionService: EditionService, protected modalService: NgbModal, protected parseLinks: ParseLinks) {
     this.itemsPerPage = ITEMS_PER_PAGE;
@@ -64,9 +65,6 @@ export class EditingComponent implements OnInit {
           }
         }
       )
-
-    this.editionService.fetchMeasureBoxes(this.storageService.getActiveEditionId(), this.currentPage - 1)
-        .subscribe(); // Should we do something?
 
     this.viewer = OpenSeadragon({
         // ajaxWithCredentials:true,
@@ -97,11 +95,13 @@ export class EditingComponent implements OnInit {
   }
 
   nextPage(): void {
+    if(this.lastPage === 0 || this.currentPage < this.lastPage) {
       this.viewer.open({
         type: 'image',
         url: this.generateUrl(this.storageService.getActiveEditionId(), ++this.currentPage - 1)
       })
       this.setAnnotationsWithServerData();
+    }
   }
 
 
@@ -192,7 +192,7 @@ export class EditingComponent implements OnInit {
 
   previousPage(): void
   {
-    if(this.currentPage > 0) {
+    if(this.currentPage > 1) {
       this.viewer.open({
         type: 'image',
         url: this.generateUrl(this.storageService.getActiveEditionId(), --this.currentPage -1)
@@ -222,7 +222,8 @@ export class EditingComponent implements OnInit {
                   this.offset = res;
                 }
                 this.annotationsData = this.makeW3CConform(response.body)
-                this.currentMeasureNo = 1;
+                this.currentMeasureNo = this.annotationsData.length + 1;
+                this.newMeasureValue = this.currentMeasureNo + this.offset;
                 this.initializeAnnotorious()
               }
             });
@@ -248,13 +249,17 @@ export class EditingComponent implements OnInit {
       this.setAnnotationsWithServerData();
     }
   }
+
+  changeMeasureNo(): void {
+    this.currentMeasureNo = this.newMeasureValue - this.offset;
+}
+
   numberOnly(event:any): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
     if (charCode > 31 && (charCode < 48 || charCode > 57)) {
       return false;
     }
     return true;
-
   }
 
   private convertBack(): ApiOrchMeasureBox[] {
