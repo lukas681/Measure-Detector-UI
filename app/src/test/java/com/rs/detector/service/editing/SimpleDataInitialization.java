@@ -64,9 +64,8 @@ public class SimpleDataInitialization {
         testPage = new Page()
             .id(1L)
             .edition(testEdition)
-            .imgFileReference("_245")
             .measureNumberOffset(0L)
-            .pageNr(245L);
+        .pageNr(245L);
 
         testBoxes = new ArrayList<>() {
             {
