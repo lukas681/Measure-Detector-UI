@@ -4,8 +4,6 @@ import com.rs.detector.config.ApplicationProperties;
 import com.rs.detector.domain.Edition;
 import com.rs.detector.domain.Page;
 import com.rs.detector.domain.Project;
-import com.rs.detector.service.MeasureBoxService;
-import com.rs.detector.service.PageService;
 import com.rs.detector.service.editing.exceptions.PagesMightNotHaveBeenGeneratedException;
 import com.rs.detector.service.util.FileUtilService;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -47,6 +45,8 @@ public class EditingFileManagementService {
     private static final String DEFAULT_FILE_FORMAT_ImageIO = "png";
 
     private static final String FILE_PREFIX = "_";
+    private static final String OUT_FILENAME = "merged.pdf";
+    private static final String TMP_FOLDER = "/tmp";
     private final String SPLIT_DIR = "/split";
 
     private final Logger log = LoggerFactory.getLogger(EditingFileManagementService.class);
@@ -260,6 +260,10 @@ public class EditingFileManagementService {
     }
 
 
+    public void combineImagesIntoPDF(Edition e) throws IOException {
+        String basePath = constructPathFromEdition(e) ;
+        combineImagesIntoPDF(basePath + File.separator + OUT_FILENAME, basePath + File.separator + TMP_FOLDER);
+    }
 
     public void combineImagesIntoPDF(String pdfPath, String... inputDirsAndFiles) throws IOException {
         try (PDDocument doc = new PDDocument()) {
@@ -320,8 +324,9 @@ public class EditingFileManagementService {
         return basePathEditionPath;
     }
 
-    public void writeBufferedInEditionFolder(BufferedImage img, Edition e, Page p, String subdir) throws IOException {
-        String path = constructPathFromEdition(e) + File.separator + subdir + File.separator + p.getImgFileReference();
+    public void writeBufferedInEditionTmpFolder(BufferedImage img, Edition e, Page p) throws IOException {
+        String path =
+            constructPathFromEdition(e) + File.separator + TMP_FOLDER + File.separator + p.getImgFileReference();
         File f = new File(path);
         f.getParentFile().mkdirs(); // should create the subdirectory related to this
 

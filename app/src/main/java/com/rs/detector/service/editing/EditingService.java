@@ -21,9 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
-import javax.imageio.ImageIO;
 import javax.validation.constraints.NotNull;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -318,13 +316,10 @@ public class EditingService {
             if(p.isPresent()) { // We could also do an assert, but this relaxes it a bit
                 BufferedImage img = editingFileManagementService.loadPage(e, pn); // TODO maybe replace with Page
                 // scorePageService.addMeasureBoxesToBufferedImage(img, p.get());
-                editingFileManagementService.writeBufferedInEditionFolder(img, e, p.get(), "/tmp");
+                editingFileManagementService.writeBufferedInEditionTmpFolder(img, e, p.get());
             }
 
-
-            // TODO Combine to single PDF
-
-            // TODO Delete TMP directory
+           editingFileManagementService.combineImagesIntoPDF(e);
             editingFileManagementService.deleteEditionSubfolder(e, "/tmp");
         }
     }
