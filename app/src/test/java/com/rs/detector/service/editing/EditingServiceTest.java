@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 })
 class EditingServiceTest extends SimpleDataInitialization {
 
-    JobContext jobContext= JobContext.Null;
+    JobContext jobContext = null;
 
     @Autowired
     ScorePageService scorePageService;

@@ -317,10 +317,15 @@ public class EditingService {
             var p= this.searchPageInRepository(e, Long.valueOf(pn));
             if(p.isPresent()) { // We could also do an assert, but this relaxes it a bit
                 BufferedImage img = editingFileManagementService.loadPage(e, pn); // TODO maybe replace with Page
-                scorePageService.addMeasureBoxesToBufferedImage(img, p.get());
-                editingFileManagementService.writeBufferedInEditionFolder(img, e, "/tmp");
+                // scorePageService.addMeasureBoxesToBufferedImage(img, p.get());
+                editingFileManagementService.writeBufferedInEditionFolder(img, e, p.get(), "/tmp");
             }
+
+
             // TODO Combine to single PDF
+
+            // TODO Delete TMP directory
+            editingFileManagementService.deleteEditionSubfolder(e, "/tmp");
         }
     }
 

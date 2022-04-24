@@ -2,6 +2,7 @@ package com.rs.detector.service.editing;
 
 import com.rs.detector.config.ApplicationProperties;
 import com.rs.detector.domain.Edition;
+import com.rs.detector.domain.Page;
 import com.rs.detector.domain.Project;
 import com.rs.detector.service.MeasureBoxService;
 import com.rs.detector.service.PageService;
@@ -43,6 +44,8 @@ import java.util.stream.Collectors;
 public class EditingFileManagementService {
 
     private static final String DEFAULT_FILE_FORMAT = ".png";
+    private static final String DEFAULT_FILE_FORMAT_ImageIO = "png";
+
     private static final String FILE_PREFIX = "_";
     private final String SPLIT_DIR = "/split";
 
@@ -124,6 +127,7 @@ public class EditingFileManagementService {
     }
 
     public void log(String s, JobContext jobContext) {
+        System.out.println(jobContext);
         if(jobContext != null && jobContext.logger() != null) {
             jobContext.logger().info(s);
         }
@@ -316,10 +320,16 @@ public class EditingFileManagementService {
         return basePathEditionPath;
     }
 
-    public void writeBufferedInEditionFolder(BufferedImage img, Edition e, String subdir) throws IOException {
-        String path = constructPathFromEdition(e) + File.separator + subdir;
+    public void writeBufferedInEditionFolder(BufferedImage img, Edition e, Page p, String subdir) throws IOException {
+        String path = constructPathFromEdition(e) + File.separator + subdir + File.separator + p.getImgFileReference();
         File f = new File(path);
-        f.mkdirs(); // should create the subdirectory related to this
-        ImageIO.write(img, DEFAULT_FILE_FORMAT, new File(path));
+        f.getParentFile().mkdirs(); // should create the subdirectory related to this
+
+        ImageIO.write(img, DEFAULT_FILE_FORMAT_ImageIO, f);
+    }
+
+    public void deleteEditionSubfolder(Edition e, String subdir) throws IOException {
+        Path p = Path.of(constructPathFromEdition(e) + File.separator + subdir);
+        traverseDelete(p);
     }
 }
