@@ -194,4 +194,19 @@ class EditingFileManagementServiceTest extends SimpleDataInitialization {
 
         assert(!Files.exists(p));
     }
+
+    @Test
+    void createMergedPDFFile() throws IOException {
+
+        var pdf = PDDocument.load(
+            new File("src/test/resources/scores/aegyptische-helena.pdf")
+        );
+        editingFileManagementService.storePDFfile(testEdition, pdf);
+        editingFileManagementService.setStartIndex(245);
+        editingFileManagementService.extractPagesFromEdition(testEdition, jobContext);
+
+        EditingFileManagementService.combineImagesIntoPDF("src/test/resources/scores/test.pdf",
+            editingFileManagementService.constructPathForSplittedPagesFromEdition(testEdition));
+        // Path p = Path.of(editingFileManagementService.constructPathFromEdition(testEdition));
+    }
 }

@@ -7,7 +7,10 @@ import com.rs.detector.service.PageService;
 import com.rs.detector.service.editing.exceptions.PagesMightNotHaveBeenGeneratedException;
 import com.rs.detector.service.measureDetection.MeasureDetectorService;
 import com.rs.detector.web.api.model.ApiMeasureDetectorResult;
+import org.apache.pdfbox.multipdf.Overlay;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.jobrunr.jobs.context.JobContext;
 import org.jobrunr.jobs.context.JobDashboardProgressBar;
 import org.junit.jupiter.api.BeforeAll;
@@ -20,6 +23,9 @@ import org.springframework.test.context.TestPropertySource;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,7 +42,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class ScorePageServiceTest extends SimpleDataInitialization {
 
     JobContext jobContext= JobContext.Null;
-    JobDashboardProgressBar progressBar = jobContext.progressBar(100); // Let's say, we have 100% ...
 
     @Autowired
     ScorePageService scorePageService;
@@ -198,5 +203,47 @@ class ScorePageServiceTest extends SimpleDataInitialization {
             .collect(Collectors.toList()).block();
 
         assert(dbRes.size() == 4); //Asuming prepulated by super.setup
+    }
+    @Test
+    void drawRectangleInPDF() throws PagesMightNotHaveBeenGeneratedException, IOException {
+        File f = new File("src/test/resources/scores/aegyptische-helena.pdf");
+        PDDocument pdf = PDDocument
+            .load(f);
+        PDPage p1 = pdf.getPage(0);
+        PDPageContentStream contentStream = new PDPageContentStream(pdf, p1);
+        contentStream.setStrokingColor(Color.DARK_GRAY);
+        contentStream.addRect(200, 200, 100, 100);
+        contentStream.fill();
+        contentStream.close();
+
+        f = new File("src/test/resources/scores/aegyptische-helena-res.pdf");
+        pdf.save(f);
+    }
+
+    @Test
+    void addRectangleToPNG() throws PagesMightNotHaveBeenGeneratedException, IOException {
+
+        var f = new File("src/test/resources/scores/split/_243.png");
+        BufferedImage img = ImageIO.read(f);
+
+        // Adding Rectangle
+        Graphics2D g2d = img.createGraphics();
+        g2d.setColor(Color.RED);
+//        g2d.drawRect(0, 0, 1000, 1000);
+        g2d.setComposite( AlphaComposite.getInstance(
+            AlphaComposite.SRC_OVER, 0.075f));
+        g2d.fillRect(0 , 0, 1000, 1000);
+
+       // Adding Measure Number
+        int fontSize = img.getHeight() / 30;
+         g2d = img.createGraphics();
+         g2d.setColor(Color.BLACK);
+         g2d.setFont(new Font("Purisa", Font.PLAIN, fontSize));
+        g2d.setComposite( AlphaComposite.getInstance(
+            AlphaComposite.SRC_OVER, 0.7f));
+        g2d.drawString("This is a test", 0, fontSize + 1);
+
+        ImageIO.write(img, "png", new File("src/test/resources/scores/split/_243-1.png"));
+
     }
 }

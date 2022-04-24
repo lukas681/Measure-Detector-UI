@@ -66,7 +66,7 @@ public class ScorePageService {
             if (pages.stream().noneMatch(x -> x.getPageNr().equals(fileNameToPageNr))) {
                 pages.add(new Page()
                     .imgFileReference(p)
-                    .pageNr(fileNameToPageNr)
+                    .pageNr(Long.valueOf(fileNameToPageNr))
                     .edition(e)
                 );
             } else {

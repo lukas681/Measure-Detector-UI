@@ -7,6 +7,10 @@ import com.rs.detector.service.ProjectService;
 import com.rs.detector.service.editing.exceptions.PagesMightNotHaveBeenGeneratedException;
 import com.rs.detector.service.util.FileUtilService;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.jobrunr.jobs.context.JobContext;
 import org.jobrunr.jobs.context.JobDashboardProgressBar;
 import org.slf4j.Logger;
@@ -29,6 +33,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -50,9 +55,6 @@ public class EditingFileManagementService {
 
     @Autowired
     FileUtilService fileUtilService;
-
-    @Autowired
-    private ProjectService projectService;
 
     private final ApplicationProperties applicationProperties;
 
@@ -112,7 +114,7 @@ public class EditingFileManagementService {
 
     // Tag: split
     public void extractPagesFromEdition(Edition e, JobContext jobContext) throws IOException {
-        log("Starting to cut pages out of pdf!", jobContext);
+        log("Starting to create png images of the  pages out of given pdf!", jobContext);
         assert(e.getProjectId() != null);
         PDDocument loadedEditionPdf = this.loadPdfFile(e);
 
@@ -227,7 +229,7 @@ public class EditingFileManagementService {
                 File.separator + e.getId() + File.separator;
     }
 
-    private String constructPathForSplittedPagesFromEdition(Edition e) {
+    public String constructPathForSplittedPagesFromEdition(Edition e) {
         return constructPathFromEdition(e) + SPLIT_DIR;
     }
 
@@ -248,11 +250,66 @@ public class EditingFileManagementService {
             .collect(Collectors.toList());
     }
 
-    public List<Long> getAllGeneratedScorePageFilesAsPageNr(Edition e) {
+    public List<Integer> getAllGeneratedScorePageFilesAsPageNr(Edition e) {
        return getAllGeneratedScorePageFiles(e).stream()
            .map(EditingFileManagementService::convertFileNameToPageNumber)
            .sorted()
            .collect(Collectors.toList());
+    }
+
+    /**
+     * This method constructs a resulting pdf from the pngs annotated with the measures
+     */
+    public void createPdfWithMeasures(Edition e) throws IOException, PagesMightNotHaveBeenGeneratedException {
+        for(var pn: getAllGeneratedScorePageFilesAsPageNr(e)) {
+            var image = loadPage(e, pn);
+
+
+        }
+
+        // get all Files in directory
+        var x =  this.getPage(e, 0);
+
+    }
+
+    public static void combineImagesIntoPDF(String pdfPath, String... inputDirsAndFiles) throws IOException {
+        try (PDDocument doc = new PDDocument()) {
+            for (String input : inputDirsAndFiles) {
+                Files.find(Paths.get(input),
+                        Integer.MAX_VALUE,
+                        (path, basicFileAttributes) -> Files.isRegularFile(path))
+                    .forEachOrdered(path -> addImageAsNewPage(doc, path.toString()));
+            }
+            doc.save(pdfPath);
+        }
+    }
+
+    // TODO Mayber add higher resolution
+    private static void addImageAsNewPage(PDDocument doc, String imagePath) {
+        try {
+            PDImageXObject image          = PDImageXObject.createFromFile(imagePath, doc);
+            PDRectangle pageSize       = PDRectangle.A4;
+
+            int            originalWidth  = image.getWidth();
+            int            originalHeight = image.getHeight();
+            float          pageWidth      = pageSize.getWidth();
+            float          pageHeight     = pageSize.getHeight();
+            float          ratio          = Math.min(pageWidth / originalWidth, pageHeight / originalHeight);
+            float          scaledWidth    = originalWidth  * ratio;
+            float          scaledHeight   = originalHeight * ratio;
+            float          x              = (pageWidth  - scaledWidth ) / 2;
+            float          y              = (pageHeight - scaledHeight) / 2;
+
+            PDPage page           = new PDPage(pageSize);
+            doc.addPage(page);
+            try (PDPageContentStream contents = new PDPageContentStream(doc, page)) {
+                contents.drawImage(image, x, y, scaledWidth, scaledHeight);
+            }
+            System.out.println("Added: " + imagePath);
+        } catch (IOException e) {
+            System.err.println("Failed to process: " + imagePath);
+            e.printStackTrace(System.err);
+        }
     }
 
     public int getStartIndex() {
@@ -263,9 +320,9 @@ public class EditingFileManagementService {
         this.startIndex = startIndex;
     }
 
-    public static Long convertFileNameToPageNumber(String p) {
+    public static Integer convertFileNameToPageNumber(String p) {
         p = StringUtils.stripFilenameExtension(p);
-        return Long.parseLong(
+        return Integer.parseInt(
             p.replace("_","")
         );
     }

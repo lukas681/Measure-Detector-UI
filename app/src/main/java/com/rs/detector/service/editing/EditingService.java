@@ -116,7 +116,7 @@ public class EditingService {
         for(int i = 0; i < allGeneratedAvailableScorePages.size(); i++) {
             logInfo("Working on Page " + (i+1) + " out of " + allGeneratedAvailableScorePages.size(), jobContext);
             logInfo("Name of the current Page: " + allGeneratedAvailableScorePages.get(i).toString(), jobContext);
-            runMeasureDetectionForSinglePage(e, allGeneratedAvailableScorePages.get(i));
+            runMeasureDetectionForSinglePage(e, Long.valueOf(allGeneratedAvailableScorePages.get(i)));
         }
         this.recalculatePageOffsets(e);
     }
@@ -311,4 +311,6 @@ public class EditingService {
     public void recalculatePageOffsets(Integer editionID) {
         recalculatePageOffsets((getEdition(editionID,editionService)));
     }
+
+
 }
