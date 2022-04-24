@@ -3,7 +3,6 @@ package com.rs.detector.service.editing;
 import com.rs.detector.config.ApplicationProperties;
 import com.rs.detector.domain.Edition;
 import com.rs.detector.domain.Project;
-import com.rs.detector.service.ProjectService;
 import com.rs.detector.service.editing.exceptions.PagesMightNotHaveBeenGeneratedException;
 import com.rs.detector.service.util.FileUtilService;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -12,16 +11,13 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.jobrunr.jobs.context.JobContext;
-import org.jobrunr.jobs.context.JobDashboardProgressBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 
 import javax.imageio.ImageIO;
@@ -272,7 +268,7 @@ public class EditingFileManagementService {
 
     }
 
-    public static void combineImagesIntoPDF(String pdfPath, String... inputDirsAndFiles) throws IOException {
+    public void combineImagesIntoPDF(String pdfPath, String... inputDirsAndFiles) throws IOException {
         try (PDDocument doc = new PDDocument()) {
             for (String input : inputDirsAndFiles) {
                 Files.find(Paths.get(input),
@@ -285,7 +281,7 @@ public class EditingFileManagementService {
     }
 
     // TODO Mayber add higher resolution
-    private static void addImageAsNewPage(PDDocument doc, String imagePath) {
+    private void addImageAsNewPage(PDDocument doc, String imagePath) {
         try {
             PDImageXObject image          = PDImageXObject.createFromFile(imagePath, doc);
             PDRectangle pageSize       = PDRectangle.A4;
@@ -305,9 +301,9 @@ public class EditingFileManagementService {
             try (PDPageContentStream contents = new PDPageContentStream(doc, page)) {
                 contents.drawImage(image, x, y, scaledWidth, scaledHeight);
             }
-            System.out.println("Added: " + imagePath);
+            log.debug("Added: " + imagePath);
         } catch (IOException e) {
-            System.err.println("Failed to process: " + imagePath);
+            log.error("Failed to process: " + imagePath);
             e.printStackTrace(System.err);
         }
     }

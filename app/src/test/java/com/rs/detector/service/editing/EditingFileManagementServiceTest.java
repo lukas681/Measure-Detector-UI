@@ -205,7 +205,7 @@ class EditingFileManagementServiceTest extends SimpleDataInitialization {
         editingFileManagementService.setStartIndex(245);
         editingFileManagementService.extractPagesFromEdition(testEdition, jobContext);
 
-        EditingFileManagementService.combineImagesIntoPDF("src/test/resources/scores/test.pdf",
+        editingFileManagementService.combineImagesIntoPDF("src/test/resources/scores/test.pdf",
             editingFileManagementService.constructPathForSplittedPagesFromEdition(testEdition));
         // Path p = Path.of(editingFileManagementService.constructPathFromEdition(testEdition));
     }
