@@ -15,7 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -154,5 +157,38 @@ public class ScorePageService {
             .toProcessor()
             .block()
             .size();
+    }
+    public BufferedImage addMeasureBoxesToBufferedImage(BufferedImage img, Page p) {
+        var measureBoxes =   measureBoxService.findAllByPageId(p.getId())
+            .collectList()
+            .toProcessor()
+            .block();
+        for(var mb: measureBoxes) {
+            img = addSingleMeasureBoxToImage(img, mb);
+        }
+        return img;
+    }
+
+    public BufferedImage addSingleMeasureBoxToImage(BufferedImage img, com.rs.detector.domain.MeasureBox mb) {
+        // Adding Rectangle
+        Graphics2D g2d = img.createGraphics();
+        g2d.setColor(Color.RED);
+        g2d.setComposite( AlphaComposite.getInstance(
+            AlphaComposite.SRC_OVER, 0.075f));
+        g2d.fillRect(Math.toIntExact(mb.getUlx()),
+            Math.toIntExact(mb.getUly()),
+            1000,
+            1000);
+
+        // Adding Measure Number
+        int fontSize = img.getHeight() / 30;
+        g2d = img.createGraphics();
+        g2d.setColor(Color.BLACK);
+        g2d.setFont(new Font("Purisa", Font.PLAIN, fontSize));
+        g2d.setComposite( AlphaComposite.getInstance(
+            AlphaComposite.SRC_OVER, 0.7f));
+        g2d.drawString("This is a test", 0, fontSize + 1);
+
+        return img;
     }
 }

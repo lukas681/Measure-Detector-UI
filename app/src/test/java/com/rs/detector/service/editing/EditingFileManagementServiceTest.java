@@ -197,7 +197,6 @@ class EditingFileManagementServiceTest extends SimpleDataInitialization {
 
     @Test
     void createMergedPDFFile() throws IOException {
-
         var pdf = PDDocument.load(
             new File("src/test/resources/scores/aegyptische-helena.pdf")
         );
@@ -209,4 +208,5 @@ class EditingFileManagementServiceTest extends SimpleDataInitialization {
             editingFileManagementService.constructPathForSplittedPagesFromEdition(testEdition));
         // Path p = Path.of(editingFileManagementService.constructPathFromEdition(testEdition));
     }
+
 }

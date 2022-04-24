@@ -3,6 +3,8 @@ package com.rs.detector.service.editing;
 import com.rs.detector.config.ApplicationProperties;
 import com.rs.detector.domain.Edition;
 import com.rs.detector.domain.Project;
+import com.rs.detector.service.MeasureBoxService;
+import com.rs.detector.service.PageService;
 import com.rs.detector.service.editing.exceptions.PagesMightNotHaveBeenGeneratedException;
 import com.rs.detector.service.util.FileUtilService;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -122,7 +124,7 @@ public class EditingFileManagementService {
     }
 
     public void log(String s, JobContext jobContext) {
-        if(jobContext != null) {
+        if(jobContext != null && jobContext.logger() != null) {
             jobContext.logger().info(s);
         }
     }
@@ -253,20 +255,7 @@ public class EditingFileManagementService {
            .collect(Collectors.toList());
     }
 
-    /**
-     * This method constructs a resulting pdf from the pngs annotated with the measures
-     */
-    public void createPdfWithMeasures(Edition e) throws IOException, PagesMightNotHaveBeenGeneratedException {
-        for(var pn: getAllGeneratedScorePageFilesAsPageNr(e)) {
-            var image = loadPage(e, pn);
 
-
-        }
-
-        // get all Files in directory
-        var x =  this.getPage(e, 0);
-
-    }
 
     public void combineImagesIntoPDF(String pdfPath, String... inputDirsAndFiles) throws IOException {
         try (PDDocument doc = new PDDocument()) {
@@ -280,7 +269,7 @@ public class EditingFileManagementService {
         }
     }
 
-    // TODO Mayber add higher resolution
+    // Generates a single PDF out of given directory(ies)
     private void addImageAsNewPage(PDDocument doc, String imagePath) {
         try {
             PDImageXObject image          = PDImageXObject.createFromFile(imagePath, doc);
@@ -327,4 +316,10 @@ public class EditingFileManagementService {
         return basePathEditionPath;
     }
 
+    public void writeBufferedInEditionFolder(BufferedImage img, Edition e, String subdir) throws IOException {
+        String path = constructPathFromEdition(e) + File.separator + subdir;
+        File f = new File(path);
+        f.mkdirs(); // should create the subdirectory related to this
+        ImageIO.write(img, DEFAULT_FILE_FORMAT, new File(path));
+    }
 }

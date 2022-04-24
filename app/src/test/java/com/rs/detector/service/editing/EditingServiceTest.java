@@ -227,6 +227,19 @@ class EditingServiceTest extends SimpleDataInitialization {
         assert(newpage.get(0).getMeasureNumberOffset() == 2);
 
         // Should have been removed. This behavour might change int he future
-
     }
+
+    @Test
+    public void generatePDFFromNewEdition () throws PagesMightNotHaveBeenGeneratedException, IOException {
+
+        var pdf = PDDocument.load(new File("src/test/resources/scores/aegyptische-helena.pdf"));
+
+        editingService.getEditingFileManagementService().setStartIndex(245);
+        editingService.uploadNewEdition(testEdition, pdf);
+        editingService.extractImagesFromPDF(testEdition, jobContext);
+        scorePageService.generatePageObjectIfNotExistent(testEdition).blockLast();
+
+       editingService.createPdfWithMeasures(testEdition);
+    }
+
 }

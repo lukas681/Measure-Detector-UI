@@ -56,15 +56,17 @@ public class SimpleDataInitialization {
             .composer("Richi Strauß");
 
         testEdition = new Edition()
-            .id(1l)
+            .id(1L)
             .title("testTitle")
             .pDFFileName("aegyptische-helena.pdf")
             .project(testProject);
 
         testPage = new Page()
-            .id(1l)
+            .id(1L)
             .edition(testEdition)
-            .pageNr(245l);
+            .imgFileReference("_245")
+            .measureNumberOffset(0L)
+            .pageNr(245L);
 
         testBoxes = new ArrayList<>() {
             {

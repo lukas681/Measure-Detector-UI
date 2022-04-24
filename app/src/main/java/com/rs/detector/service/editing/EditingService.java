@@ -9,6 +9,7 @@ import com.rs.detector.service.EditionService;
 import com.rs.detector.service.MeasureBoxService;
 import com.rs.detector.service.PageService;
 import com.rs.detector.service.ProjectService;
+import com.rs.detector.service.editing.exceptions.PagesMightNotHaveBeenGeneratedException;
 import com.rs.detector.service.measureDetection.MeasureDetectorService;
 import com.rs.detector.web.api.model.ApiMeasureDetectorResult;
 import com.rs.detector.web.api.model.ApiOrchMeasureBox;
@@ -18,16 +19,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.imageio.ImageIO;
 import javax.validation.constraints.NotNull;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.List;
 import java.util.Optional;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -94,9 +96,6 @@ public class EditingService {
         editingFileManagementService.extractPagesFromEdition(e, jobContext);
     }
 
-    // TODO Catch Exception
-    // TODO Remove Blocking also here.
-
     /**
      * Triggeres the Measure Detection on all Pages. Requires the methods and uploaded Edition and the extracted
      * Images, so make sure to call that beforehand. For example:
@@ -132,7 +131,7 @@ public class EditingService {
         }
     }
 
-    private Optional<Page> searchPageInRepository(Edition e, Long pageNr) {
+    private Optional<Page> searchPageInRepository(Edition e, Long  pageNr) {
         return pageRepository.findAllByEditionId(e.getId())
             .collect(Collectors.toList()).toProcessor().block()
             .stream().filter(x -> x.getPageNr().equals(pageNr))
@@ -306,6 +305,23 @@ public class EditingService {
             .lry(mb.getLry())
             .ulx(mb.getUlx())
             .uly(mb.getUly());
+    }
+
+    /**
+     * This method constructs a resulting pdf from the pngs annotated with the measures
+     */
+    public void createPdfWithMeasures(Edition e) throws IOException, PagesMightNotHaveBeenGeneratedException {
+        for(var pn: editingFileManagementService.getAllGeneratedScorePageFilesAsPageNr(e)) {
+            System.out.println(pn);
+            this.pageRepository.findAll().collectList().toProcessor().block().forEach(System.out::println);
+            var p= this.searchPageInRepository(e, Long.valueOf(pn));
+            if(p.isPresent()) { // We could also do an assert, but this relaxes it a bit
+                BufferedImage img = editingFileManagementService.loadPage(e, pn); // TODO maybe replace with Page
+                scorePageService.addMeasureBoxesToBufferedImage(img, p.get());
+                editingFileManagementService.writeBufferedInEditionFolder(img, e, "/tmp");
+            }
+            // TODO Combine to single PDF
+        }
     }
 
     public void recalculatePageOffsets(Integer editionID) {
