@@ -9,7 +9,8 @@ WORKDIR /usr/src/app
 COPY inference_server.py .
 
 # Get latest model
-RUN curl -L `curl -sL https://api.github.com/repos/OMR-Research/MeasureDetector/releases/latest | jq -r '.assets[].browser_download_url'` --output model.pb
+
+RUN curl -L https://github.com/OMR-Research/MeasureDetector/releases/download/v1.0/2019-05-16_faster-rcnn-inception-resnet-v2.pb --output model.pb
 
 EXPOSE 8080
 CMD ["hug", "-p=8080", "-f=inference_server.py"]

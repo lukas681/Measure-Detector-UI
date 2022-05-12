@@ -13,6 +13,8 @@ This application was generated using JHipster 7.4.0, you can find documentation 
 2) Make sure to have Docker installed. For Windows you can also use WSL 2 to get a nice Docker environment. Now build the MeasureDetector. This works also on Windows using Docker for Windows.
 
 
+      $ cd measure-detector-docker
+
       # Build the image with the latest model
       $ docker build -t measure_detector .
 
@@ -25,9 +27,10 @@ This application was generated using JHipster 7.4.0, you can find documentation 
 # Starting Development Mode
 
 For developing it might makes sense to spawn npm in a second process.
-
+      
       .\gradlew -Pdev
       # wait for finish
+      npm i --save-dev @types/openseadragon      
       npm start
 
        --------------------------------------
