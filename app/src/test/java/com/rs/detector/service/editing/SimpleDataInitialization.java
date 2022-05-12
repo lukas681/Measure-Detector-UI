@@ -63,6 +63,7 @@ public class SimpleDataInitialization {
 
         testPage = new Page()
             .id(1L)
+            .imgFileReference("_245.png")
             .edition(testEdition)
             .measureNumberOffset(0L)
         .pageNr(245L);
@@ -78,14 +79,14 @@ public class SimpleDataInitialization {
                 );
                 add(new MeasureBox()
                     .page(testPage)
-                    .lrx(223l)
+                    .lrx(500l)
                     .lry(324l)
                     .ulx(146l)
                     .uly(176l)
                 );
                 add(new MeasureBox()
                     .page(testPage)
-                    .lrx(246l)
+                    .lrx(800l)
                     .lry(246l)
                     .ulx(146l)
                     .uly(4354l)

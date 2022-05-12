@@ -1,10 +1,8 @@
 package com.rs.detector.service.editing;
 
 import com.rs.detector.domain.Edition;
-import com.rs.detector.domain.MeasureBox;
 import com.rs.detector.domain.Page;
 import com.rs.detector.domain.enumeration.EditionType;
-import com.rs.detector.service.EditionService;
 import com.rs.detector.service.editing.exceptions.PagesMightNotHaveBeenGeneratedException;
 import com.rs.detector.web.api.model.ApiOrchMeasureBox;
 import org.apache.pdfbox.pdmodel.PDDocument;

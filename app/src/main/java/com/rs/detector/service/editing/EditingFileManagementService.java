@@ -46,7 +46,7 @@ public class EditingFileManagementService {
 
     private static final String FILE_PREFIX = "_";
     private static final String OUT_FILENAME = "merged.pdf";
-    private static final String TMP_FOLDER = "/tmp";
+    private static final String TMP_FOLDER = "tmp";
     private final String SPLIT_DIR = "/split";
 
     private final Logger log = LoggerFactory.getLogger(EditingFileManagementService.class);
@@ -329,6 +329,7 @@ public class EditingFileManagementService {
             constructPathFromEdition(e) + File.separator + TMP_FOLDER + File.separator + p.getImgFileReference();
         File f = new File(path);
         f.getParentFile().mkdirs(); // should create the subdirectory related to this
+        System.out.println(f);
 
         ImageIO.write(img, DEFAULT_FILE_FORMAT_ImageIO, f);
     }

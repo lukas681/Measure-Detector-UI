@@ -2,6 +2,7 @@ package com.rs.detector.service.editing;
 
 import com.rs.detector.domain.Edition;
 import com.rs.detector.domain.Page;
+import com.rs.detector.domain.util.utils;
 import com.rs.detector.repository.PageRepository;
 import com.rs.detector.service.EditionService;
 import com.rs.detector.service.MeasureBoxService;
@@ -164,21 +165,25 @@ public class ScorePageService {
             .toProcessor()
             .block();
         for(var mb: measureBoxes) {
-            img = addSingleMeasureBoxToImage(img, mb);
+            log.debug("Adding MeasureBox to image: " + mb.getMeasureCount());
+            img = addSingleMeasureBoxToImage(img, mb, p.getMeasureNumberOffset());
         }
         return img;
     }
 
-    public BufferedImage addSingleMeasureBoxToImage(BufferedImage img, com.rs.detector.domain.MeasureBox mb) {
+    public BufferedImage addSingleMeasureBoxToImage(BufferedImage img, com.rs.detector.domain.MeasureBox mb,
+                                                    Long offset) {
+
+        Long[] mbCoordinates = utils.convertToXYWH(mb);
         // Adding Rectangle
         Graphics2D g2d = img.createGraphics();
-        g2d.setColor(Color.RED);
+        g2d.setColor(Color.GRAY);
         g2d.setComposite( AlphaComposite.getInstance(
             AlphaComposite.SRC_OVER, 0.075f));
-        g2d.fillRect(Math.toIntExact(mb.getUlx()),
-            Math.toIntExact(mb.getUly()),
-            1000,
-            1000);
+        g2d.fillRect(Math.toIntExact(mbCoordinates[0]),
+            Math.toIntExact(mbCoordinates[1]),
+            Math.toIntExact(mbCoordinates[2]),
+            Math.toIntExact(mbCoordinates[3]));
 
         // Adding Measure Number
         int fontSize = img.getHeight() / 30;
@@ -187,8 +192,11 @@ public class ScorePageService {
         g2d.setFont(new Font("Purisa", Font.PLAIN, fontSize));
         g2d.setComposite( AlphaComposite.getInstance(
             AlphaComposite.SRC_OVER, 0.7f));
-        g2d.drawString("This is a test", 0, fontSize + 1);
 
+        if(mb.getMeasureCount() != null) {
+            offset = offset == null?0:offset;
+            g2d.drawString(mb.getMeasureCount() + offset + "", mbCoordinates[0], mbCoordinates[1] + 10);
+        }
         return img;
     }
 }
