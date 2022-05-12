@@ -4,7 +4,8 @@ PORT= 8080
 
 build-docker:
 	docker build --no-cache --tag measure:1 -t measure_detector .
-	docker run --name mdet -p ${PORT}:8080 measure_detector
+	docker run --name mdet -d -p ${PORT}:8080 measure_detector
+
 stop-docker:
 	docker stop mdet
 remove-container:

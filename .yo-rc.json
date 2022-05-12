@@ -1,0 +1,10 @@
+{
+  "generator-jhipster": {
+    "appsFolders": ["snowball", "test"],
+    "directoryPath": "../",
+    "monitoring": "elk",
+    "consoleOptions": [],
+    "serviceDiscoveryType": "eureka",
+    "jwtSecretKey": "MTY1OGJlMjgyOWI3MzlhY2ZjMGNiNGNkY2ZjNGNjM2I4Y2MyOGFlMzBkMTZlMmE0ZWFmYTUzMDg3MTMwMTFhN2Y0YTE5YmRhMDBhOGM2M2Y4ZGY4ZTZjZTMwOWRjZWNkNWFiMA=="
+  }
+}
