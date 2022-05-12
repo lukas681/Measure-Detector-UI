@@ -30,7 +30,7 @@ For developing it might makes sense to spawn npm in a second process.
       
       .\gradlew -Pdev
       # wait for finish
-      npm i --save-dev @types/openseadragon      
+      npm i --save-dev @types/openseadragon@2.4.8
       npm start
 
        --------------------------------------
