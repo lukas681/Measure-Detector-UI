@@ -1,7 +1,7 @@
 {
   "dependencies": {
-    "@recogito/annotorious-openseadragon": "^2.6.0",
-    "@recogito/annotorious-shape-labels": "^0.2.1",
-    "@types/openseadragon": "^2.4.8"
+    "@recogito/annotorious-openseadragon": "2.6.0",
+    "@recogito/annotorious-shape-labels": "0.2.1",
+    "@types/openseadragon": "2.4.8"
   }
 }
