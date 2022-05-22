@@ -162,7 +162,7 @@ application:
   imageSplitDPI: 250
   measure-detector:
     host: http://localhost
-    port: 8080
+    port: 8081
     endpoint: /upload
 org:
   jobrunr:

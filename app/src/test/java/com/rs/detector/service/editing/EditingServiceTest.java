@@ -109,8 +109,6 @@ class EditingServiceTest extends SimpleDataInitialization {
 
         var res = editingService.runMeasureDetectionOnEdition(testEdition, 243);
         assertNotNull(res);
-
-
     }
 
     @Test
@@ -229,15 +227,14 @@ class EditingServiceTest extends SimpleDataInitialization {
 
     @Test
     public void generatePDFFromNewEdition () throws PagesMightNotHaveBeenGeneratedException, IOException {
-
         var pdf = PDDocument.load(new File("src/test/resources/scores/aegyptische-helena.pdf"));
 
         editingService.getEditingFileManagementService().setStartIndex(245);
         editingService.uploadNewEdition(testEdition, pdf);
         editingService.extractImagesFromPDF(testEdition, jobContext);
         scorePageService.generatePageObjectIfNotExistent(testEdition).blockLast();
+        editingService.runFullMeasureDetectionOverEdition(testEdition, null );
 
        editingService.createPdfWithMeasures(testEdition);
     }
-
 }

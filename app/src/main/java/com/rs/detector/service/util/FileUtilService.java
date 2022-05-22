@@ -10,12 +10,12 @@ import org.jobrunr.jobs.context.JobDashboardProgressBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
 import javax.imageio.ImageIO;
 import javax.validation.constraints.NotNull;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Path;
 
 @Service
@@ -136,5 +136,14 @@ public class FileUtilService {
     public void convertPdf2Img2(@NotNull PDDocument documentToConvert, @NotNull Path outputPath,
                                 JobContext jobContext) throws IOException {
         this.convertPdf2Img2(documentToConvert, outputPath, 0, jobContext);
+    }
+
+    public InputStream getPDF(String pdfPath) throws FileNotFoundException {
+        try {
+            return new FileInputStream(pdfPath);
+        } catch (IOException e) {
+            log.error("An error has occured while loading the PDF file",e.getMessage());
+            throw e;
+        }
     }
 }

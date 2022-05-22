@@ -144,6 +144,26 @@ paths:
             text/plain:
               schema:
                 type: string
+  /edition/{editionID}/getFullPDF:
+      get:
+        summary: Generates a PDF with all the MeasureBoxes for this edition
+        operationId: getAnnotatedPDF
+        parameters:
+          - name: editionID
+            schema:
+              type: integer
+              format: int64
+            in: path
+            required: true
+            description: ID of the edition you want to generate a PDF from
+        responses:
+          200:
+            description: Expected response to a valid request
+            content:
+              application/pdf:
+                schema:
+                  type: string
+                  format: binary
   /edition/add:
     post:
       summary: Adds a new edition + a corresponding

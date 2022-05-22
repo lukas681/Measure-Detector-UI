@@ -48,7 +48,6 @@ public class ScorePageService {
     /**
      * This method will prepopulate the database with new page.
      * <p>
-     * iiii @param e
      *
      * @return
      */
@@ -173,30 +172,38 @@ public class ScorePageService {
 
     public BufferedImage addSingleMeasureBoxToImage(BufferedImage img, com.rs.detector.domain.MeasureBox mb,
                                                     Long offset) {
-
         Long[] mbCoordinates = utils.convertToXYWH(mb);
         // Adding Rectangle
         Graphics2D g2d = img.createGraphics();
-        g2d.setColor(Color.GRAY);
+        g2d.setColor(Color.getHSBColor((float) (Math.random()*359+1d), (float) Math.min(Math.random() +.5, 1),1F)); //
+        // Generate a
+        // random
+        // saturation
         g2d.setComposite( AlphaComposite.getInstance(
-            AlphaComposite.SRC_OVER, 0.075f));
+            AlphaComposite.SRC_OVER, 0.1f));
         g2d.fillRect(Math.toIntExact(mbCoordinates[0]),
             Math.toIntExact(mbCoordinates[1]),
             Math.toIntExact(mbCoordinates[2]),
             Math.toIntExact(mbCoordinates[3]));
 
         // Adding Measure Number
-        int fontSize = img.getHeight() / 30;
+        int fontSize = img.getHeight() / 40;
         g2d = img.createGraphics();
         g2d.setColor(Color.BLACK);
-        g2d.setFont(new Font("Purisa", Font.PLAIN, fontSize));
+        g2d.setFont(new Font("Purisa", Font.BOLD, fontSize));
         g2d.setComposite( AlphaComposite.getInstance(
-            AlphaComposite.SRC_OVER, 0.7f));
-
+            AlphaComposite.SRC_OVER, 0.9f));
         if(mb.getMeasureCount() != null) {
             offset = offset == null?0:offset;
             g2d.drawString(mb.getMeasureCount() + offset + "", mbCoordinates[0], mbCoordinates[1] + 10);
         }
         return img;
+    }
+
+    static <E> E getRandomSetElement(Set<E> set) {
+        return set.stream()
+            .skip(new Random()
+                .nextInt(set.size()))
+            .findFirst().orElse(null);
     }
 }

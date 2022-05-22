@@ -11,6 +11,7 @@ import com.rs.detector.service.PageService;
 import com.rs.detector.service.ProjectService;
 import com.rs.detector.service.editing.exceptions.PagesMightNotHaveBeenGeneratedException;
 import com.rs.detector.service.measureDetection.MeasureDetectorService;
+import com.rs.detector.service.util.FileUtilService;
 import com.rs.detector.web.api.model.ApiMeasureDetectorResult;
 import com.rs.detector.web.api.model.ApiOrchMeasureBox;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -20,12 +21,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
 import javax.validation.constraints.NotNull;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +40,9 @@ public class EditingService {
 
     private final Logger log = LoggerFactory.getLogger(EditingService.class);
     private final long DEFAULT_OFFSET = 0;
+
+    @Autowired
+    FileUtilService fileUtilService;
 
     @Autowired
     EditingFileManagementService editingFileManagementService;
@@ -112,7 +115,7 @@ public class EditingService {
 
         for(int i = 0; i < allGeneratedAvailableScorePages.size(); i++) {
             logInfo("Working on Page " + (i+1) + " out of " + allGeneratedAvailableScorePages.size(), jobContext);
-            logInfo("Name of the current Page: " + allGeneratedAvailableScorePages.get(i).toString(), jobContext);
+            logInfo("Name of the current Page: " + allGeneratedAvailableScorePages.get(i), jobContext);
             runMeasureDetectionForSinglePage(e, Long.valueOf(allGeneratedAvailableScorePages.get(i)));
         }
         this.recalculatePageOffsets(e);
@@ -308,25 +311,26 @@ public class EditingService {
     /**
      * This method constructs a resulting pdf from the pngs annotated with the measures
      */
-    public void createPdfWithMeasures(Edition e) throws IOException, PagesMightNotHaveBeenGeneratedException {
+    public String createPdfWithMeasures(Edition e) throws IOException, PagesMightNotHaveBeenGeneratedException {
+        String generatedPath = null;
         for(var pn: editingFileManagementService.getAllGeneratedScorePageFilesAsPageNr(e)) {
-            System.out.println(pn);
-            this.pageRepository.findAll().collectList().toProcessor().block().forEach(System.out::println);
             var p= this.searchPageInRepository(e, Long.valueOf(pn));
             if(p.isPresent()) { // We could also do an assert, but this relaxes it a bit
                 BufferedImage img = editingFileManagementService.loadPage(e, pn); // TODO maybe replace with Page
                 scorePageService.addMeasureBoxesToBufferedImage(img, p.get());
                 editingFileManagementService.writeBufferedInEditionTmpFolder(img, e, p.get());
             }
-
-           editingFileManagementService.combineImagesIntoPDF(e);
-            // editingFileManagementService.deleteEditionSubfolder(e, "/tmp");
+           generatedPath = editingFileManagementService.combineImagesIntoPDF(e);
+            // editingFileManagementService.deleteEditionSubfolder(e, "/tmp"); // TODO !!
         }
+        return generatedPath;
     }
 
     public void recalculatePageOffsets(Integer editionID) {
         recalculatePageOffsets((getEdition(editionID,editionService)));
     }
 
-
+    public InputStream getGeneratedPDFFile(Edition e) throws FileNotFoundException {
+        return fileUtilService.getPDF(editingFileManagementService.constructAnnotatedPDFPath(e));
+    }
 }

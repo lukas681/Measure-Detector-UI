@@ -159,6 +159,7 @@ public class EditingFileManagementService {
     }
 
     public BufferedImage loadPage(Edition e, int pageNr) throws PagesMightNotHaveBeenGeneratedException, IOException {
+
         if(!isPageExistent(e, pageNr)) {
             throw new PagesMightNotHaveBeenGeneratedException();
         }
@@ -226,18 +227,6 @@ public class EditingFileManagementService {
         }
     }
 
-    public String constructPathFromEdition(Edition e) {
-        return basePathEditionPath.toString() + File.separator + e.getProjectId() +
-                File.separator + e.getId() + File.separator;
-    }
-
-    public String constructPathForSplittedPagesFromEdition(Edition e) {
-        return constructPathFromEdition(e) + SPLIT_DIR;
-    }
-
-    public String constructPagePath(Edition e, int pageNr) {
-        return constructPathFromEdition(e) + SPLIT_DIR + File.separator +FILE_PREFIX + pageNr + DEFAULT_FILE_FORMAT;
-    }
 
     /**
      * If the splitting was already done, this method returns all the page Names.
@@ -259,10 +248,10 @@ public class EditingFileManagementService {
            .collect(Collectors.toList());
     }
 
-
-    public void combineImagesIntoPDF(Edition e) throws IOException {
-        String basePath = constructPathFromEdition(e) ;
-        combineImagesIntoPDF(basePath + File.separator + OUT_FILENAME, basePath + File.separator + TMP_FOLDER);
+    public String combineImagesIntoPDF(Edition e) throws IOException {
+        String targetPath = constructAnnotatedPDFPath(e);
+        combineImagesIntoPDF(targetPath, constructPathFromEdition(e) + File.separator + TMP_FOLDER);
+        return targetPath;
     }
 
     public void combineImagesIntoPDF(String pdfPath, String... inputDirsAndFiles) throws IOException {
@@ -324,18 +313,36 @@ public class EditingFileManagementService {
         return basePathEditionPath;
     }
 
-    public void writeBufferedInEditionTmpFolder(BufferedImage img, Edition e, Page p) throws IOException {
+    public String writeBufferedInEditionTmpFolder(BufferedImage img, Edition e, Page p) throws IOException {
         String path =
             constructPathFromEdition(e) + File.separator + TMP_FOLDER + File.separator + p.getImgFileReference();
         File f = new File(path);
         f.getParentFile().mkdirs(); // should create the subdirectory related to this
-        System.out.println(f);
 
         ImageIO.write(img, DEFAULT_FILE_FORMAT_ImageIO, f);
+        return path;
     }
 
     public void deleteEditionSubfolder(Edition e, String subdir) throws IOException {
         Path p = Path.of(constructPathFromEdition(e) + File.separator + subdir);
         traverseDelete(p);
     }
+
+    public String constructPathFromEdition(Edition e) {
+        return basePathEditionPath.toString() + File.separator + e.getProjectId() +
+            File.separator + e.getId() + File.separator;
+    }
+
+    public String constructPathForSplittedPagesFromEdition(Edition e) {
+        return constructPathFromEdition(e) + SPLIT_DIR;
+    }
+
+    public String constructPagePath(Edition e, int pageNr) {
+        return constructPathFromEdition(e) + SPLIT_DIR + File.separator +FILE_PREFIX + pageNr + DEFAULT_FILE_FORMAT;
+    }
+
+    public String constructAnnotatedPDFPath(Edition e) {
+        return constructPathFromEdition(e) + File.separator + OUT_FILENAME;
+    }
+
 }
