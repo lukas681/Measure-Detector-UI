@@ -320,9 +320,9 @@ public class EditingService {
                 scorePageService.addMeasureBoxesToBufferedImage(img, p.get());
                 editingFileManagementService.writeBufferedInEditionTmpFolder(img, e, p.get());
             }
-           generatedPath = editingFileManagementService.combineImagesIntoPDF(e);
             // editingFileManagementService.deleteEditionSubfolder(e, "/tmp"); // TODO !!
         }
+        generatedPath = editingFileManagementService.combineImagesIntoPDF(e);
         return generatedPath;
     }
 

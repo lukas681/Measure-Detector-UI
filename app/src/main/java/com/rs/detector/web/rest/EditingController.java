@@ -64,9 +64,7 @@ public class EditingController implements EditionApiDelegate {
             return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
+        } catch (FileNotFoundException | MalformedURLException e) {
             e.printStackTrace();
         }
         return (ResponseEntity<Resource>) ResponseEntity.badRequest();
@@ -207,7 +205,6 @@ public class EditingController implements EditionApiDelegate {
         if(edition == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
         try {
             editingService.createPdfWithMeasures(edition);
              file = new InputStreamResource(editingService.getGeneratedPDFFile(edition));

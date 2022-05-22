@@ -257,10 +257,13 @@ public class EditingFileManagementService {
     public void combineImagesIntoPDF(String pdfPath, String... inputDirsAndFiles) throws IOException {
         try (PDDocument doc = new PDDocument()) {
             for (String input : inputDirsAndFiles) {
-                Files.find(Paths.get(input),
+                Files.find(Paths.get(input), // TODO This is very ugly.
                         Integer.MAX_VALUE,
                         (path, basicFileAttributes) -> Files.isRegularFile(path))
-                    .forEachOrdered(path -> addImageAsNewPage(doc, path.toString()));
+                    .sorted(Comparator.comparingInt(o -> Integer.parseInt(o.getFileName()
+                            .toString().replace("_", "").replace(".png", "")))
+                        )
+                    .forEach(path -> addImageAsNewPage(doc, path.toString()));
             }
             doc.save(pdfPath);
         }
