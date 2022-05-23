@@ -110,6 +110,7 @@ public class EditingService {
      * @throws IOException
      */
     public void runFullMeasureDetectionOverEdition(@NotNull Edition e, JobContext jobContext) throws IOException {
+
         // TODO Delete Everything if measure Detection has been run
         var allGeneratedAvailableScorePages = editingFileManagementService.getAllGeneratedScorePageFilesAsPageNr(e);
 

@@ -2,6 +2,7 @@ package com.rs.detector.web.rest;
 
 import com.fasterxml.jackson.core.Base64Variants;
 import com.fasterxml.jackson.databind.node.TextNode;
+import com.github.f4b6a3.uuid.UuidCreator;
 import com.rs.detector.domain.Edition;
 import com.rs.detector.domain.enumeration.EditionType;
 import com.rs.detector.service.EditionService;
@@ -12,14 +13,11 @@ import com.rs.detector.web.api.EditionApiDelegate;
 import com.rs.detector.web.api.model.ApiOrchEditionWithFileAsString;
 import com.rs.detector.web.api.model.ApiOrchMeasureBox;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.jobrunr.jobs.JobDetails;
 import org.jobrunr.jobs.annotations.Job;
 import org.jobrunr.jobs.context.JobContext;
 import org.jobrunr.scheduling.BackgroundJob;
-import org.jobrunr.scheduling.JobRequestScheduler;
-import org.jobrunr.scheduling.JobScheduler;
+import org.jobrunr.storage.JobNotFoundException;
 import org.jobrunr.storage.StorageProvider;
-import org.jobrunr.storage.StorageProviderUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +48,6 @@ public class EditingController implements EditionApiDelegate {
     StorageProvider storageProvider;
 
     private final Logger log = LoggerFactory.getLogger(EditingController.class);
-
 
     @Override
     public ResponseEntity<List<ApiOrchMeasureBox>> getMeasureBoxesByEditionIdAndPageNr(Integer editionID, Integer pageNr) {
@@ -84,22 +81,23 @@ public class EditingController implements EditionApiDelegate {
 
     @Override
     public ResponseEntity<Void> addEdition(ApiOrchEditionWithFileAsString apiOrchEditionWithFileAsString)  {
+        UUID jobUUID = UuidCreator.getNameBasedSha1(apiOrchEditionWithFileAsString.getTitle());
+
         if(apiOrchEditionWithFileAsString.getPdfFile() == null) {
             return ResponseEntity.badRequest().build();
         }
-        BackgroundJob.enqueue(UUID.randomUUID(), () ->
+        BackgroundJob.enqueue(jobUUID, () ->
                 process(apiOrchEditionWithFileAsString, JobContext.Null));
         return ResponseEntity.ok().build();
     }
 
     @Override
     public ResponseEntity<String> runFullMeasureDetectionByEditionId(Integer id) {
-        if(id != null) {
-            BackgroundJob.enqueue(UUID.randomUUID(), () -> processFullDetection(id, JobContext.Null));
-        }
-       // storageProvider.getJobStats().
+        // A measure detection should only be started once. Triggering it multiple times should be ignored.
+        // An existing job will not throw an exception, but just continues the old one.
+       UUID jobUUID = UuidCreator.getNameBasedSha1(id.toString());
+        BackgroundJob.enqueue(jobUUID, () -> processFullDetection(id, JobContext.Null));
         return ResponseEntity.ok("The Job was successfully scheduled and now being processed in the background.");
-//        return EditionApiDelegate.super.runFullMeasureDetectionByEditionId(id);
     }
 
     public void processFullDetection(Integer id, JobContext jobContext) {

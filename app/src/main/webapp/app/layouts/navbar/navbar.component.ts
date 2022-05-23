@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { interval} from 'rxjs';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -74,15 +74,15 @@ export class NavbarComponent implements OnInit {
   }
 
   scheduleJobStatFetcher(): void {
-    const source = interval(5000);
-    source.subscribe( () => {
+    interval(5000)
+      .subscribe( () => {
         this.navbarService.getJobStats()
           .subscribe(res => {
             if(res.body){
               this.jobStats = res.body;
             }
           })
-    }
+      }
     )
   }
 }
