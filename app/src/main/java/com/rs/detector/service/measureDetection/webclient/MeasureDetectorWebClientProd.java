@@ -43,7 +43,7 @@ public class MeasureDetectorWebClientProd implements MeasureDetectorWebClient {
         HttpClient httpClient =
             HttpClient.create()
                 .wiretap(this.getClass().getCanonicalName(),
-                    LogLevel.TRACE, AdvancedByteBufFormat.TEXTUAL) // TODO: Maybe adjust the loglevel a bit ...
+                    LogLevel.INFO, AdvancedByteBufFormat.TEXTUAL)
             .compress(true);
         ReactorClientHttpConnector conn = new ReactorClientHttpConnector(httpClient.compress(true));
 

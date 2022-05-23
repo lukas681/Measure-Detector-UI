@@ -127,7 +127,10 @@ public class EditingService {
         var p =
             searchPageInRepository(e, pageNr);
         if(p.isPresent()) {
-            scorePageService.updatePageMeasureBoxesWithMDResult(p.get(), measureDetectorResult).collectList().toProcessor().block();
+            scorePageService.updatePageMeasureBoxesWithMDResult(p.get(), measureDetectorResult)
+                .collectList()
+                .toProcessor()
+                .block();
         } else {
             log.error("The desired page " + pageNr +" could not be found. Maybe it has not been created so far?!");
         }

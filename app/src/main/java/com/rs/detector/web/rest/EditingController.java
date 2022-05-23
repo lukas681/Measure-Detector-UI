@@ -16,7 +16,6 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.jobrunr.jobs.annotations.Job;
 import org.jobrunr.jobs.context.JobContext;
 import org.jobrunr.scheduling.BackgroundJob;
-import org.jobrunr.storage.JobNotFoundException;
 import org.jobrunr.storage.StorageProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -189,7 +188,6 @@ public class EditingController implements EditionApiDelegate {
         editingService.saveMeasureBoxesbyEditionIdAndPageNr(editionID, pageNr, apiOrchMeasureBox);
         editingService.recalculatePageOffsets(editionID);
         return ResponseEntity.ok().build();
-        // TODO Catch errors.
     }
 
 

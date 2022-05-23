@@ -34,19 +34,24 @@
 
   <div class="container-fluid">
     <div class="row">
-      <div class="col-sm-4">
+      <div class="col-sm-3">
         <div class="align-self-center mx-auto text-center">
         <button type="button" (click)="previousPage()" class="btn btn-primary">Previous</button>
         </div>
         </div>
-      <div class="col-sm-4">
+      <div class="col-sm-3">
         <div class="align-self-center mx-auto text-center">
         <button type="button" (click)="save()" class="btn btn-info">Save</button>
         </div>
       </div>
-      <div class="col-sm-4">
+      <div class="col-sm-3">
         <div class="align-self-center mx-auto text-center">
           <button type="button" (click)="nextPage()" class="btn btn-primary">Next</button>
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <div class="align-self-center mx-auto text-center">
+          <button type="button" (click)="recalculateCurrentMeasures()" class="btn btn-primary">Reorder Measures</button>
         </div>
       </div>
     </div>

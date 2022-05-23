@@ -100,8 +100,6 @@ export class EditingComponent implements OnInit {
       this.setAnnotationsWithServerData();
     }
   }
-
-
   initializeAnnotorious(): void {
     // Note: Although methods like clearAnnotations() and setAnnotations() exist, we have to recreate the Annotorious Instance
     // to prevent internal conflicts with the Annotations
@@ -147,11 +145,30 @@ export class EditingComponent implements OnInit {
       const deletedMeasureNumber:number = selection.body[0].value;
       this.annotationsData = this.anno.getAnnotations();
       // this.currentMeasureNo--; // Maybe this makes sense, but deleting something in between might be unlogical
-      // TODO decrease all annotations that come after this
       this.updateFollowingMeasures(deletedMeasureNumber, -1)
       this.anno.setAnnotations(this.annotationsData);
       this.status = Status.MODIFIED;
     });
+  }
+
+  recalculateCurrentMeasures(): void {
+    console.warn("Recalc!")
+    let convertedBack: ApiOrchMeasureBox[] = this.convertBack()
+    convertedBack = convertedBack.sort((a,b ) => this.boxComparator(a,b));
+    console.warn(this.convertBack())
+    let i = 0;
+    while(convertedBack[i]) { // DONO HOW TO ACCESS BY REFERENCE ...
+      console.warn(String(convertedBack[i].lry) + " " + String(convertedBack[i].lrx) + " " + String(convertedBack[i].uly))
+      const element:ApiOrchMeasureBox = convertedBack[i]
+      element.measureCount = i;
+      convertedBack[i] = element;
+      i++;
+    }
+    this.annotationsData = this.makeW3CConform(convertedBack);
+    this.anno.setAnnotations(this.annotationsData);
+    console.warn(this.annotationsData)
+    this.status = Status.MODIFIED
+    this.currentMeasureNo = convertedBack.length
   }
 
   updateInInterval(newMeasureNo: number, oldMeasureNo: number, updated:any): void {
@@ -263,12 +280,20 @@ export class EditingComponent implements OnInit {
     const measureBoxes = []
     for (const annotation of this.annotationsData)  {
       const restoredValues = this.restoreValues(annotation);
+
+      // Probably the uglies code I have ever written, but it fixes a conversion bug that occures in the push addition with 0
+      // Can't explain this typescript behaviour.
+      for(let i = 0; i < 4; i++) {
+        if(restoredValues[i] === 0) {
+          restoredValues[i] = 1;
+        }
+      }
       measureBoxes.push(
         new ApiOrchMeasureBoxImpl(
-          undefined,
+          restoredValues[4],
           restoredValues[0], // ulx
-          restoredValues[2] + restoredValues[0], // lry
-          restoredValues[3] + restoredValues[1], // lrx
+          (restoredValues[2] + restoredValues[0]), // lry
+              (restoredValues[3] + restoredValues[1]), // lrx
           restoredValues[1], // uly
           annotation.body[0].value - this.offset - 1,
           "Edited"
@@ -287,6 +312,7 @@ export class EditingComponent implements OnInit {
       Number(splittedRectangleString[1]),
       Number(splittedRectangleString[2]),
       Number(splittedRectangleString[3]),
+      Number(annotation.id)
     ]
   }
 
@@ -333,26 +359,33 @@ export class EditingComponent implements OnInit {
     }
   }
 
-//   protected boxComparator(self: ApiOrchMeasureBox, other: ApiOrchMeasureBox): number {
 
-   /* if self['left'] >= other['left'] and self['top'] >= other['top']:
-    return +1;
-
-    elif self['left'] < other['left'] and self['top'] < other['top']:
-    return -1  # other after self
-  else:
-    overlap_y = min(self['bottom'] - other['top'], other['bottom'] - self['top']) \
-                    / min(self['bottom'] - self['top'], other['bottom'] - other['top'])
-    if overlap_y >= 0.5:
-    if self['left'] < other['left']:
-    return -1
-  else:
-    return 1
-  else:
-    if self['left'] < other['left']:
-    return 1
-  else:
-    return -1 */
+  private boxComparator(self: ApiOrchMeasureBox, other: ApiOrchMeasureBox): number {
+    if(self.ulx && self.uly && other.uly && other.ulx && self.lry && other.lry) {
+      if (self.ulx >= other.ulx && self.uly >= other.uly) {
+        return 1;
+      } else if (self.ulx < other.ulx && self.uly < other.uly) {
+        return -1
+      } else {
+        const overlap_y = Math.min(self.lry - other.uly, other.lry - self.uly)
+          / Math.min(self.lry - self.uly, other.lry - other.uly)
+        if(overlap_y >= 0.5) {
+          if(self.ulx < other.ulx) {
+            return -1;
+          } else {
+            return 1;
+          }
+        } else {
+          if(self.ulx < other.ulx) {
+            return 1;
+          } else {
+            return -1;
+          }
+        }
+      }
+    }
+    return 0;
+  }
 }
 
 

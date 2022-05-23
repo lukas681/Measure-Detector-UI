@@ -164,7 +164,7 @@ public class ScorePageService {
             .block();
         for(var mb: measureBoxes) {
             log.debug("Adding MeasureBox to image: " + mb.getMeasureCount());
-            img = addSingleMeasureBoxToImage(img, mb, p.getMeasureNumberOffset());
+            img = addSingleMeasureBoxToImage(img, mb, p.getMeasureNumberOffset() + 1); // TODO Here offset
         }
         return img;
     }
