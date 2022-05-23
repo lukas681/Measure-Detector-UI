@@ -6,6 +6,7 @@ import com.rs.detector.domain.enumeration.EditionType;
 import com.rs.detector.service.editing.exceptions.PagesMightNotHaveBeenGeneratedException;
 import com.rs.detector.web.api.model.ApiOrchMeasureBox;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.jobrunr.configuration.JobRunr;
 import org.jobrunr.jobs.context.JobContext;
 import org.jobrunr.scheduling.BackgroundJob;
 import org.junit.jupiter.api.BeforeEach;
@@ -120,6 +121,7 @@ class EditingServiceTest extends SimpleDataInitialization {
         scorePageService.generatePageObjectIfNotExistent(testEdition).blockLast();
 
         editingService.runFullMeasureDetectionOverEdition(testEdition, null);
+
 
         var res = pageRepository.findAllByEditionId(testEdition.getId()).collectList().block();
 

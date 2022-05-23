@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { interval, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { SessionStorageService } from 'ngx-webstorage';
@@ -9,6 +10,8 @@ import { Account } from 'app/core/auth/account.model';
 import { AccountService } from 'app/core/auth/account.service';
 import { LoginService } from 'app/login/login.service';
 import { ProfileService } from 'app/layouts/profiles/profile.service';
+import {ApiOrchJobStats} from "../../shared/model/openapi/model/ApiOrchJobStats";
+import {NavbarService} from "./navbar.service";
 
 @Component({
   selector: 'jhi-navbar',
@@ -22,8 +25,10 @@ export class NavbarComponent implements OnInit {
   openAPIEnabled?: boolean;
   version = '';
   account: Account | null = null;
+  jobStats: ApiOrchJobStats | undefined;
 
   constructor(
+    private navbarService: NavbarService,
     private loginService: LoginService,
     private translateService: TranslateService,
     private sessionStorageService: SessionStorageService,
@@ -42,6 +47,7 @@ export class NavbarComponent implements OnInit {
       this.openAPIEnabled = profileInfo.openAPIEnabled;
     });
     this.accountService.getAuthenticationState().subscribe(account => (this.account = account));
+    this.scheduleJobStatFetcher()
   }
 
   changeLanguage(languageKey: string): void {
@@ -65,5 +71,18 @@ export class NavbarComponent implements OnInit {
 
   toggleNavbar(): void {
     this.isNavbarCollapsed = !this.isNavbarCollapsed;
+  }
+
+  scheduleJobStatFetcher(): void {
+    const source = interval(5000);
+    source.subscribe( () => {
+        this.navbarService.getJobStats()
+          .subscribe(res => {
+            if(res.body){
+              this.jobStats = res.body;
+            }
+          })
+    }
+    )
   }
 }

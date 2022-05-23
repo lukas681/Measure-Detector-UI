@@ -281,7 +281,7 @@ export class EditingComponent implements OnInit {
     return measureBoxes;
   }
 
-  private restoreValues(annotation:any):number[] {
+  private restoreValues(annotation:any): number[] {
     const simplifiedRectangleString = annotation.target.selector.value;
     const splittedRectangleString:string[] = simplifiedRectangleString.replace("xywh=pixel:","").split(",");
 
@@ -335,6 +335,27 @@ export class EditingComponent implements OnInit {
       }
     }
   }
+
+//   protected boxComparator(self: ApiOrchMeasureBox, other: ApiOrchMeasureBox): number {
+
+   /* if self['left'] >= other['left'] and self['top'] >= other['top']:
+    return +1;
+
+    elif self['left'] < other['left'] and self['top'] < other['top']:
+    return -1  # other after self
+  else:
+    overlap_y = min(self['bottom'] - other['top'], other['bottom'] - self['top']) \
+                    / min(self['bottom'] - self['top'], other['bottom'] - other['top'])
+    if overlap_y >= 0.5:
+    if self['left'] < other['left']:
+    return -1
+  else:
+    return 1
+  else:
+    if self['left'] < other['left']:
+    return 1
+  else:
+    return -1 */
 }
 
 

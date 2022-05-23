@@ -15,6 +15,18 @@ paths:
           description: Successful response
 
 
+  /system/getJobStats:
+    get:
+      summary: Returns
+      operationId: getJobStats
+      responses:
+        200:
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ApiOrchJobStats'
+
   /edition/{editionID}/saveMeasureBoxes/{pageNr}:
     post:
       summary: Saves a sdet of possibly modified Measure Boxes back to the server. The reverse operation of [GET] getMeasureBoxes
@@ -284,6 +296,28 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/ApiOrchMeasureBox'
+    ApiOrchJobStats:
+      type: object
+      properties:
+        total:
+          type: integer
+          format: int64
+        scheduled:
+          type: integer
+          format: int64
+        enqueued:
+          type: integer
+          format: int64
+        processing:
+          type: integer
+          format: int64
+        failed:
+          type: integer
+          format: int64
+        succeeded:
+          type: integer
+          format: int64
+
     ApiOrchMeasureBox:
       type: object
       properties:

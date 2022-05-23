@@ -8,14 +8,18 @@ import com.rs.detector.service.EditionService;
 import com.rs.detector.service.editing.EditingService;
 import com.rs.detector.service.editing.ScorePageService;
 import com.rs.detector.service.editing.exceptions.PagesMightNotHaveBeenGeneratedException;
-import com.rs.detector.service.util.FileUtilService;
 import com.rs.detector.web.api.EditionApiDelegate;
 import com.rs.detector.web.api.model.ApiOrchEditionWithFileAsString;
 import com.rs.detector.web.api.model.ApiOrchMeasureBox;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.jobrunr.jobs.JobDetails;
 import org.jobrunr.jobs.annotations.Job;
 import org.jobrunr.jobs.context.JobContext;
 import org.jobrunr.scheduling.BackgroundJob;
+import org.jobrunr.scheduling.JobRequestScheduler;
+import org.jobrunr.scheduling.JobScheduler;
+import org.jobrunr.storage.StorageProvider;
+import org.jobrunr.storage.StorageProviderUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +46,8 @@ public class EditingController implements EditionApiDelegate {
     @Autowired
     EditingService editingService;
 
+    @Autowired
+    StorageProvider storageProvider;
 
     private final Logger log = LoggerFactory.getLogger(EditingController.class);
 
@@ -91,6 +97,7 @@ public class EditingController implements EditionApiDelegate {
         if(id != null) {
             BackgroundJob.enqueue(UUID.randomUUID(), () -> processFullDetection(id, JobContext.Null));
         }
+       // storageProvider.getJobStats().
         return ResponseEntity.ok("The Job was successfully scheduled and now being processed in the background.");
 //        return EditionApiDelegate.super.runFullMeasureDetectionByEditionId(id);
     }

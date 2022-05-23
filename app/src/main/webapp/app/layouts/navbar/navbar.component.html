@@ -17,7 +17,50 @@
     <fa-icon icon="bars"></fa-icon>
   </a>
   <div class="navbar-collapse collapse" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed" [ngSwitch]="account !== null">
+
     <ul class="navbar-nav ml-auto">
+      <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <ng-template #popContent>
+          <table class="table table-striped">
+            <thead>
+            <tr>
+              <th>Key</th>
+              <th>Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>Total</td>
+              <td>{{jobStats!.total}}</td>
+            </tr>
+            <tr>
+              <td>Succeeded</td>
+              <td>{{jobStats!.succeeded}}</td>
+            </tr>
+            <tr>
+              <td>Failed</td>
+              <td>{{jobStats!.failed}}</td>
+            </tr>
+            <tr>
+              <td>Processing</td>
+              <td>{{jobStats!.processing}}</td>
+            </tr>
+            <tr>
+              <td>Scheduled</td>
+              <td>{{jobStats!.scheduled}}</td>
+            </tr>
+            <tr>
+              <td>Enqueued</td>
+              <td>{{jobStats!.enqueued}}</td>
+            </tr>
+            </tbody>
+        </table>
+        </ng-template>
+        <button type="button" class="btn btn-outline-secondary me-2" placement="bottom"
+                [ngbPopover]="popContent" popoverTitle="Job Queue">
+          Jobs
+        </button>
+      </li>
       <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
         <a class="nav-link" routerLink="myprojects" (click)="collapseNavbar()">
           <span>
