@@ -17,8 +17,6 @@ enum Status {
   SAVED = "Saved",
   MODIFIED = "Modified"
 }
-// TODO Improvement: Add array with all used numbers and jump to unused ones.
-
 @Component({
   selector: 'jhi-edition',
   templateUrl: './editing.component.html',
@@ -123,6 +121,7 @@ export class EditingComponent implements OnInit {
       await this.anno.saveSelected();
       this.annotationsData = this.anno.getAnnotations();
       this.status = Status.MODIFIED;
+      this.newMeasureValue = this.currentMeasureNo + 1
     });
 
     this.anno.on('updateAnnotation', (updated:any, prev:any) => {
@@ -148,14 +147,12 @@ export class EditingComponent implements OnInit {
       this.updateFollowingMeasures(deletedMeasureNumber, -1)
       this.anno.setAnnotations(this.annotationsData);
       this.status = Status.MODIFIED;
-    });
+   });
   }
 
   recalculateCurrentMeasures(): void {
-    console.warn("Recalc!")
     let convertedBack: ApiOrchMeasureBox[] = this.convertBack()
     convertedBack = convertedBack.sort((a,b ) => this.boxComparator(a,b));
-    console.warn(this.convertBack())
     let i = 0;
     while(convertedBack[i]) { // DONO HOW TO ACCESS BY REFERENCE ...
       console.warn(String(convertedBack[i].lry) + " " + String(convertedBack[i].lrx) + " " + String(convertedBack[i].uly))
@@ -166,9 +163,9 @@ export class EditingComponent implements OnInit {
     }
     this.annotationsData = this.makeW3CConform(convertedBack);
     this.anno.setAnnotations(this.annotationsData);
-    console.warn(this.annotationsData)
     this.status = Status.MODIFIED
-    this.currentMeasureNo = convertedBack.length
+    this.currentMeasureNo = convertedBack.length;
+    this.newMeasureValue = this.currentMeasureNo + 1
   }
 
   updateInInterval(newMeasureNo: number, oldMeasureNo: number, updated:any): void {
