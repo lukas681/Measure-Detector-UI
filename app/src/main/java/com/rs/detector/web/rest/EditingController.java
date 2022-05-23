@@ -120,7 +120,7 @@ public class EditingController implements EditionApiDelegate {
      * @throws IOException
      */
     @Job(name = "Uploading a new Edition.")
-    public void process(ApiOrchEditionWithFileAsString apiOrchEditionWithFileAsString, JobContext jobContext) throws IOException {
+    public void process(ApiOrchEditionWithFileAsString apiOrchEditionWithFileAsString, JobContext jobContext) throws IOException, PagesMightNotHaveBeenGeneratedException {
         log("Starting. objects to be processed", jobContext);
         var progressBar = jobContext.progressBar(100); // Let's say, we have 100% ...
         var transformedText = parseDataFromBase64Encoded(apiOrchEditionWithFileAsString.getPdfFile()); // TODO switch
@@ -135,6 +135,7 @@ public class EditingController implements EditionApiDelegate {
             e.printStackTrace();
         }
         editingService.extractImagesFromPDF(parsedEdition, jobContext);
+        scorePageService.generatePageObjectIfNotExistent(parsedEdition);
         progressBar.setValue(100); // Setting finished
         log("Finished Job", jobContext);
     }

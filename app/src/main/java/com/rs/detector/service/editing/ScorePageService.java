@@ -58,7 +58,6 @@ public class ScorePageService {
             throw new PagesMightNotHaveBeenGeneratedException();
         }
         // Fetch, if there already have been some pages generated
-        // TODO Just remove all existing pages and replace the
         var pages = pageRepository
             .findAllByEditionId(e.getId())
             .collect(Collectors.toList()).share()

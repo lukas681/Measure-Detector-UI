@@ -12,7 +12,7 @@
       "updated": "Project aktualisiert mit ID {{ param }}",
       "deleted": "Project gelöscht mit ID {{ param }}",
       "delete": {
-        "question": "Soll Project {{ id }} wirklich dauerhaft gelöscht werden?"
+        "question": "Soll Project {{ id }} wirklich dauerhaft gelöscht werden? Bitte zuerst alle Editionen, die zu diesem Projekt gehöre entfernen!"
       },
       "detail": {
         "title": "Project"

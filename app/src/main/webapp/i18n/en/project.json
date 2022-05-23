@@ -12,7 +12,7 @@
       "updated": "A Project is updated with identifier {{ param }}",
       "deleted": "A Project is deleted with identifier {{ param }}",
       "delete": {
-        "question": "Are you sure you want to delete Project {{ id }}?"
+        "question": "Are you sure you want to delete Project {{ id }}? Please make sure to delete all underlying editions first"
       },
       "detail": {
         "title": "Project"
