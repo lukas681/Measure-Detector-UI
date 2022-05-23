@@ -28,7 +28,7 @@
     <span jhiTranslate="measureDetectorApp.edition.home.notFound">No editions found</span>
   </div>
 
-  <div class="table-responsive" id="entities" *ngIf="editions && editions.length > 0">
+  <div  class="table-responsive" id="entities" *ngIf="editions && editions.length > 0">
     <table class="table table-striped" aria-describedby="page-heading">
       <thead>
         <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="reset()">
@@ -88,31 +88,32 @@
                 <span class="d-none d-md-inline" jhiTranslate="entity.action.triggerDetection">EditMode</span>
               </button>
             </div>
-              <div class="btn-group">
-              <button
-                type="submit"
-                [routerLink]="['/edition-detail', edition.id, 'view']"
-                class="btn btn-info btn-sm"
-                data-cy="entityDetailsButton"
-              >
-                <fa-icon icon="eye"></fa-icon>
-                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+            <div ngbDropdown container="body" class="d-inline-block">
+              <button type="button" class="btn btn-outline-primary" id="dropdown1" ngbDropdownToggle>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.moreOptions">More Options</span>
               </button>
+              <div ngbDropdownMenu aria-labelledby="options">
 
-              <button
-                type="submit"
-                [routerLink]="['/edition-detail', edition.id, 'edit']"
-                class="btn btn-primary btn-sm"
-                data-cy="entityEditButton"
-              >
+                <button ngbDropdownItem type="submit" (click)="downloadAnnotatedPDF(edition.id)" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                  <fa-icon icon="eye"></fa-icon>
+                  <span class="d-none d-md-inline" jhiTranslate="entity.action.downloadPDF">Download PDF</span>
+                </button>
+
+                <button ngbDropdownItem type="submit" [routerLink]="['/edition-detail', edition.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                  <fa-icon icon="eye"></fa-icon>
+                  <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                </button>
+
+               <button ngbDropdownItem type="submit" [routerLink]="['/edition-detail', edition.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
                 <fa-icon icon="pencil-alt"></fa-icon>
                 <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
-              </button>
+                </button>
 
-              <button type="submit" (click)="delete(edition)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
-                <fa-icon icon="times"></fa-icon>
-                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
-              </button>
+                <button ngbDropdownItem type="submit" (click)="delete(edition)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                  <fa-icon icon="times"></fa-icon>
+                  <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                </button>
+              </div>
             </div>
           </td>
         </tr>

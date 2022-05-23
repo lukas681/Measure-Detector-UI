@@ -106,7 +106,9 @@
       "view": "Details",
       "project-editions": "Fortfahren",
       "triggerDetection": "Starte Takterkennung",
-      "openEditMode": "Öffne Editor"
+      "openEditMode": "Öffne Editor",
+      "moreOptions": "Mehr Optionen",
+      "downloadPDF": "PDF Download"
     },
     "detail": {
       "field": "Feld",

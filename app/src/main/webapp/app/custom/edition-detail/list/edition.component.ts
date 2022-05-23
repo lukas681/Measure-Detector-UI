@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
+import { saveAs } from 'file-saver'
 
 import { IEdition } from '../edition-detail.model';
 
@@ -101,8 +102,19 @@ export class EditionComponent implements OnInit {
     if(id){
       this.editionService.triggerMeasureDetection(id)
         .subscribe(x=> {
-          console.warn(x)
+          console.warn("Finished")
         });
+    }
+  }
+
+  downloadAnnotatedPDF(editionID: number | undefined): void {
+    if(editionID) {
+      this.editionService.downloadPDF(editionID)
+        .subscribe(
+          blob => {
+            saveAs(blob, 'annotated.pdf')
+          }
+        );
     }
   }
 

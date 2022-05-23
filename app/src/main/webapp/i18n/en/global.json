@@ -105,7 +105,9 @@
       "view": "View",
       "project-editions": "Proceed",
       "triggerDetection": "Start Detection",
-      "openEditMode": "Open Editor"
+      "openEditMode": "Open Editor",
+      "moreOptions": "More Options",
+      "downloadPDF": "PDF Download"
     },
     "detail": {
       "field": "Field",

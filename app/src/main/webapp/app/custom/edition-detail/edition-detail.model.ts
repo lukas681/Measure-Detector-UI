@@ -45,7 +45,6 @@ export class EditionWithFile implements ApiOrchEditionWithFile {
 ) {}
 }
 
-
 export function getEditionIdentifier(edition: IEdition): number | undefined {
   return edition.id;
 }

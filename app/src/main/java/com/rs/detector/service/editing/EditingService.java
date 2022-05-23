@@ -320,11 +320,26 @@ public class EditingService {
                 scorePageService.addMeasureBoxesToBufferedImage(img, p.get());
                 editingFileManagementService.writeBufferedInEditionTmpFolder(img, e, p.get());
             }
-            // editingFileManagementService.deleteEditionSubfolder(e, "/tmp"); // TODO !!
         }
         generatedPath = editingFileManagementService.combineImagesIntoPDF(e);
+        editingFileManagementService.deleteEditionSubfolder(e, "/tmp");
         return generatedPath;
     }
+
+   /** public String createPDFWithoutMeasures(Edition e) {
+    String generatedPath = null;
+        for(var pn: editingFileManagementService.getAllGeneratedScorePageFilesAsPageNr(e)) {
+        var p= this.searchPageInRepository(e, Long.valueOf(pn));
+        if(p.isPresent()) { // We could also do an assert, but this relaxes it a bit
+            BufferedImage img = editingFileManagementService.loadPage(e, pn); // TODO maybe replace with Page
+            scorePageService.addMeasureBoxesToBufferedImage(img, p.get());
+            editingFileManagementService.writeBufferedInEditionTmpFolder(img, e, p.get());
+        }
+        // editingFileManagementService.deleteEditionSubfolder(e, "/tmp"); // TODO !!
+    }
+    generatedPath = editingFileManagementService.combineImagesIntoPDF(e);
+        return generatedPath;
+    }*/
 
     public void recalculatePageOffsets(Integer editionID) {
         recalculatePageOffsets((getEdition(editionID,editionService)));

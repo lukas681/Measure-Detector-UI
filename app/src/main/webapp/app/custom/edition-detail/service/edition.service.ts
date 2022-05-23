@@ -19,13 +19,12 @@ export class EditionService {
   protected resourceUrlEditionsByProject = this.applicationConfigService.getEndpointFor('api/editionsByProject');
   protected resourceUrlAddEditionWithFile = this.applicationConfigService.getEndpointFor('api/edition/add');
   protected resourceUrlTriggerDetection = this.applicationConfigService.getEndpointFor('api/edition/runMeasureDetection');
+  protected resourcePDFDownload = this.applicationConfigService.getEndpointFor('api/edition/');
 
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
   create(edition: IEdition): Observable<EntityResponseType> {
-
     const copy = this.convertDateFromClient(edition);
-    console.warn(edition)
 
     return this.http
       .post<IEdition>(this.resourceUrlAddEditionWithFile, copy, { observe: 'response' })
@@ -90,6 +89,11 @@ export class EditionService {
       return [...editionsToAdd, ...editionCollection];
     }
     return editionCollection;
+  }
+
+  downloadPDF(editionID: number): Observable<Blob> {
+    return this.http.get(`${this.resourcePDFDownload}/${editionID}/getFullPDF`, { responseType: 'blob' }
+    );
   }
 
   protected convertDateFromClient(edition: IEdition): IEdition {
