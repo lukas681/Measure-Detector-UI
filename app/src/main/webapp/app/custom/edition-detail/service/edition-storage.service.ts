@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import {IEdition} from "../edition-detail.model";
 
 @Injectable({ providedIn: 'root' })
 export class StorageService {

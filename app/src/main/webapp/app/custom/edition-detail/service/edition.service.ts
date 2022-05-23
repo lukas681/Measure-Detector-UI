@@ -7,7 +7,7 @@ import * as dayjs from 'dayjs';
 import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
-import {IEdition, getEditionIdentifier, EditionWithFile} from '../edition-detail.model';
+import {IEdition, getEditionIdentifier} from '../edition-detail.model';
 
 export type EntityResponseType = HttpResponse<IEdition>;
 export type EntityArrayResponseType = HttpResponse<IEdition[]>;

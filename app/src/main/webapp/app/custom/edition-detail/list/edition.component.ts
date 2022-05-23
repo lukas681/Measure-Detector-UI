@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpHeaders, HttpResponse, HttpEventType } from '@angular/common/http';
+import { HttpHeaders} from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
 import { saveAs } from 'file-saver'
-import { tap, last } from 'rxjs/operators'
 
 import { IEdition } from '../edition-detail.model';
 
@@ -102,7 +101,7 @@ export class EditionComponent implements OnInit {
   triggerDetection(id: number | undefined): void {
     if(id){
       this.editionService.triggerMeasureDetection(id)
-        .subscribe(x=> {
+        .subscribe(() => {
           console.warn("Finished")
         });
     }
@@ -117,11 +116,6 @@ export class EditionComponent implements OnInit {
             this.isLoading = false;
             saveAs(blob, String(edition.pDFFileName))
           },
-          err => {
-            // An error occured
-            this.isLoading = false;
-          }
-
         );
     }
   }

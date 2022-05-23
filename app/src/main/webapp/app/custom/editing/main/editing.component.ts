@@ -1,20 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
 
 import {ApiOrchMeasureBoxImpl, IEdition} from '../editing.model';
 
-import { ASC, DESC, ITEMS_PER_PAGE } from 'app/config/pagination.constants';
+import { ITEMS_PER_PAGE } from 'app/config/pagination.constants';
 import { EditionService } from '../service/edition.service';
 import { ParseLinks } from 'app/core/util/parse-links.service';
 
 import * as OpenSeadragon from 'openseadragon';
 import * as OSDAnnotorious from '@recogito/annotorious-openseadragon';
 import ShapeLabelsFormatter from '@recogito/annotorious-shape-labels';
-import {TileSource} from "openseadragon";
 import {StorageService} from "../../edition-detail/service/edition-storage.service";
-import {IMeasureBox} from "../../../entities/measure-box/measure-box.model";
 import {ApiOrchMeasureBox} from "../../../shared/model/openapi/model/apiOrchMeasureBox";
 enum Status {
   SAVED = "Saved",
@@ -137,7 +134,7 @@ export class EditingComponent implements OnInit {
       if(updated.body[0].value !== undefined) {
        this.currentMeasureNo = Number(updated.body[0].value)+ 1;
       }
-      if(hasTagChanged) { //Has changed
+      if(hasTagChanged) { // Has changed
         this.updateInInterval(updated.body[0].value, prev.body[0].value, updated)
         this.anno.setAnnotations(this.annotationsData)
       }
@@ -159,7 +156,7 @@ export class EditingComponent implements OnInit {
 
   updateInInterval(newMeasureNo: number, oldMeasureNo: number, updated:any): void {
     this.annotationsData.filter(
-      (el, idx, arr) => {
+      (el) => {
         if (el.body[0].value !== undefined) {
           console.warn(el === updated)
           return el.body[0].value >= newMeasureNo && el.body[0].value < oldMeasureNo && (el.id !== updated.id);
@@ -176,7 +173,7 @@ export class EditingComponent implements OnInit {
 
   updateFollowingMeasures(deletedMeasureNr:number, delta:number): void {
     this.annotationsData.filter(
-      (el, idx, arr) => {
+      (el) => {
         if (el.body[0].value !== undefined) {
           return el.body[0].value > deletedMeasureNr;
         }
@@ -233,7 +230,7 @@ export class EditingComponent implements OnInit {
     if(this.status === Status.MODIFIED) {
       const measureBoxListConvertedBack = this.convertBack();
       this.editionService.save(this.storageService.getActiveEditionId(), this.currentPage - 1, measureBoxListConvertedBack)
-        .subscribe(x=>{
+        .subscribe( () =>{
           this.status = Status.SAVED
         });
     }
@@ -271,8 +268,8 @@ export class EditingComponent implements OnInit {
           undefined,
           restoredValues[0], // ulx
           restoredValues[2] + restoredValues[0], // lry
-          restoredValues[3] + restoredValues[1], //lrx
-          restoredValues[1], //uly
+          restoredValues[3] + restoredValues[1], // lrx
+          restoredValues[1], // uly
           annotation.body[0].value - this.offset - 1,
           "Edited"
         )

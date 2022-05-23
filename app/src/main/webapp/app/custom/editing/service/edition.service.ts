@@ -1,18 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import * as dayjs from 'dayjs';
 
 
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
-import {IMeasureBox} from "../../../entities/measure-box/measure-box.model";
-import {EntityResponseType} from "../../../entities/measure-box/service/measure-box.service";
 import {ApiOrchMeasureBox} from "../../../shared/model/openapi/model/apiOrchMeasureBox";
-import {IProject} from "../../myprojects/project.model";
-
-// export type EntityResponseType = HttpResponse<IEdition>;
-// export type EntityArrayResponseType = HttpResponse<IEdition[]>;
 
 export type EntityArrayResponseType = HttpResponse<ApiOrchMeasureBox[]>;
 export type simpleLongReturn = HttpResponse<number>;
