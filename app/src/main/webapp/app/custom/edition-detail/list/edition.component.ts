@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpHeaders, HttpResponse, HttpEventType } from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
 import { saveAs } from 'file-saver'
+import { tap, last } from 'rxjs/operators'
 
 import { IEdition } from '../edition-detail.model';
 
@@ -107,13 +108,20 @@ export class EditionComponent implements OnInit {
     }
   }
 
-  downloadAnnotatedPDF(editionID: number | undefined): void {
-    if(editionID) {
-      this.editionService.downloadPDF(editionID)
+  downloadAnnotatedPDF(edition: IEdition): void {
+    if(edition.id) {
+      this.isLoading=true;
+      this.editionService.downloadPDF(edition.id)
         .subscribe(
           blob => {
-            saveAs(blob, 'annotated.pdf')
+            this.isLoading = false;
+            saveAs(blob, String(edition.pDFFileName))
+          },
+          err => {
+            // An error occured
+            this.isLoading = false;
           }
+
         );
     }
   }

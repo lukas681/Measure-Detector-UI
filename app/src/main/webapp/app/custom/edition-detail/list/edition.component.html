@@ -28,6 +28,11 @@
     <span jhiTranslate="measureDetectorApp.edition.home.notFound">No editions found</span>
   </div>
 
+  <div *ngIf="isLoading" class="d-flex align-items-center" style="margin-top: 25px; margin-bottom: 25px">
+    <strong>Loading, this can take a while ... </strong>
+    <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+  </div>
+
   <div  class="table-responsive" id="entities" *ngIf="editions && editions.length > 0">
     <table class="table table-striped" aria-describedby="page-heading">
       <thead>
@@ -94,7 +99,7 @@
               </button>
               <div ngbDropdownMenu aria-labelledby="options">
 
-                <button ngbDropdownItem type="submit" (click)="downloadAnnotatedPDF(edition.id)" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                <button ngbDropdownItem type="submit" (click)="downloadAnnotatedPDF(edition)" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
                   <fa-icon icon="eye"></fa-icon>
                   <span class="d-none d-md-inline" jhiTranslate="entity.action.downloadPDF">Download PDF</span>
                 </button>

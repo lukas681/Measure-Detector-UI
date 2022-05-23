@@ -4,6 +4,8 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
+import {Location} from '@angular/common';
+
 
 import * as dayjs from 'dayjs';
 import { DATE_TIME_FORMAT } from 'app/config/input.constants';
@@ -46,12 +48,12 @@ export class EditionUpdateComponent implements OnInit {
     protected projectService: ProjectService,
     protected activatedRoute: ActivatedRoute,
     protected fb: FormBuilder,
+    private _location: Location
   ) {}
 
   ngOnInit(): void {
     // If something arrives: Edit Mode
     this.activatedRoute.data.subscribe(({ edition }) => {
-
       if (edition.id === undefined) {
         // Create.New Mode
         edition.createdDate = dayjs();
@@ -63,8 +65,7 @@ export class EditionUpdateComponent implements OnInit {
   }
 
   previousState(): void {
-
-    window.history.back();
+    this._location.historyGo(-2)
   }
 
   save(): void {
@@ -101,13 +102,16 @@ export class EditionUpdateComponent implements OnInit {
   }
 
   protected subscribeToSaveResponse(result: Observable<HttpResponse<IEdition>>): void {
-    result.pipe(finalize(() => this.onSaveFinalize())).subscribe(
+    result
+      .pipe(finalize(() => this.onSaveFinalize()))
+      .subscribe(
       () => this.onSaveSuccess(),
       () => this.onSaveError()
     );
   }
 
   protected onSaveSuccess(): void {
+
     this.previousState();
   }
 
@@ -118,7 +122,6 @@ export class EditionUpdateComponent implements OnInit {
   protected onSaveFinalize(): void {
     this.isSaving = false;
   }
-
 
   protected updateForm(edition: IEdition): void {
 

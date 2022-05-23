@@ -8,7 +8,6 @@ import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
 import {IEdition, getEditionIdentifier, EditionWithFile} from '../edition-detail.model';
-import {ApiOrchEditionWithFile} from "../../../shared/model/openapi/model/apiOrchEditionWithFile";
 
 export type EntityResponseType = HttpResponse<IEdition>;
 export type EntityArrayResponseType = HttpResponse<IEdition[]>;
@@ -92,7 +91,9 @@ export class EditionService {
   }
 
   downloadPDF(editionID: number): Observable<Blob> {
-    return this.http.get(`${this.resourcePDFDownload}/${editionID}/getFullPDF`, { responseType: 'blob' }
+    return this.http.request("GET", `${this.resourcePDFDownload}/${editionID}/getFullPDF`,
+      { responseType: 'blob',
+        reportProgress: true }
     );
   }
 
