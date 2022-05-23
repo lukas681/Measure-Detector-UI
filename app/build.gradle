@@ -329,6 +329,7 @@ dependencies {
     implementation 'org.processing:core:3.3.6'
 
     implementation "org.tensorflow:libtensorflow_jni:1.13.1"
+    implementation 'com.github.f4b6a3:uuid-creator:4.6.1'
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
 }
 
