@@ -110,7 +110,20 @@ export class EditionComponent implements OnInit {
   downloadAnnotatedPDF(edition: IEdition): void {
     if(edition.id) {
       this.isLoading=true;
-      this.editionService.downloadPDF(edition.id)
+      this.editionService.downloadAnnotatedPDF(edition.id)
+        .subscribe(
+          blob => {
+            this.isLoading = false;
+            saveAs(blob, String(edition.pDFFileName))
+          },
+        );
+    }
+  }
+
+  downloadUnannotatedPDF(edition: IEdition): void {
+      if(edition.id) {
+      this.isLoading=true;
+      this.editionService.downloadUnannotatedPDF(edition.id)
         .subscribe(
           blob => {
             this.isLoading = false;

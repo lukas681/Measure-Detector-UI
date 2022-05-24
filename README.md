@@ -85,6 +85,21 @@ To launch your application's tests, run:
 ./gradlew test integrationTest jacocoTestReport
 ```
 
+
+# Experimental: Setting it up in a Docker Container without any Build Script
+
+This function can be used to really debug all the necessary steps.
+
+     $ docker run ubuntu /bin/bash
+
+     apt update
+     apt install gradle 
+     cd ~
+     git clone https://gitlab.lrz.de/ge82xib/measure-detector-ui # dding TUM Credentials
+     cd measure-detector-ui/app     
+     chmod +x gradlew 
+     ./gradlew
+   
 ## Further links
 
 [node.js]: https://nodejs.org/

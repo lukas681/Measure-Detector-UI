@@ -107,7 +107,8 @@
       "triggerDetection": "Start Detection",
       "openEditMode": "Open Editor",
       "moreOptions": "More Options",
-      "downloadPDF": "PDF Download"
+      "downloadPDF": "PDF Download",
+      "downloadUnannotatedPDF": "PDF Download (Raw)"
     },
     "detail": {
       "field": "Field",

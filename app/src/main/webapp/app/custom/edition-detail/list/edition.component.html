@@ -104,6 +104,12 @@
                   <span class="d-none d-md-inline" jhiTranslate="entity.action.downloadPDF">Download PDF</span>
                 </button>
 
+                <button ngbDropdownItem type="submit" (click)="downloadUnannotatedPDF(edition)" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                  <fa-icon icon="eye"></fa-icon>
+                  <span class="d-none d-md-inline" jhiTranslate="entity.action.downloadUnannotatedPDF">Download PDF</span>
+                </button>
+
+
                 <button ngbDropdownItem type="submit" [routerLink]="['/edition-detail', edition.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
                   <fa-icon icon="eye"></fa-icon>
                   <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>

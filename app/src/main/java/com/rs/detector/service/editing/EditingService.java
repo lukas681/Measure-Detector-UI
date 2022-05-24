@@ -316,12 +316,23 @@ public class EditingService {
      * This method constructs a resulting pdf from the pngs annotated with the measures
      */
     public String createPdfWithMeasures(Edition e) throws IOException, PagesMightNotHaveBeenGeneratedException {
+        return createPdf(e, true);
+    }
+
+    public String createPDFWithoutMeasures(Edition e) throws PagesMightNotHaveBeenGeneratedException, IOException {
+        return createPdf(e, false);
+    }
+
+    public String createPdf(Edition e, boolean hasMeasures) throws IOException,
+        PagesMightNotHaveBeenGeneratedException {
         String generatedPath = null;
         for(var pn: editingFileManagementService.getAllGeneratedScorePageFilesAsPageNr(e)) {
             var p= this.searchPageInRepository(e, Long.valueOf(pn));
             if(p.isPresent()) { // We could also do an assert, but this relaxes it a bit
                 BufferedImage img = editingFileManagementService.loadPage(e, pn); // TODO maybe replace with Page
-                scorePageService.addMeasureBoxesToBufferedImage(img, p.get());
+                if(hasMeasures) {
+                    scorePageService.addMeasureBoxesToBufferedImage(img, p.get());
+                }
                 editingFileManagementService.writeBufferedInEditionTmpFolder(img, e, p.get());
             }
         }
@@ -329,21 +340,6 @@ public class EditingService {
         editingFileManagementService.deleteEditionSubfolder(e, "/tmp");
         return generatedPath;
     }
-
-   /** public String createPDFWithoutMeasures(Edition e) {
-    String generatedPath = null;
-        for(var pn: editingFileManagementService.getAllGeneratedScorePageFilesAsPageNr(e)) {
-        var p= this.searchPageInRepository(e, Long.valueOf(pn));
-        if(p.isPresent()) { // We could also do an assert, but this relaxes it a bit
-            BufferedImage img = editingFileManagementService.loadPage(e, pn); // TODO maybe replace with Page
-            scorePageService.addMeasureBoxesToBufferedImage(img, p.get());
-            editingFileManagementService.writeBufferedInEditionTmpFolder(img, e, p.get());
-        }
-        // editingFileManagementService.deleteEditionSubfolder(e, "/tmp"); // TODO !!
-    }
-    generatedPath = editingFileManagementService.combineImagesIntoPDF(e);
-        return generatedPath;
-    }*/
 
     public void recalculatePageOffsets(Integer editionID) {
         recalculatePageOffsets((getEdition(editionID,editionService)));

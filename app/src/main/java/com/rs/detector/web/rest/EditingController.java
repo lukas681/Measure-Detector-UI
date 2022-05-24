@@ -46,6 +46,12 @@ public class EditingController implements EditionApiDelegate {
     @Autowired
     StorageProvider storageProvider;
 
+    @Autowired
+    ScorePageService scorePageService;
+
+    @Autowired
+    EditionService editionService;
+
     private final Logger log = LoggerFactory.getLogger(EditingController.class);
 
     @Override
@@ -72,11 +78,6 @@ public class EditingController implements EditionApiDelegate {
         return (ResponseEntity<Resource>) ResponseEntity.badRequest();
     }
 
-    @Autowired
-    ScorePageService scorePageService;
-
-    @Autowired
-    EditionService editionService;
 
     @Override
     public ResponseEntity<Void> addEdition(ApiOrchEditionWithFileAsString apiOrchEditionWithFileAsString)  {
@@ -201,8 +202,17 @@ public class EditingController implements EditionApiDelegate {
 
     @Override
     public ResponseEntity<Resource> getAnnotatedPDF(Long editionID) {
-        InputStreamResource file = null;
+        return proxyPDFGeneration(editionID, true);
+    }
 
+    @Override
+    public ResponseEntity<Resource> getUnannotatedPDF(Long editionID) {
+        return proxyPDFGeneration(editionID, false);
+    }
+
+
+    private ResponseEntity<Resource> proxyPDFGeneration(Long editionID, boolean hasMeasureBoxes) {
+        InputStreamResource file;
         var edition = editionService.findOne(editionID)
             .toProcessor()
             .block();
@@ -210,12 +220,11 @@ public class EditingController implements EditionApiDelegate {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         try {
-            editingService.createPdfWithMeasures(edition);
-             file = new InputStreamResource(editingService.getGeneratedPDFFile(edition));
+            editingService.createPdf(edition, hasMeasureBoxes);
+            file = new InputStreamResource(editingService.getGeneratedPDFFile(edition));
         } catch (IOException | PagesMightNotHaveBeenGeneratedException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
         return ResponseEntity.ok()
             .header(HttpHeaders.CONTENT_DISPOSITION, "inline;attachment; filename="+ edition.getpDFFileName())
             .contentType(MediaType.APPLICATION_PDF)

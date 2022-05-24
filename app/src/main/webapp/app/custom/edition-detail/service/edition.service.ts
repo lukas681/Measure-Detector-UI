@@ -18,7 +18,7 @@ export class EditionService {
   protected resourceUrlEditionsByProject = this.applicationConfigService.getEndpointFor('api/editionsByProject');
   protected resourceUrlAddEditionWithFile = this.applicationConfigService.getEndpointFor('api/edition/add');
   protected resourceUrlTriggerDetection = this.applicationConfigService.getEndpointFor('api/edition/runMeasureDetection');
-  protected resourcePDFDownload = this.applicationConfigService.getEndpointFor('api/edition/');
+  protected resourcePDFDownload = this.applicationConfigService.getEndpointFor('api/edition');
 
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
@@ -90,8 +90,15 @@ export class EditionService {
     return editionCollection;
   }
 
-  downloadPDF(editionID: number): Observable<Blob> {
+  downloadAnnotatedPDF(editionID: number): Observable<Blob> {
     return this.http.request("GET", `${this.resourcePDFDownload}/${editionID}/getFullPDF`,
+      { responseType: 'blob',
+        reportProgress: true }
+    );
+  }
+
+  downloadUnannotatedPDF(editionID: number): Observable<Blob> {
+    return this.http.request("GET", `${this.resourcePDFDownload}/${editionID}/getFullPDFWithoutAnnotations`,
       { responseType: 'blob',
         reportProgress: true }
     );

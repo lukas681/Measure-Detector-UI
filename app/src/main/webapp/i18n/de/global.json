@@ -108,7 +108,8 @@
       "triggerDetection": "Starte Takterkennung",
       "openEditMode": "Öffne Editor",
       "moreOptions": "Mehr Optionen",
-      "downloadPDF": "PDF Download"
+      "downloadPDF": "PDF Download",
+      "downloadUnannotatedPDF": "PDF Download (Raw)"
     },
     "detail": {
       "field": "Feld",
