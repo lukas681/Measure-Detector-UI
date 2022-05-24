@@ -84,6 +84,7 @@ export class EditingComponent implements OnInit {
             type: 'image',
             url: this.generateUrl(this.storageService.getActiveEditionId(), this.currentPage - 1)
           },
+        showNavigationControl: false // Can be switched. BUt Access to these resources not allowed...
       }
     );
     this.setAnnotationsWithServerData();

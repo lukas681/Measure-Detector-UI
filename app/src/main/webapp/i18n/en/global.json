@@ -108,7 +108,7 @@
       "openEditMode": "Open Editor",
       "moreOptions": "More Options",
       "downloadPDF": "PDF Download",
-      "downloadUnannotatedPDF": "PDF Download (Raw)"
+      "downloadUnannotatedPDF": "PDF Download (Internal PNG)"
     },
     "detail": {
       "field": "Field",
