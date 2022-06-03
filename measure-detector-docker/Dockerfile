@@ -1,4 +1,5 @@
 FROM tensorflow/tensorflow:1.15.5-py3
+# Test also with version minor .0: Long Term Support
 
 RUN apt-get update && apt-get install -y jq curl
 
