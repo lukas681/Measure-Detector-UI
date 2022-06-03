@@ -1,8 +1,8 @@
-FROM tensorflow/tensorflow:1.13.1-py3
+FROM tensorflow/tensorflow:1.15.5-py3
 
 RUN apt-get update && apt-get install -y jq curl
 
-RUN pip3 install pillow hug
+RUN pip3 install pillow==7.2.0 hug==2.6.0
 RUN mkdir -p /usr/src/app
 
 WORKDIR /usr/src/app

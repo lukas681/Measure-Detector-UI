@@ -10,16 +10,21 @@ This application was generated using JHipster 7.4.0, you can find documentation 
 
        git clone https://gitlab.lrz.de/ge82xib/measure-detector-ui
 
-2) Make sure to have Docker installed. For Windows you can also use WSL 2 to get a nice Docker environment. Now build the MeasureDetector. This works also on Windows using Docker for Windows.
+2) Make sure to have Docker installed. For Windows you can also use WSL 2 to get a nice Docker environment. Now build the MeasureDetector. This works also on Windows using Docker for Windows. If you have Make installed, then you can also use the provided Makefile. Adjust the port to your needs. Standard is 8181 where it is going to listen to incoming requests.
+
+      $ cd measure-detector-docker
+      $ make build-docker
+
+   Otherwise, just build the container manually:
 
 
       $ cd measure-detector-docker
 
       # Build the image with the latest model
-      $ docker build -t measure_detector .
+	$ docker build --no-cache --tag mdet:1 -t measure_detector .
 
       # Run in container (change port to `XXXX:8080` if needed):
-      $ docker run -p 8080:8080 measure_detector
+	$ docker run --name mdet -d -p ${PORT}:8080 measure_detector
    
 3) (Optional) Test the REST interface:
 
@@ -42,11 +47,12 @@ For developing it might makes sense to spawn npm in a second process.
         --------------------------------------
 # Interfaces
 
-You have access to the following interfaces acompanying the application:
+You have access to the following interfaces acompanying the application (Standard Ports):
 
 * Swagger: Login -> Administration/Api
 * JobRunR (Tracks the background jobs) -> :8000
 * Main Application ->
+* measure detector listener: 8081
 
 # Software Stack
 

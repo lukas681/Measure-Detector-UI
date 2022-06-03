@@ -1,9 +1,9 @@
 # Makefile for managing the Measure Detector
 #
-PORT= 8080
+PORT=8181
 
 build-docker:
-	docker build --no-cache --tag measure:1 -t measure_detector .
+	docker build --no-cache --tag mdet:1 -t measure_detector .
 	docker run --name mdet -d -p ${PORT}:8080 measure_detector
 
 stop-docker:
