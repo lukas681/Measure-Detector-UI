@@ -29,6 +29,20 @@ This application was generated using JHipster 7.4.0, you can find documentation 
 3) (Optional) Test the REST interface:
 
        curl --location --request POST 'localhost:8080/upload' --form 'image=@"path/to/example/image"'
+
+# Necessary Configurations
+
+You need to follow these steps, to set up the application correctly:
+
+* By now, the upload mechanism is not implemented optimally. Therefore, you have to set the max-recieving filelength manually, which depends on your available RAM.
+
+In my case, I have around 16GB RAM on my Computer, so I can without troubles set it to 5GB (whcih would support score files size to 5GB). Therefore, open application.yml (application-prod, application-dev, resp.) and change the following line:
+
+
+      spring:
+         codec:
+            max-in-memory-size: 5GB
+
 # Starting Development Mode
 
 For developing it might makes sense to spawn npm in a second process.
@@ -45,6 +59,18 @@ For developing it might makes sense to spawn npm in a second process.
        UI: http://localhost:3001
        UI External: http://localhost:3001
         --------------------------------------
+
+# Running in Productive Mode
+
+Currently, the productive mode is conigured to use a local mysql instance. Observe the corresponing line in the application.yml:
+
+      liquibase:
+         contexts: prod
+         url: jdbc:mysql://localhost:3306/MeasureDetector?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+
+In order to run against a local h2 database (Should also be sufficient as we do not store large data in the database so far...), just run in development mode.
+
+
 # Interfaces
 
 You have access to the following interfaces acompanying the application (Standard Ports):

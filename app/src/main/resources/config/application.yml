@@ -65,6 +65,8 @@ management:
             enabled: true
 
 spring:
+  codec:
+    max-in-memory-size: 5GB
   application:
     name: MeasureDetector
   profiles:
@@ -162,7 +164,7 @@ application:
   imageSplitDPI: 250
   measure-detector:
     host: http://localhost
-    port: 8080
+    port: 8181
     endpoint: /upload
 org:
   jobrunr:
