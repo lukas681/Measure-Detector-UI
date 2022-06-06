@@ -5,10 +5,7 @@ import com.rs.detector.domain.MeasureBox;
 import com.rs.detector.domain.Page;
 import com.rs.detector.repository.EditionRepository;
 import com.rs.detector.repository.PageRepository;
-import com.rs.detector.service.EditionService;
-import com.rs.detector.service.MeasureBoxService;
-import com.rs.detector.service.PageService;
-import com.rs.detector.service.ProjectService;
+import com.rs.detector.service.*;
 import com.rs.detector.service.editing.exceptions.PagesMightNotHaveBeenGeneratedException;
 import com.rs.detector.service.measureDetection.MeasureDetectorService;
 import com.rs.detector.service.util.FileUtilService;
@@ -70,6 +67,9 @@ public class EditingService {
 
     @Autowired
     EditionService editionService;
+
+    @Autowired
+    MeiService meiService;
 
     /**
      * Provides a conventient way to upload a new Edition with a corresponding PDF file which will later be splitted
@@ -347,5 +347,9 @@ public class EditingService {
 
     public InputStream getGeneratedPDFFile(Edition e) throws FileNotFoundException {
         return fileUtilService.getPDF(editingFileManagementService.constructAnnotatedPDFPath(e));
+    }
+
+    public String generateMEI(Edition edition) throws IOException {
+        return meiService.generateMEIXML(edition);
     }
 }

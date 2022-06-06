@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mei
+    xmlns="http://www.music-encoding.org/ns/mei">
+    <meiHead>
+        <fileDesc>
+            <titleStmt>
+                <title/>
+            </titleStmt>
+            <pubStmt/>
+        </fileDesc>
+        <encodingDesc>
+            <appInfo>
+                <application isodate="${ISODATE}" version="1.0.2">
+                    <name>Measures</name>
+                    <p>Measures detected with Deep Optical Measure Detector generated via Mesasure Detector UI.</p>
+                </application>
+            </appInfo>
+        </encodingDesc>
+    </meiHead>
+    <music>
+        <facsimile>
+            ${SURFACES}
+        </facsimile>
+        <body>
+            <mdiv xml:id="mdiv_01ENZC2WFY2DW9ZWXT77DNM7BG" n="1" label="">
+                <score>
+                    <scoreDef/>
+                    <section>
+                        <pb/>
+                        ${MEASURES}
+                        <sb/>
+                        <pb/>
+                    </section>
+                </score>
+            </mdiv>
+        </body>
+    </music>
+</mei>

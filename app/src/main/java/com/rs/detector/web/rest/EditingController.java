@@ -230,4 +230,21 @@ public class EditingController implements EditionApiDelegate {
             .contentType(MediaType.APPLICATION_PDF)
             .body(file);
     }
+
+    @Override
+    public ResponseEntity<String> getMei(Long editionID) {
+        var edition = editionService.findOne(editionID)
+            .toProcessor()
+            .block();
+        if(edition == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        try {
+            return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_XML)
+                .body(editingService.generateMEI(edition));
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }

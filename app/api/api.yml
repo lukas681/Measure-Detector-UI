@@ -196,6 +196,25 @@ paths:
               schema:
                 type: string
                 format: binary
+  /edition/{editionID}/getMEI:
+    get:
+      summary: Generates a MEI file corresponidng to the PNG stored internally
+      operationId: getMei
+      parameters:
+        - name: editionID
+          schema:
+            type: integer
+            format: int64
+          in: path
+          required: true
+          description: ID of the edition you want to generate the MEI XML from
+      responses:
+        200:
+          description: Expected response to a valid request
+          content:
+            application/xml:
+              schema:
+                type: string
   /edition/add:
     post:
       summary: Adds a new edition + a corresponding
