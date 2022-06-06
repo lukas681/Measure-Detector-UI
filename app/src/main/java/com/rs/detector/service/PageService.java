@@ -131,4 +131,10 @@ public class PageService {
               measureBoxRepository.deleteById(x.getId())
           );
     }
+
+    public Flux<Page> findAllByEdition(Long editionID) {
+        log.debug("Fetching all pages to the edition");
+
+        return pageRepository.findAllByEditionId(editionID);
+    }
 }

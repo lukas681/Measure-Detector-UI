@@ -15,10 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.nio.charset.StandardCharsets.*;
 
@@ -83,6 +81,7 @@ public class MeiService {
 
         for(var pn: Objects.requireNonNull(pageService.findAllByEdition(e.getId())
             .collectList()
+            .share()
             .block())
         ) {
             var zones = String.format("\n<graphic xml:id=\"%s\" target=\"%s\"/>",
@@ -114,7 +113,9 @@ public class MeiService {
     }
 
     private String[] addMeasureBoxes(String measure, String zone, List<MeasureBox> measureBoxes, Page pn) {
-        for(var m: measureBoxes) {
+        for(var m: measureBoxes.stream()
+            .sorted(Comparator.comparing(MeasureBox::getMeasureCount))
+            .collect(Collectors.toList())) {
             String zoneID = "zone_" + getAlphaNumericString(26);
             zone = String.format("%s\n<zone xml:id=\"%s\" type=\"measure\" ulx=\"%s\" uly=\"%s\" lrx=\"%s\" lry=\"%s\"/>",
                 zone,

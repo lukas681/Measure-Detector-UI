@@ -109,7 +109,8 @@
       "openEditMode": "Öffne Editor",
       "moreOptions": "Mehr Optionen",
       "downloadPDF": "PDF Download",
-      "downloadUnannotatedPDF": "PDF Download (Internal PNG)"
+      "downloadUnannotatedPDF": "PDF Download (Internal PNG)",
+      "downloadMEI": "Download MEI XML "
     },
     "detail": {
       "field": "Feld",

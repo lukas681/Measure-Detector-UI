@@ -104,6 +104,12 @@ export class EditionService {
     );
   }
 
+  downloadMEI(editionID: number): Observable<string> {
+    return this.http.request("GET", `${this.resourcePDFDownload}/${editionID}/getMEI`,
+      { responseType: 'text',
+        reportProgress: true }
+    );
+  }
   protected convertDateFromClient(edition: IEdition): IEdition {
     return Object.assign({}, edition, {
       createdDate: edition.createdDate?.isValid() ? edition.createdDate.toJSON() : undefined,

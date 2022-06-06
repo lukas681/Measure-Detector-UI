@@ -133,6 +133,22 @@ export class EditionComponent implements OnInit {
     }
   }
 
+  downloadMEI(edition: IEdition): void {
+    if(edition.id) {
+      this.isLoading=true;
+      this.editionService.downloadMEI(edition.id)
+        .subscribe(
+          text => {
+            const blob = new Blob([text], {type: "text/xml"});
+            const url = URL.createObjectURL(blob);
+            window.open(url);
+            URL.revokeObjectURL(url);
+          },
+        );
+    }
+
+  }
+
   previousState(): void {
     window.history.back();
   }
