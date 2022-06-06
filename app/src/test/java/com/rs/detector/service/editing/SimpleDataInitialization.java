@@ -53,7 +53,7 @@ public class SimpleDataInitialization {
         testProject = new Project()
             .id(1l) // Should be automatically done by deleting whole database.
             .name("TestProject")
-            .composer("Richi Strauß");
+            .composer("Richi Strauss");
 
         testEdition = new Edition()
             .id(1L)
@@ -72,6 +72,7 @@ public class SimpleDataInitialization {
             {
                 add(new MeasureBox()
                     .page(testPage)
+                    .measureCount(1l)
                     .lrx(123l)
                     .lry(123l)
                     .ulx(23l)
@@ -79,6 +80,7 @@ public class SimpleDataInitialization {
                 );
                 add(new MeasureBox()
                     .page(testPage)
+                    .measureCount(2l)
                     .lrx(500l)
                     .lry(324l)
                     .ulx(146l)
@@ -86,6 +88,7 @@ public class SimpleDataInitialization {
                 );
                 add(new MeasureBox()
                     .page(testPage)
+                    .measureCount(3l)
                     .lrx(800l)
                     .lry(246l)
                     .ulx(146l)

@@ -22,7 +22,7 @@
             ${SURFACES}
         </facsimile>
         <body>
-            <mdiv xml:id="mdiv_01ENZC2WFY2DW9ZWXT77DNM7BG" n="1" label="">
+            <mdiv xml:id="${MDIVID}" n="1" label="">
                 <score>
                     <scoreDef/>
                     <section>

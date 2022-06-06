@@ -226,7 +226,7 @@ public class EditingController implements EditionApiDelegate {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok()
-            .header(HttpHeaders.CONTENT_DISPOSITION, "inline;attachment; filename="+ edition.getpDFFileName())
+            .header(HttpHeaders.CONTENT_DISPOSITION, "inline;attachment; filename=out.pdf")
             .contentType(MediaType.APPLICATION_PDF)
             .body(file);
     }
