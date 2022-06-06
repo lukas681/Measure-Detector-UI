@@ -138,15 +138,19 @@ export class EditionComponent implements OnInit {
       this.isLoading=true;
       this.editionService.downloadMEI(edition.id)
         .subscribe(
-          text => {
-            const blob = new Blob([text], {type: "text/xml"});
+          blob => {
+            const element = document.createElement('a');
+
+            const blobXML = new Blob([blob], {type: "text/xml"});
             const url = URL.createObjectURL(blob);
-            window.open(url);
-            URL.revokeObjectURL(url);
+            element.href = url;
+            element.setAttribute('download', "out.xml");
+            document.body.appendChild(element)
+            element.click()
+            this.isLoading = false;
           },
         );
     }
-
   }
 
   previousState(): void {

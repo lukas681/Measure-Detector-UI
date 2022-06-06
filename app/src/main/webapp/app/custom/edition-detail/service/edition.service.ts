@@ -104,9 +104,9 @@ export class EditionService {
     );
   }
 
-  downloadMEI(editionID: number): Observable<string> {
+  downloadMEI(editionID: number): Observable<Blob> {
     return this.http.request("GET", `${this.resourcePDFDownload}/${editionID}/getMEI`,
-      { responseType: 'text',
+      { responseType: 'blob',
         reportProgress: true }
     );
   }
