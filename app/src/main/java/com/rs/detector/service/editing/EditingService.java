@@ -136,7 +136,7 @@ public class EditingService {
         }
     }
 
-    private Optional<Page> searchPageInRepository(Edition e, Long  pageNr) {
+    public Optional<Page> searchPageInRepository(Edition e, Long  pageNr) {
         return pageRepository.findAllByEditionId(e.getId())
             .collect(Collectors.toList()).toProcessor().block()
             .stream().filter(x -> x.getPageNr().equals(pageNr))
@@ -323,6 +323,14 @@ public class EditingService {
         return createPdf(e, false);
     }
 
+    /**
+     * Generates the PDF with annotated Measure Boxes
+     * @param e
+     * @param hasMeasures
+     * @return
+     * @throws IOException
+     * @throws PagesMightNotHaveBeenGeneratedException
+     */
     public String createPdf(Edition e, boolean hasMeasures) throws IOException,
         PagesMightNotHaveBeenGeneratedException {
         String generatedPath = null;
