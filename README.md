@@ -44,6 +44,13 @@ In my case, I have around 16GB RAM on my Computer, so I can without troubles set
          codec:
             max-in-memory-size: 5GB
 
+# Quick Start
+
+In order to run the whole application inside a docker container, promt the following: Adjust the path to the cloned repository, as relative paths are not supported any more.
+
+      docker run -v /mnt/wsl/docker-desktop-bind-mounts/Ubuntu-20.04/5b34cac1f4eceeed64b176538b277248cab7ff01961f27cb589fd8c218e73d03/measure-detector-ui/app:/home/jhipster/app --rm jhipster/jhipster ./gradlew bootRun -Pdev
+
+Voila, the application should already start ...
 # Starting Development Mode
 
 For developing it might makes sense to spawn npm in a second process.
