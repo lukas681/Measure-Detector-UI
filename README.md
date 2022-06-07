@@ -13,10 +13,12 @@ This application was generated using JHipster 7.4.0, you can find documentation 
 2) Make sure to have Docker installed. For Windows you can also use WSL 2 to get a nice Docker environment. Now build the MeasureDetector. This works also on Windows using Docker for Windows. If you have Make installed, then you can also use the provided Makefile. Adjust the port to your needs. Standard is 8181 where it is going to listen to incoming requests.
 
 
-      $ cd measure-detector-docker
+      $ cd docker/measure-detector-docker
       $ make build-docker
 
+
    Otherwise, just build the container manually:
+
 
 
       $ cd measure-detector-docker
@@ -48,7 +50,8 @@ In my case, I have around 16GB RAM on my Computer, so I can without troubles set
 
 In order to run the whole application inside a docker container, promt the following: Adjust the path to the cloned repository, as relative paths are not supported any more.
 
-      docker run --network="host" -p 8080:8080 -v /mnt/wsl/docker-desktop-bind-mounts/Ubuntu-20.04/5b34cac1f4eceeed64b176538b277248cab7ff01961f27cb589fd8c218e73d03/measure-detector-ui/app:/home/jhipster/app --rm jhipster/jhipster .\gradlew bootRun --args='--spring.profiles.active=dev'
+      cd measure-detector-ui/app
+      docker run --network="host" -v ${PWD}:/home/jhipster/app --rm jhipster/jhipster .\gradlew bootRun --args='--spring.profiles.active=dev'
 
 
 Voila, the application should already start ...
@@ -58,8 +61,8 @@ Voila, the application should already start ...
 
 # Starting Development Mode
 
-      er s 
-       .\gradlew -Pdev
+       cd app
+      ./gradlew bootRun --args='--spring.profiles.active=dev
        # wait for finish
        npm i --save-dev @types/openseadragon@2.4.8
        npm start
