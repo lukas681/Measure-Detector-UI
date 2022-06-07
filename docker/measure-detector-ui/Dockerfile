@@ -4,7 +4,7 @@ MAINTAINER Lukas Retschmeier
 
 
 WORKDIR home/jhipster/app
-COPY docker bui app /home/jhipster/app
+COPY ../../app /home/jhipster/app
 
 CMD ["./gradlew", "bootRun --args='spring.profiles.active=dev'"]
 EXPOSE 8080

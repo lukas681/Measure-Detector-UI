@@ -1,32 +1,26 @@
 # Measure-Detector-UI
 
-
-Contains a Front-End for the Measure Detector developed along an Interdisciplinary Project in cooperation with the Richard-Strauss-Ausgabe and TU in Munich.
+Contains a frontend for the Measure Detector developed along an Interdisciplinary Project in cooperation with the Richard-Strauss-Ausgabe and TU in Munich.
  
 This application was generated using JHipster 7.4.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v7.4.0](https://www.jhipster.tech/documentation-archive/v7.4.0).
 
 
-![alt text](doc/measure-detector-docs/images/editions.png)
-
 # Main Functionalities
 
 * Manage Projects and Editions containing musical context
+  ![alt text](doc/measure-detector-docs/images/editions.png)
 * Automatic Measure Detection with the Measure Detector: https://github.com/OMR-Research/MeasureDetector
 * Provides a Front-End for managing the counting of measures of any musical work
 * Export into MEI / PDF with Annotations
-
-An exported PDF can look like this:
-
-![alt text](doc/measure-detector-docs/images/generated.png)
-
+  ![alt text](doc/measure-detector-docs/images/generated.png)
 
 ## Setting-up this repository
   
-1) You might need to login with your LRZ Credentials as the project is not entirely public.
+1) Clone the repository: 
 
-       git clone https://gitlab.lrz.de/ge82xib/measure-detector-ui
+       git clone https://github.com/lukas681/Measure-Detector-UI.git 
 
-2) Make sure to have Docker installed. For Windows you can also use WSL 2 to get a nice Docker environment. Now build the MeasureDetector. This works also on Windows using Docker for Windows. If you have Make installed, then you can also use the provided Makefile. Adjust the port to your needs. Standard is 8181 where it is going to listen to incoming requests.
+3) Make sure to have Docker installed. For Windows you can also use WSL 2 to get a nice Docker environment. Now build the MeasureDetector. This works also on Windows using Docker for Windows. Use the provided Makefile.
 
 
       $ cd docker/measure-detector-docker
@@ -48,7 +42,7 @@ An exported PDF can look like this:
 
        curl --location --request POST 'localhost:8080/upload' --form 'image=@"path/to/example/image"'
 
-# Necessary Configurations
+# Necessary Configurations (Might apply ...)
 
 You need to follow these steps, to set up the application correctly:
 
@@ -61,7 +55,7 @@ In my case, I have around 16GB RAM on my Computer, so I can without troubles set
          codec:
             max-in-memory-size: 5GB
 
-# Quick Start
+# Quick Start (Still Experimental)
 
 In order to run the whole application inside a docker container, promt the following: Adjust the path to the cloned repository, as relative paths are not supported any more.
 
@@ -75,16 +69,18 @@ Voila, the application should already start ...
 
 
 # Starting Development Mode
+Start the application manually: Therefore, we just have to call the gradle wrapper which will setup the enire environment.
 
        cd app
       ./gradlew bootRun --args='--spring.profiles.active=dev'
+
        # wait for finish
        npm i --save-dev @types/openseadragon@2.4.8
        npm start
 
        --------------------------------------
-       Local: http://localhost:9000
-       External: http://192.168.2.148:9000
+       Local: http://localhost:8080
+       External: http://192.168.2.148:8080
        --------------------------------------
        UI: http://localhost:3001
        UI External: http://localhost:3001
@@ -92,14 +88,13 @@ Voila, the application should already start ...
 
 # Running in Productive Mode
 
-Currently, the productive mode is conigured to use a local mysql instance. Observe the corresponing line in the application.yml:
+Currently, the productive mode is configured to use a local mysql instance. Observe the corresponing line in the application.yml:
 
       liquibase:
          contexts: prod
          url: jdbc:mysql://localhost:3306/MeasureDetector?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
 
 In order to run against a local h2 database (Should also be sufficient as we do not store large data in the database so far...), just run in development mode.
-
 
 # Interfaces
 
