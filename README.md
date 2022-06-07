@@ -54,6 +54,8 @@ In order to run the whole application inside a docker container, promt the follo
 Voila, the application should already start ...
 
 > Note: --network="host" will embedd the hosts localhost inside the container. For saver usage consider using a VNetwork
+
+
 # Starting Development Mode
 
       er s 
@@ -94,11 +96,12 @@ You have access to the following interfaces acompanying the application (Standar
 
 The following frameworks are used for building this application. In general, **jhipster 7.4.0** was used to generate the backbone of the application
 
-| Name  	|   Version 	|   Required	|
-|---	|---	|---	|
-|  NodeJS 	|  14 	|  yes 	|
-|  Docker 	|  	|  yes 	|
-|  TensorFlow 	|  1.13.1 	|   via gradle	|
+| Name  	      | Version 	 |   Required	|
+|--------------|-----------|---	|
+| NodeJS 	     | 14 	      |  yes 	|
+| Docker 	     | 	         |  yes 	|
+| Java         | 	14       |  yes 	|
+| TensorFlow 	 | 1.13.1 	  |   via gradle	|
 
 # File Structure
 

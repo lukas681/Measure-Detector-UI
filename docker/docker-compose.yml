@@ -1,0 +1,14 @@
+version: "3.9"
+services:
+  backend:
+    container_name: mdet-detector
+    build: measure-detector-docker
+   # ports:
+   #   - "8181:8181"
+    network_mode: host
+  web:
+    container_name: mdet-ui
+    build: measure-detector-ui
+    #ports:
+    #  - "8080:8080"
+    network_mode: host

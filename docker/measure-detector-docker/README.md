@@ -8,4 +8,4 @@ To do so, start the server script with hug -p=8080 -f=inference_server.py (see a
 	$ docker build -t measure_detector .
 
 	# Run in container (change port to `XXXX:8080` if needed):
-	$ docker run -p 8080:8080 measure_detector
+	$ docker run -p 8181:8181 measure_detector
