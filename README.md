@@ -1,8 +1,24 @@
 # Measure-Detector-UI
 
-Contains a Front-End for the Measure Detector developed along an Interdisciplinary Project in cooperation with the LMU and TU in Munich.
+
+Contains a Front-End for the Measure Detector developed along an Interdisciplinary Project in cooperation with the Richard-Strauss-Ausgabe and TU in Munich.
  
 This application was generated using JHipster 7.4.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v7.4.0](https://www.jhipster.tech/documentation-archive/v7.4.0).
+
+
+![alt text](doc/measure-detector-docs/images/editions.png)
+
+# Main Functionalities
+
+* Manage Projects and Editions containing musical context
+* Automatic Measure Detection with the Measure Detector: https://github.com/OMR-Research/MeasureDetector
+* Provides a Front-End for managing the counting of measures of any musical work
+* Export into MEI / PDF with Annotations
+
+An exported PDF can look like this:
+
+![alt text](doc/measure-detector-docs/images/generated.png)
+
 
 ## Setting-up this repository
   
@@ -18,7 +34,6 @@ This application was generated using JHipster 7.4.0, you can find documentation 
 
 
    Otherwise, just build the container manually:
-
 
 
       $ cd measure-detector-docker
@@ -62,7 +77,7 @@ Voila, the application should already start ...
 # Starting Development Mode
 
        cd app
-      ./gradlew bootRun --args='--spring.profiles.active=dev
+      ./gradlew bootRun --args='--spring.profiles.active=dev'
        # wait for finish
        npm i --save-dev @types/openseadragon@2.4.8
        npm start
