@@ -20,7 +20,7 @@ This application was generated using JHipster 7.4.0, you can find documentation 
 
        git clone https://github.com/lukas681/Measure-Detector-UI.git 
 
-3) Make sure to have Docker installed. For Windows you can also use WSL 2 to get a nice Docker environment. Now build the MeasureDetector. This works also on Windows using Docker for Windows. Use the provided Makefile.
+3) Make sure to have **Docker** installed. For Windows you can also use WSL 2 to get a nice Docker environment. Now build the MeasureDetector. This works also on Windows using Docker for Windows. Use the provided Makefile.
 
 
       $ cd docker/measure-detector-docker
@@ -29,18 +29,16 @@ This application was generated using JHipster 7.4.0, you can find documentation 
 
    Otherwise, just build the container manually:
 
-
       $ cd measure-detector-docker
-
       # Build the image with the latest model
-	$ docker build --no-cache --tag mdet:1 -t measure_detector .
+      $ docker build --no-cache --tag mdet:1 -t measure_detector .
 
       # Run in container (change port to `XXXX:8080` if needed):
-	$ docker run --name mdet -d -p ${PORT}:8080 measure_detector
+      $ docker run --name mdet -d -p ${PORT}:8080 measure_detector
    
 3) (Optional) Test the REST interface:
 
-       curl --location --request POST 'localhost:8080/upload' --form 'image=@"path/to/example/image"'
+      curl --location --request POST 'localhost:8080/upload' --form 'image=@"path/to/example/image"'
 
 # Necessary Configurations (Might apply ...)
 
