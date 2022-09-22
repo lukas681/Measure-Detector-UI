@@ -1,41 +1,51 @@
 # Measure-Detector-UI
 
-Contains a front-end the Measure Detector developed in an interdisciplinary Project in cooperation with the LMU and TU in Munich.
+Contains a Front-End for the Measure Detector developed along an Interdisciplinary Project in cooperation with the LMU and TU in Munich.
  
-This application was generated using JHipster 7.4.0. You can find documentation and help at [https://www.jhipster.tech/documentation-archive/v7.4.0](https://www.jhipster.tech/documentation-archive/v7.4.0).
+This application was generated using JHipster 7.4.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v7.4.0](https://www.jhipster.tech/documentation-archive/v7.4.0).
+
+
+# Main Functionalities
+
+* Manage Projects and Editions containing musical context
+  ![alt text](doc/measure-detector-docs/images/editions.png)
+* Automatic Measure Detection with the Measure Detector: https://github.com/OMR-Research/MeasureDetector
+* Provides a Front-End for managing the counting of measures of any musical work
+* Export into MEI / PDF with Annotations
+  ![alt text](doc/measure-detector-docs/images/generated.png)
 
 ## Setting-up this repository
   
-1) Clone the repository
+1) Clone the repository: 
 
-       git clone https://github.com/lukas681/Measure-Detector-UI
+       git clone https://github.com/lukas681/Measure-Detector-UI.git 
 
-2) Make sure to have Docker installed. WSL 2 + Docker for Windows recommended. Now build the Measure Detector Docker Container with the following commands. If you have "Make" installed, then you can also use the provided Makefile where you can adjust the required ports to your needs. Standard is 8181 where it will listen to incoming requests.
+3) Make sure to have **Docker** installed. For Windows you can also use WSL 2 to get a nice Docker environment. Now build the MeasureDetector. This works also on Windows using Docker for Windows. Use the provided Makefile.
 
-
-      $ cd measure-detector-docker
-      $ make build-docker
-
-   Alternatively, build the container manually:
+        $ cd docker/measure-detector-docker
+        $ make build-docker
 
 
-      $ cd measure-detector-docker
-      # Build the image with the latest model
-      $ docker build --no-cache --tag mdet:1 -t measure_detector .
-      # Run in container (change port to `XXXX:8080` if needed):
-      $ docker run --name mdet -d -p ${PORT}:8080 measure_detector
+   Otherwise, just build the container manually:
+
+        $ cd measure-detector-docker
+        # Build the image with the latest model
+        $ docker build --no-cache --tag mdet:1 -t measure_detector .
+
+        # Run in container (change port to `XXXX:8080` if needed):
+        $ docker run --name mdet -d -p ${PORT}:8080 measure_detector
    
-3) (Optional) Test the REST interface to the Measure Detector
+3) (Optional) Test the REST interface:
 
-       curl --location --request POST 'localhost:8080/upload' --form 'image=@"path/to/example/image"'
+        curl --location --request POST 'localhost:8080/upload' --form 'image=@"path/to/example/image"'
 
-# Necessary Configurations
+# Necessary Configurations (Might apply ...)
 
-Now we need to configure a few things to make the application run correctly.
+You need to follow these steps, to set-up the application correctly:
 
-* Unfortunately, the upload mechanism is not implemented optimally. Therefore, you have to set the max-recieving file length manually. To fully utilze the available RAM, we have to set a parameter.
+* By now, the upload mechanism is not implemented optimally. Therefore, you have to set the max-recieving filelength manually, which depends on your available RAM.
 
-   If you have for example ~16GB RAM on my Computer, you can savely set it to 5GB (which would support files of size up to 5GB). To do so, open the application.yml file (application-prod, application-dev, resp.) and change the following line:
+If you have for example 16GB RAM on your Computer, so I can without troubles set it to 5GB (whcih would support score files size to 5GB). Therefore, open application.yml (application-prod, application-dev, resp.) and change the following line:
 
 
       spring:
@@ -44,27 +54,29 @@ Now we need to configure a few things to make the application run correctly.
 
 # Quick Start
 
-In order to run the whole application inside a docker container, use the following command, but first adjust the path to the cloned repository, as relative paths are not supported by docker any more. We are using the official jhopster image.
+In order to run the whole application inside a docker container, promt the following: Adjust the path to the cloned repository, as relative paths are not supported any more.
 
-      docker run --network="host" -p 8080:8080 -v /mnt/wsl/docker-desktop-bind-mounts/Ubuntu-20.04/5b34cac1f4eceeed64b176538b277248cab7ff01961f27cb589fd8c218e73d03/measure-detector-ui/app:/home/jhipster/app --rm jhipster/jhipster .\gradlew bootRun --args='--spring.profiles.active=dev'
-
+      cd measure-detector-ui/app
+      docker run --network="host" -v ${PWD}:/home/jhipster/app --rm jhipster/jhipster .\gradlew bootRun --args='--spring.profiles.active=dev'
 
 Voila, the application should already start ...
 
-> Note: --network="host" will embedd the hosts localhost inside the container. A safe option would be to consider using a virtual Network
+> Note: --network="host" will embedd the hosts localhost inside the container. For saver usage consider using a VNetwork
 
 
 # Starting Development Mode
-If you like to start the development mode, we can simply switch the profile to dev. This will load the application-dev.yml profile.
+Start the application manually: Therefore, we just have to call the gradle wrapper which will setup the enire environment.
 
-       .\gradlew -Pdev
+       cd app
+      ./gradlew bootRun --args='--spring.profiles.active=dev'
+
        # wait for finish
        npm i --save-dev @types/openseadragon@2.4.8
        npm start
 
        --------------------------------------
-       Local: http://localhost:9000
-       External: http://192.168.2.148:9000
+       Local: http://localhost:8080
+       External: http://192.168.2.148:8080
        --------------------------------------
        UI: http://localhost:3001
        UI External: http://localhost:3001
@@ -72,15 +84,14 @@ If you like to start the development mode, we can simply switch the profile to d
 
 # Running in Productive Mode
 
-
-Currently, the productive mode is configured to use a local mysql instance, but you can safely also use a local h2 database. Observe the corresponding line in the application.yml:
+Note: In most cases it is easier to use the development mode (uses a h2 file database). In case you want to deploy the application on a large scale level, consider using this prod profile.
+Currently, the productive mode is configured to use a local mysql instance. Observe the corresponding line in the application.yml:
 
       liquibase:
          contexts: prod
          url: jdbc:mysql://localhost:3306/MeasureDetector?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
 
 In order to run against a local h2 database (Should also be sufficient as we do not store large data in the database so far...), just run in development mode.
-
 
 # Interfaces
 
