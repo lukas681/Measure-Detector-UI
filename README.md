@@ -13,7 +13,7 @@ This application was generated using JHipster 7.4.0, you can find documentation 
 * Automatic Measure Detection with the Measure Detector: https://github.com/OMR-Research/MeasureDetector
 * Provides a Front-End for managing the counting of measures of any musical work
 * Export into MEI / PDF with Annotations
-  ![alt text](doc/measure-detector-docs/images/generated.png | width=100)
+  <img src="doc/measure-detector-docs/images/generated.png" width="100" height="100">
 
 ## Setting-up this repository
   
