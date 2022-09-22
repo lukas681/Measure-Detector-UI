@@ -7,6 +7,7 @@ This application was generated using JHipster 7.4.0, you can find documentation 
 
 # Main Functionalities
 
+
 * Manage Projects and Editions containing musical context
               ![Measure Detector](doc/measure-detector-docs/images/editions.png | width=100)
 * Automatic Measure Detection with the Measure Detector: https://github.com/OMR-Research/MeasureDetector
