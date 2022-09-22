@@ -8,7 +8,7 @@ This application was generated using JHipster 7.4.0, you can find documentation 
 # Main Functionalities
 
 * Manage Projects and Editions containing musical context
-  ![alt text](doc/measure-detector-docs/images/editions.png)
+              ![Measure Detector](doc/measure-detector-docs/images/editions.png | width=100)
 * Automatic Measure Detection with the Measure Detector: https://github.com/OMR-Research/MeasureDetector
 * Provides a Front-End for managing the counting of measures of any musical work
 * Export into MEI / PDF with Annotations
