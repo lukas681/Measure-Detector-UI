@@ -4,6 +4,8 @@ Contains a Front-End for the Measure Detector developed along an Interdisciplina
  
 This application was generated using JHipster 7.4.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v7.4.0](https://www.jhipster.tech/documentation-archive/v7.4.0).
 
+<img src="doc/measure-detector-docs/images/eroica_anim.gif">
+
 
 # Main Functionalities
 
