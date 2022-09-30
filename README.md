@@ -1,6 +1,7 @@
 # Measure Detector UI
 
-This is the repository for a GUI for the Measure Detector developed in a cooperation of LMU and TU in Munich. Based on a clean 4-Tier architecture it provides a way, to simplify the process of "Measure Counting" (Vertaktung) done in modern music edition projects. Until now, most of this process was done non-digital in a manual way. Using the power of AI, this process can be speed-up.
+Makes Measure Detection Great Again! Based on a clean 4-Tier architecture we contribute to a simplification of the process of "Measure Counting" (Vertaktung) done in modern music edition projects. AI powered, based on a modern technology stack and ready for you to use!
+
 
 This application was generated using JHipster 7.4.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v7.4.0](https://www.jhipster.tech/documentation-archive/v7.4.0).
 
