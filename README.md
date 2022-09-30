@@ -155,8 +155,7 @@ To launch your application's tests, run:
 ```
 
 
-# Experimental: Setting it up in a Docker Container without any Build Script
-
+# Experimental: Running without Docker
 This function can be used to really debug all the necessary steps.
 
      $ docker run ubuntu /bin/bash
@@ -164,7 +163,7 @@ This function can be used to really debug all the necessary steps.
      apt update
      apt install gradle 
      cd ~
-     git clone https://gitlab.lrz.de/ge82xib/measure-detector-ui # dding TUM Credentials
+     git clone https://gitlab.lrz.de/ge82xib/measure-detector-ui
      cd measure-detector-ui/app     
      chmod +x gradlew 
      ./gradlew
@@ -184,6 +183,12 @@ Project Link: [https://github.com/lukas681/Measure-Detector-UI](https://github.c
 ## Acknowledgments
 
 The Measure Detector DNN model was trained in this project [https://github.com/OMR-Research/MeasureDetector/](project)
+
+# Mirror
+
+The original repository was hosted at LRZ, but due to a better availability for the public moved to Github. The old repository can still be found here: 
+
+ [https://gitlab.lrz.de/ge82xib/measure-detector-ui](https://gitlab.lrz.de/ge82xib/measure-detector-ui)
    
 # Further links
 
