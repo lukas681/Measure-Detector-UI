@@ -1,31 +1,42 @@
-# Measure-Detector-UI
+# Measure Detector UI
 
-Contains a Front-End for the Measure Detector developed along an Interdisciplinary Project in cooperation with the LMU and TU in Munich.
- 
+This is the repository for a GUI for the Measure Detector developed in a cooperation of LMU and TU in Munich. Based on a clean 4-Tier architecture it provides a way, to simplify the process of "Measure Counting" (Vertaktung) done in modern music edition projects. Until now, most of this process was done non-digital in a manual way. Using the power of AI, this process can be speed-up.
+
 This application was generated using JHipster 7.4.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v7.4.0](https://www.jhipster.tech/documentation-archive/v7.4.0).
 
-<img src="doc/measure-detector-docs/images/eroica_anim.gif">
+<img src="doc/measure-detector-docs/images/eroica_anim.gif" width="600">
 
 
-# Main Functionalities
+# Core Functions
 
-
-* Manage Projects and Editions containing musical context
+* Manage Projects and Editions with sheets of music
 
   <img src="doc/measure-detector-docs/images/editions.png" width="700">
 * Automatic Measure Detection with the Measure Detector: https://github.com/OMR-Research/MeasureDetector
-* Provides a Front-End for managing the counting of measures of any musical work
+* Provides a web-based front-end (AngularJS) where edition works can be managed.
 * Export into MEI / PDF with Annotations
 
   <img src="doc/measure-detector-docs/images/generated.png" width="300">
+* User Management, Scheduling System, ...
+
+# Getting-Started
+
+This section guides you throw the installation of the application and its required dependencies.
+
+## Repo Structure
+
+* doc/**: Contains all the required documentation generate with mkdocs which enables simple web rendering of the whole documentation contents
+
+* app/**: Contains the whole application
 
 ## Setting-up this repository
+
   
 1) Clone the repository: 
 
        git clone https://github.com/lukas681/Measure-Detector-UI.git 
 
-3) Make sure to have **Docker** installed. For Windows you can also use WSL 2 to get a nice Docker environment. Now build the MeasureDetector. This works also on Windows using Docker for Windows. Use the provided Makefile.
+3) Make sure to have **Docker** installed. Use WSL 2 + Docker on WNX based systems. Then build the Measure Detector Docker container. Use the provided Makefile.
 
         $ cd docker/measure-detector-docker
         $ make build-docker
@@ -44,33 +55,35 @@ This application was generated using JHipster 7.4.0, you can find documentation 
 
         curl --location --request POST 'localhost:8080/upload' --form 'image=@"path/to/example/image"'
 
-# Necessary Configurations (Might apply ...)
+# Further Configurations
 
 You need to follow these steps, to set-up the application correctly:
 
-* By now, the upload mechanism is not implemented optimally. Therefore, you have to set the max-recieving filelength manually, which depends on your available RAM.
+* As the upload mechanism is not implemented optimally, yet, weshoudl increase the maximal receiving file length. (Affects the maximal size of a music document to be uploaded).
 
-If you have for example 16GB RAM on your Computer, so I can without troubles set it to 5GB (whcih would support score files size to 5GB). Therefore, open application.yml (application-prod, application-dev, resp.) and change the following line:
+You can therefore free around 1/3 of your available (e.g. 5GB on a 16GB machine). To do so, open `app/src/main/resources/config/application-xx.yml` (dev, prod, xx) and modify the following line:
 
 
       spring:
          codec:
             max-in-memory-size: 5GB
 
-# Quick Start
+# Quick Start of the Jhipster Application
 
-In order to run the whole application inside a docker container, promt the following: Adjust the path to the cloned repository, as relative paths are not supported any more.
+You can run the application inside a docker containre with the official jhipster docker images. therefore execute the following commands. Make sure to provide absolute paths as relative paths are not supported any more by docker.
+
 
       cd measure-detector-ui/app
-      docker run --network="host" -v ${PWD}:/home/jhipster/app --rm jhipster/jhipster .\gradlew bootRun --args='--spring.profiles.active=dev'
+      docker run --network="host" -v ${PWD}:/home/jhipster/app -p 8000:8000 --rm jhipster/jhipster .\gradlew bootRun --args='--spring.profiles.active=dev'
 
-Voila, the application should already start ...
+Voilâ, the application should already start ...
 
-> Note: --network="host" will embedd the hosts localhost inside the container. For saver usage consider using a VNetwork
+> Note: --network="host" will embedd the host localhost inside the container, so that we can also reach the Measure Detector in the other container. Concerning security, this is not optimal and should be switched to a Virtual Network based approach (Docker Networking + Docker Compose)
 
 
 # Starting Development Mode
-Start the application manually: Therefore, we just have to call the gradle wrapper which will setup the enire environment.
+
+in order to strat the application, call the gradle wrapper with the corresponding profile. It might be necessary, to also installed the openseadragon 2.4.8 type delarations manually to match those required by AnnotoriusJS.
 
        cd app
       ./gradlew bootRun --args='--spring.profiles.active=dev'
@@ -98,16 +111,16 @@ Currently, the productive mode is configured to use a local mysql instance. Obse
 
 In order to run against a local h2 database (Should also be sufficient as we do not store large data in the database so far...), just run in development mode.
 
-# Interfaces
+# Overview: Interfaces
 
 You have access to the following interfaces acompanying the application (Standard Ports):
 
-* Swagger: Login -> Administration/Api
-* JobRunR (Tracks the background jobs) -> :8000
-* Main Application ->
-* measure detector listener: 8081
+* **Swagger**: Login -> Administration/Api
+* **JobRunR** (Tracks the background jobs) -> :8000
+* **Main Application** -> 8080
+* **Measure Detector** Listener: 8081
 
-# Software Stack
+# Software Stack & Versions
 
 The following frameworks are used for building this application. In general, **jhipster 7.4.0** was used to generate the backbone of the application
 
@@ -118,13 +131,8 @@ The following frameworks are used for building this application. In general, **j
 | Java         | 	14       |  yes 	|
 | TensorFlow 	 | 1.13.1 	  |   via gradle	|
 
-# File Structure
 
-* doc/**: Contains all the required documentation generate with mkdocs which enables simple web rendering of the whole documentation contents
-  
-* app/**: Contains the whole application
-
-## Building for production
+## Building for Production
 
 ### Packaging as jar
 
@@ -159,8 +167,24 @@ This function can be used to really debug all the necessary steps.
      cd measure-detector-ui/app     
      chmod +x gradlew 
      ./gradlew
+
+## License
+
+Distributed under the MIT License. See `LICENSE.md` for more information.
+
+## Contact
+
+Lukas Retschmeier - [lukasretschmeier.de](https://lukasretscheier.de) - lukas.retschmeier@tum.de
+
+Project Link: [https://github.com/lukas681/Measure-Detector-UI](https://github.com/lukas681/Measure-Detector-UI)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Acknowledgments
+
+The Measure Detector DNN model was trained in this project [https://github.com/OMR-Research/MeasureDetector/](project)
    
-## Further links
+# Further links
 
 [node.js]: https://nodejs.org/
 [npm]: https://www.npmjs.com/
